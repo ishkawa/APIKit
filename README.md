@@ -3,6 +3,26 @@ APIKit
 
 protocol set for building type safe web API client in Swift.
 
+## Example
+
+```swift
+let request = GitHub.Request.SearchRepositories(query: "APIKit")
+
+GitHub.sendRequest(request) { response in
+    switch response {
+    case .Success(let box):
+        self.repositories = box.unbox // type of response object is inferred by request
+        
+    case .Failure(let box):
+        let alertController = UIAlertController(title: "Error", message: box.unbox.localizedDescription, preferredStyle: .Alert)
+        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        alertController.addAction(action)
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+}
+```
+
+See [GitHub](https://github.com/ishkawa/APIKit/blob/master/DemoApp/GitHub.swift) and [GitHubRequests](https://github.com/ishkawa/APIKit/blob/master/DemoApp/GitHubRequests.swift) for more details.
 
 ## License
 
