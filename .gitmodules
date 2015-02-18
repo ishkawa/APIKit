@@ -1,0 +1,3 @@
+[submodule "Carthage/Checkouts/LlamaKit"]
+	path = Carthage/Checkouts/LlamaKit
+	url = https://github.com/LlamaKit/LlamaKit.git
