@@ -7,6 +7,8 @@ protocol set for building type safe web API client in Swift.
 
 ## Example
 
+### Sending request
+
 ```swift
 // parameters of request are validated by type system of Swift
 let request = GitHub.Request.SearchRepositories(query: "APIKit", sort: .Stars)
@@ -24,6 +26,54 @@ GitHub.sendRequest(request) { response in
         let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
         alertController.addAction(action)
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+}
+```
+
+### Defining request
+
+```swift
+// https://developer.github.com/v3/search/#search-repositories
+class SearchRepositories: APIKit.Request {
+    enum Sort: String {
+        case Stars = "stars"
+        case Forks = "forks"
+        case Updated = "updated"
+    }
+    
+    enum Order: String {
+        case Ascending = "asc"
+        case Descending = "desc"
+    }
+    
+    typealias Response = [Repository]
+    
+    let query: String
+    let sort: Sort
+    let order: Order
+    
+    var URLRequest: NSURLRequest {
+        return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+    }
+    
+    init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
+        self.query = query
+        self.sort = sort
+        self.order = order
+    }
+    
+    func responseFromObject(object: AnyObject) -> Response? {
+        var repositories = [Repository]()
+        
+        if let dictionaries = object["items"] as? [NSDictionary] {
+            for dictionary in dictionaries {
+                if let repository = Repository(dictionary: dictionary) {
+                    repositories.append(repository)
+                }
+            }
+        }
+        
+        return repositories
     }
 }
 ```
