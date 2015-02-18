@@ -10,5 +10,5 @@ public protocol Request {
 }
 
 public protocol API {
-    class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>))
+    class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void)
 }
