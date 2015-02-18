@@ -1,6 +1,8 @@
 APIKit
 ======
 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 protocol set for building type safe web API client in Swift.
 
 ## Example
@@ -12,6 +14,7 @@ GitHub.sendRequest(request) { response in
     switch response {
     case .Success(let box):
         self.repositories = box.unbox // type of response object is inferred by request
+        self.tableView?.reloadData()
         
     case .Failure(let box):
         let alertController = UIAlertController(title: "Error", message: box.unbox.localizedDescription, preferredStyle: .Alert)
