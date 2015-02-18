@@ -8,12 +8,15 @@ protocol set for building type safe web API client in Swift.
 ## Example
 
 ```swift
-let request = GitHub.Request.SearchRepositories(query: "APIKit")
+// parameters of request are validated by type system of Swift
+let request = GitHub.Request.SearchRepositories(query: "APIKit", sort: .Stars)
 
 GitHub.sendRequest(request) { response in
+    // no optional bindings are required to get response and error (thanks to LlamaKit.Result)
     switch response {
     case .Success(let box):
-        self.repositories = box.unbox // type of response object is inferred by request
+        // type of response is inferred from type of request
+        self.repositories = box.unbox
         self.tableView?.reloadData()
         
     case .Failure(let box):
