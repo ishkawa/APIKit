@@ -24,30 +24,15 @@ public enum RequestBodyBuilder {
             if let data = NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: &error) {
                 result = Result.Success(Box(data))
             } else {
-                // According to doc of NSJSONSerialization, error must occur if return value is nil.
                 result = Result.Failure(Box(error!))
             }
 
         case .URL(let encoding):
-            var queryItems = [NSURLQueryItem]()
-            
-            if let dictionary = object as? [String: AnyObject] {
-                for (key, value) in dictionary {
-                    let string = (value as? String) ?? "\(value)"
-                    let queryItem = NSURLQueryItem(name: key, value: string)
-                    queryItems.append(queryItem)
-                }
-            }
-            
-            let components = NSURLComponents()
-            components.queryItems = queryItems
-            
-            if let data = components.query?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true) {
+            var error: NSError?
+            if let data = URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: &error) {
                 result = Result.Success(Box(data))
             } else {
-                let userInfo = [NSLocalizedDescriptionKey: "failed to create url encoded dictionary."]
-                let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                result = Result.Failure(Box(error))
+                result = Result.Failure(Box(error!))
             }
 
         case .Custom(let buildBodyFromObject):

@@ -15,25 +15,16 @@ public enum ResponseBodyParser {
             if let object: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: &error) {
                 result = Result.Success(Box(object))
             } else {
-                // According to doc of NSJSONSerialization, error must occur if return value is nil.
                 result = Result.Failure(Box(error!))
             }
 
         case .URL(let encoding):
-            var dictionary = [String: AnyObject]()
-
-            if let string = NSString(data: data, encoding: encoding) as? String {
-                let URLComponents = NSURLComponents()
-                URLComponents.query = string
-
-                if let queryItems = URLComponents.queryItems as? [NSURLQueryItem] {
-                    for queryItem in queryItems {
-                        dictionary[queryItem.name] = queryItem.value
-                    }
-                }
+            var error: NSError?
+            if let object: AnyObject = URLEncodedSerialization.objectFromData(data, encoding: encoding, error: &error) {
+                result = Result.Success(Box(object))
+            } else {
+                result = Result.Failure(Box(error!))
             }
-
-            result = Result.Success(Box(dictionary))
 
         case .Custom(let parseData):
             result = parseData(data)

@@ -12,6 +12,9 @@
 		7F0869A11A9787AF001AD3E1 /* ResponseBodyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */; };
 		7F0869A31A9787E1001AD3E1 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1E1A94D1B4006863BB /* LlamaKit.framework */; };
 		7F0869A41A9787E3001AD3E1 /* LlamaKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7F45FD1E1A94D1B4006863BB /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7F0869A61A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */; };
+		7F0869A71A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */; };
+		7F0869A81A979088001AD3E1 /* APIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45FD171A94D085006863BB /* APIKit.swift */; };
 		7F30A8561A975BD600A8C136 /* RequestBodyBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */; };
 		7F45FD181A94D085006863BB /* APIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45FD171A94D085006863BB /* APIKit.swift */; };
 		7F45FD421A94D1CC006863BB /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; };
@@ -98,6 +101,7 @@
 
 /* Begin PBXFileReference section */
 		7F0869941A978790001AD3E1 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilderTests.swift; sourceTree = "<group>"; };
 		7F45FCDD1A94D02C006863BB /* APIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F45FCE11A94D02C006863BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -197,6 +201,7 @@
 			children = (
 				7F45FCE21A94D02C006863BB /* APIKit.h */,
 				7F45FD171A94D085006863BB /* APIKit.swift */,
+				7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */,
 				7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */,
 				7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */,
 				7F45FCE01A94D02C006863BB /* Supporting Files */,
@@ -505,6 +510,7 @@
 				7FCBE9DD1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */,
 				7F45FD181A94D085006863BB /* APIKit.swift in Sources */,
 				7FCBE9E01A9734950075AFD9 /* ResponseBodyParser.swift in Sources */,
+				7F0869A61A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,7 +519,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FCBE9DE1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */,
+				7F0869A81A979088001AD3E1 /* APIKit.swift in Sources */,
 				7FCBE9E11A9734950075AFD9 /* ResponseBodyParser.swift in Sources */,
+				7F0869A71A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,7 +659,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -691,7 +700,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

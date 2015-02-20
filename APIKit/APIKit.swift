@@ -42,15 +42,7 @@ public class API {
             
             switch method {
             case .GET:
-                var queryItems = [NSURLQueryItem]()
-                
-                for (key, value) in parameters {
-                    let string = (value as? String) ?? "\(value)"
-                    let queryItem = NSURLQueryItem(name: key, value: string)
-                    queryItems.append(queryItem)
-                }
-                
-                components.queryItems = queryItems
+                components.query = URLEncodedSerialization.stringFromObject(parameters, encoding: NSUTF8StringEncoding)
                 
             case .POST:
                 switch requestBodyBuilder().buildBodyFromObject(parameters) {
