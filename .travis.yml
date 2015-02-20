@@ -1,0 +1,15 @@
+language: objective-c
+
+before_install:
+  - brew install carthage
+  - gem install xcpretty
+
+install:
+  - carthage bootstrap --platform Mac
+
+script: 
+  - make test
+
+env:
+  global:
+    - LANG=en_US.UTF-8
