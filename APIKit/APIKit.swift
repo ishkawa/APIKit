@@ -67,31 +67,31 @@ public class API {
         let session = URLSession()
         let task = session.dataTaskWithRequest(request.URLRequest) { data, URLResponse, connectionError in
             let mainQueue = dispatch_get_main_queue()
-
             if let error = connectionError {
                 dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
                 return
             }
 
-            var parseError: NSError?
-            let JSONObject: AnyObject! = NSJSONSerialization.JSONObjectWithData(data,
-                options: nil,
-                error: &parseError)
-
-            if let error = parseError {
+            let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
+            if !contains(200..<300, statusCode) {
+                let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
+                let error = NSError(domain: APIKitErrorDomain, code: statusCode, userInfo: userInfo)
                 dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
                 return
             }
 
-            let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode
-            switch (statusCode, request.responseFromObject(JSONObject)) {
-            case (.Some(200..<300), .Some(let response)):
-                dispatch_async(mainQueue, { handler(.Success(Box(response))) })
+            switch self.responseBodyEncoding().decode(data) {
+            case .Failure(let box):
+                dispatch_async(mainQueue, { handler(.Failure(Box(box.unbox))) })
 
-            default:
-                let userInfo = [NSLocalizedDescriptionKey: "unresolved error occurred."]
-                let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+            case .Success(let box):
+                if let response = request.responseFromObject(box.unbox) {
+                    dispatch_async(mainQueue, { handler(.Success(Box(response))) })
+                } else {
+                    let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
+                    let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                }
             }
         }
         
