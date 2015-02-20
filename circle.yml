@@ -5,6 +5,7 @@ machine:
 dependencies:
   override:
     - sudo gem install xcpretty
+    - brew install carthage
     - make carthage
 
 test:
