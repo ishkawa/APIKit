@@ -1,0 +1,12 @@
+machine:
+  environment:
+    LC_CTYPE: en_US.UTF-8
+
+dependencies:
+  override:
+    - sudo gem install xcpretty
+    - make carthage
+
+test:
+  override:
+    - make test && cp build/test-report.xml $CIRCLE_TEST_REPORTS
