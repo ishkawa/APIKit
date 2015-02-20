@@ -7,7 +7,7 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testJSONSuccess() {
         let string = "{\"foo\": 1, \"bar\": 2, \"baz\": 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let encoding = API.ResponseBodyEncoding.JSON(nil)
+        let encoding = ResponseBodyEncoding.JSON(nil)
 
         switch encoding.decode(data) {
         case .Success(let box):
@@ -24,7 +24,7 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testJSONFailure() {
         let string = "{\"foo\": 1, \"bar\": 2, \" 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let encoding = API.ResponseBodyEncoding.JSON(nil)
+        let encoding = ResponseBodyEncoding.JSON(nil)
 
         switch encoding.decode(data) {
         case .Success:
@@ -40,7 +40,7 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testURLSuccess() {
         let string = "foo=1&bar=2&baz=3"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let encoding = API.ResponseBodyEncoding.URL(NSUTF8StringEncoding)
+        let encoding = ResponseBodyEncoding.URL(NSUTF8StringEncoding)
 
         switch encoding.decode(data) {
         case .Success(let box):
@@ -57,7 +57,7 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testCustomSuccess() {
         let expectedDictionary = ["foo": 1]
         let data = NSData()
-        let encoding = API.ResponseBodyEncoding.Custom({ data in
+        let encoding = ResponseBodyEncoding.Custom({ data in
             return Result.Success(Box(expectedDictionary))
         })
 
@@ -74,7 +74,7 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testCustomFailure() {
         let expectedError = NSError()
         let data = NSData()
-        let encoding = API.ResponseBodyEncoding.Custom({ data in
+        let encoding = ResponseBodyEncoding.Custom({ data in
             return Result.Failure(Box(expectedError))
         })
 
