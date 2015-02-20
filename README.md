@@ -4,11 +4,7 @@ APIKit
 [![Circle CI](https://img.shields.io/circleci/project/ishkawa/APIKit.svg?style=flat)](https://circleci.com/gh/ishkawa/APIKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-protocol set for building type safe web API client in Swift.
-
-## Example
-
-### Sending request
+A networking library for building type safe web API client in Swift.
 
 ```swift
 // parameters of request are validated by type system of Swift
@@ -23,63 +19,140 @@ GitHub.sendRequest(request) { response in
         self.tableView?.reloadData()
         
     case .Failure(let box):
-        let alertController = UIAlertController(title: "Error", message: box.unbox.localizedDescription, preferredStyle: .Alert)
-        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        alertController.addAction(action)
-        self.presentViewController(alertController, animated: true, completion: nil)
+        // if request fails, value in box is a NSError
+        println(box.unbox)
     }
 }
 ```
 
-### Defining request
+
+## Requirements
+
+- iOS 8.0 or later (7.0 will be supported in future version)
+- Mac OS 10.9 or later
+
+
+## Installation
+
+You have 2 choices.
+
+- Embed `APIKit.framework` to your project.
+- add `github "ishkawa/APIKit"` to your [Cartfile](https://github.com/Carthage/Carthage).
+
+
+## Usage
+
+1. Create subclass of `API` that represents target web API.
+2. Set base URL by overriding `baseURL()`.
+3. Set encoding of request body by overriding `requestBodyBuilder()`.
+4. Set encoding of response body by overriding `responseBodyParser()`.
+5. Define request classes that conforms to `APIKit.Request` for each endpoints.
 
 ```swift
-// https://developer.github.com/v3/search/#search-repositories
-class SearchRepositories: APIKit.Request {
-    enum Sort: String {
-        case Stars = "stars"
-        case Forks = "forks"
-        case Updated = "updated"
+class GitHub: API {
+    override class func baseURL() -> NSURL {
+        return NSURL(string: "https://api.github.com")!
     }
-    
-    enum Order: String {
-        case Ascending = "asc"
-        case Descending = "desc"
+
+    override class func requestBodyBuilder() -> RequestBodyBuilder {
+        return .JSON(nil)
     }
-    
-    typealias Response = [Repository]
-    
-    let query: String
-    let sort: Sort
-    let order: Order
-    
-    var URLRequest: NSURLRequest {
-        return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+
+    override class func responseBodyParser() -> ResponseBodyParser {
+        return .JSON(nil)
     }
-    
-    init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
-        self.query = query
-        self.sort = sort
-        self.order = order
-    }
-    
-    func responseFromObject(object: AnyObject) -> Response? {
-        var repositories = [Repository]()
-        
-        if let dictionaries = object["items"] as? [NSDictionary] {
-            for dictionary in dictionaries {
-                if let repository = Repository(dictionary: dictionary) {
-                    repositories.append(repository)
+
+    class Request {
+        // https://developer.github.com/v3/search/#search-repositories
+        class SearchRepositories: APIKit.Request {
+            enum Sort: String {
+                case Stars = "stars"
+                case Forks = "forks"
+                case Updated = "updated"
+            }
+
+            enum Order: String {
+                case Ascending = "asc"
+                case Descending = "desc"
+            }
+
+            typealias Response = [Repository]
+
+            let query: String
+            let sort: Sort
+            let order: Order
+
+            var URLRequest: NSURLRequest? {
+                return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+            }
+
+            init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
+                self.query = query
+                self.sort = sort
+                self.order = order
+            }
+
+            func responseFromObject(object: AnyObject) -> Response? {
+                var repositories = [Repository]()
+
+                if let dictionaries = object["items"] as? [NSDictionary] {
+                    for dictionary in dictionaries {
+                        if let repository = Repository(dictionary: dictionary) {
+                            repositories.append(repository)
+                        }
+                    }
                 }
+
+                return repositories
             }
         }
-        
-        return repositories
+
+        // https://developer.github.com/v3/search/#search-users
+        class SearchUsers: APIKit.Request {
+            enum Sort: String {
+                case Followers = "followers"
+                case Repositories = "repositories"
+                case Joined = "joined"
+            }
+
+            enum Order: String {
+                case Ascending = "asc"
+                case Descending = "desc"
+            }
+
+            typealias Response = [User]
+
+            let query: String
+            let sort: Sort
+            let order: Order
+
+            var URLRequest: NSURLRequest? {
+                return GitHub.URLRequest(.GET, "/search/users", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+            }
+
+            init(query: String, sort: Sort = .Followers, order: Order = .Ascending) {
+                self.query = query
+                self.sort = sort
+                self.order = order
+            }
+
+            func responseFromObject(object: AnyObject) -> Response? {
+                var users = [User]()
+
+                if let dictionaries = object["items"] as? [NSDictionary] {
+                    for dictionary in dictionaries {
+                        if let user = User(dictionary: dictionary) {
+                            users.append(user)
+                        }
+                    }
+                }
+                
+                return users
+            }
+        }
     }
 }
 ```
-
-See [GitHub](https://github.com/ishkawa/APIKit/blob/master/DemoApp/GitHub.swift) and [GitHubRequests](https://github.com/ishkawa/APIKit/blob/master/DemoApp/GitHubRequests.swift) for more details.
 
 ## License
 
