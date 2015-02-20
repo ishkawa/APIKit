@@ -7,7 +7,7 @@ class GitHub: API {
         return NSURL(string: "https://api.github.com")!
     }
 
-    override class func requestBodyEncoding() -> RequestBodyEncoding {
+    override class func requestBodyBuilder() -> RequestBodyBuilder {
         return .JSON(nil)
     }
 

@@ -21,8 +21,8 @@
 		7F45FD711A94DA2B006863BB /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; };
 		7F45FD721A94DA2B006863BB /* LlamaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F45FD741A94E832006863BB /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45FD731A94E832006863BB /* Models.swift */; };
-		7FCBE9DD1A9734880075AFD9 /* RequestBodyEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyEncoding.swift */; };
-		7FCBE9DE1A9734880075AFD9 /* RequestBodyEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyEncoding.swift */; };
+		7FCBE9DD1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */; };
+		7FCBE9DE1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */; };
 		7FCBE9E01A9734950075AFD9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */; };
 		7FCBE9E11A9734950075AFD9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */; };
 		7FEC5A191A96FE2600B1D3C0 /* ResponseBodyEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyEncodingTests.swift */; };
@@ -90,7 +90,7 @@
 		7F45FD561A94D9A9006863BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		7F45FD6A1A94D9F9006863BB /* GitHub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHub.swift; sourceTree = "<group>"; };
 		7F45FD731A94E832006863BB /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		7FCBE9DC1A9734880075AFD9 /* RequestBodyEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyEncoding.swift; sourceTree = "<group>"; };
+		7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilder.swift; sourceTree = "<group>"; };
 		7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseBodyParser.swift; sourceTree = "<group>"; };
 		7FEC5A141A96FE2600B1D3C0 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FEC5A171A96FE2600B1D3C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 			children = (
 				7F45FCE21A94D02C006863BB /* APIKit.h */,
 				7F45FD171A94D085006863BB /* APIKit.swift */,
-				7FCBE9DC1A9734880075AFD9 /* RequestBodyEncoding.swift */,
+				7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */,
 				7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */,
 				7F45FCE01A94D02C006863BB /* Supporting Files */,
 			);
@@ -427,7 +427,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7FCBE9DD1A9734880075AFD9 /* RequestBodyEncoding.swift in Sources */,
+				7FCBE9DD1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */,
 				7F45FD181A94D085006863BB /* APIKit.swift in Sources */,
 				7FCBE9E01A9734950075AFD9 /* ResponseBodyParser.swift in Sources */,
 			);
@@ -437,7 +437,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7FCBE9DE1A9734880075AFD9 /* RequestBodyEncoding.swift in Sources */,
+				7FCBE9DE1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */,
 				7FCBE9E11A9734950075AFD9 /* ResponseBodyParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

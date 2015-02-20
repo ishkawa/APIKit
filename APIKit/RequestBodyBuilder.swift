@@ -1,12 +1,12 @@
 import Foundation
 import LlamaKit
 
-public enum RequestBodyEncoding {
+public enum RequestBodyBuilder {
     case JSON(NSJSONWritingOptions)
     case URL(NSStringEncoding)
     case Custom(AnyObject -> Result<NSData, NSError>)
 
-    public func encode(object: AnyObject) -> Result<NSData, NSError> {
+    public func buildBodyFromObject(object: AnyObject) -> Result<NSData, NSError> {
         var result: Result<NSData, NSError>
 
         switch self {

@@ -27,7 +27,7 @@ public class API {
         return NSURLSession.sharedSession()
     }
 
-    public class func requestBodyEncoding() -> RequestBodyEncoding {
+    public class func requestBodyBuilder() -> RequestBodyBuilder {
         return .JSON(nil)
     }
 
@@ -47,7 +47,7 @@ public class API {
             components.query = join("&", parameters.keys.map({ "\($0)=\(parameters[$0]!)" })) as String
 
         case .POST:
-            switch requestBodyEncoding().encode(parameters) {
+            switch requestBodyBuilder().buildBodyFromObject(parameters) {
             case .Success(let box):
                 request.HTTPBody = box.unbox
 
