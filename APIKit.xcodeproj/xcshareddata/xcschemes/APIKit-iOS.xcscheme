@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7F45FD071A94D04D006863BB"
+               BlueprintIdentifier = "7FEC5A131A96FE2600B1D3C0"
                BuildableName = "APIKitTests.xctest"
-               BlueprintName = "APIKitTests"
+               BlueprintName = "APIKitTests-iOS"
                ReferencedContainer = "container:APIKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,9 +46,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7F45FD071A94D04D006863BB"
+               BlueprintIdentifier = "7FEC5A131A96FE2600B1D3C0"
                BuildableName = "APIKitTests.xctest"
-               BlueprintName = "APIKitTests"
+               BlueprintName = "APIKitTests-iOS"
                ReferencedContainer = "container:APIKit.xcodeproj">
             </BuildableReference>
          </TestableReference>

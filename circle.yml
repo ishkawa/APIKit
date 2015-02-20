@@ -1,0 +1,13 @@
+machine:
+  environment:
+    LC_CTYPE: en_US.UTF-8
+
+dependencies:
+  override:
+    - sudo gem install xcpretty
+    - brew install carthage
+    - carthage bootstrap --platform Mac
+
+test:
+  override:
+    - set -o pipefail && xcodebuild test -scheme APIKit-Mac | xcpretty -c -r junit -o build/test-report.xml

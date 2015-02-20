@@ -3,71 +3,105 @@ import APIKit
 import LlamaKit
 
 class GitHub: API {
-    enum Method: String {
-        case GET = "GET"
-        case POST = "POST"
+    override class func baseURL() -> NSURL {
+        return NSURL(string: "https://api.github.com")!
     }
-    
-    class URLRequest: NSMutableURLRequest {
-        let scheme = "https"
-        let host = "api.github.com"
-        
-        convenience init(_ method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) {
-            self.init()
-            
-            let components = NSURLComponents()
-            
-            switch method {
-            case .GET:
-                // TODO: escape values
-                components.query = join("&", parameters.keys.map({ "\($0)=\(parameters[$0]!)" })) as String
+
+    override class func requestBodyBuilder() -> RequestBodyBuilder {
+        return .JSON(nil)
+    }
+
+    override class func responseBodyParser() -> ResponseBodyParser {
+        return .JSON(nil)
+    }
+
+    class Request {
+        // https://developer.github.com/v3/search/#search-repositories
+        class SearchRepositories: APIKit.Request {
+            enum Sort: String {
+                case Stars = "stars"
+                case Forks = "forks"
+                case Updated = "updated"
+            }
+
+            enum Order: String {
+                case Ascending = "asc"
+                case Descending = "desc"
+            }
+
+            typealias Response = [Repository]
+
+            let query: String
+            let sort: Sort
+            let order: Order
+
+            var URLRequest: NSURLRequest? {
+                return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+            }
+
+            init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
+                self.query = query
+                self.sort = sort
+                self.order = order
+            }
+
+            func responseFromObject(object: AnyObject) -> Response? {
+                var repositories = [Repository]()
+
+                if let dictionaries = object["items"] as? [NSDictionary] {
+                    for dictionary in dictionaries {
+                        if let repository = Repository(dictionary: dictionary) {
+                            repositories.append(repository)
+                        }
+                    }
+                }
+
+                return repositories
+            }
+        }
+
+        // https://developer.github.com/v3/search/#search-users
+        class SearchUsers: APIKit.Request {
+            enum Sort: String {
+                case Followers = "followers"
+                case Repositories = "repositories"
+                case Joined = "joined"
+            }
+
+            enum Order: String {
+                case Ascending = "asc"
+                case Descending = "desc"
+            }
+
+            typealias Response = [User]
+
+            let query: String
+            let sort: Sort
+            let order: Order
+
+            var URLRequest: NSURLRequest? {
+                return GitHub.URLRequest(.GET, "/search/users", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+            }
+
+            init(query: String, sort: Sort = .Followers, order: Order = .Ascending) {
+                self.query = query
+                self.sort = sort
+                self.order = order
+            }
+
+            func responseFromObject(object: AnyObject) -> Response? {
+                var users = [User]()
+
+                if let dictionaries = object["items"] as? [NSDictionary] {
+                    for dictionary in dictionaries {
+                        if let user = User(dictionary: dictionary) {
+                            users.append(user)
+                        }
+                    }
+                }
                 
-            case .POST:
-                HTTPBody = NSJSONSerialization.dataWithJSONObject(parameters, options: nil, error: nil)
-            }
-            
-            components.scheme = scheme
-            components.host = host
-            components.path = path
-            
-            URL = components.URL
-            HTTPMethod = method.rawValue
-            setValue("application/json", forHTTPHeaderField: "Accept")
-        }
-    }
-    
-    class func sendRequest<T : APIKit.Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = { r in }) {
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request.URLRequest) { data, URLResponse, connectionError in
-            let mainQueue = dispatch_get_main_queue()
-
-            if let error = connectionError {
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
-                return
-            }
-
-            var parseError: NSError?
-            let JSONObject: AnyObject! = NSJSONSerialization.JSONObjectWithData(data,
-                options: nil,
-                error: &parseError)
-
-            if let error = parseError {
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
-                return
-            }
-
-            let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode
-            switch (statusCode, request.responseFromObject(JSONObject)) {
-            case (.Some(200..<300), .Some(let response)):
-                dispatch_async(mainQueue, { handler(.Success(Box(response))) })
-
-            default:
-                let userInfo = [NSLocalizedDescriptionKey: "unresolved error occurred."]
-                let error = NSError(domain: "GitHubErrorDomain", code: 0, userInfo: userInfo)
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                return users
             }
         }
-        
-        task.resume()
     }
 }
