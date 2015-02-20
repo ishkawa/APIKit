@@ -5,8 +5,8 @@ machine:
 dependencies:
   override:
     - sudo gem install xcpretty
+    - brew install carthage
     - carthage update --use-submodule --platform iOS
-    - make carthage
 
 test:
   override:
