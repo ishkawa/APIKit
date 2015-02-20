@@ -35,8 +35,8 @@ public enum ResponseBodyParser {
 
             result = Result.Success(Box(dictionary))
 
-        case .Custom(let decode):
-            result = decode(data)
+        case .Custom(let parseData):
+            result = parseData(data)
         }
 
         return result

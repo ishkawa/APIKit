@@ -23,8 +23,8 @@ public enum RequestBodyBuilder {
             // FIXME:
             result = Result.Success(Box(NSData()))
 
-        case .Custom(let encode):
-            result = encode(object)
+        case .Custom(let buildBodyFromObject):
+            result = buildBodyFromObject(object)
         }
 
         return result
