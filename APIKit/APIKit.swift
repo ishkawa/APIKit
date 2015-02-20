@@ -31,7 +31,7 @@ public class API {
         return .JSON(nil)
     }
 
-    public class func responseBodyEncoding() -> ResponseBodyEncoding {
+    public class func responseBodyParser() -> ResponseBodyParser {
         return .JSON(nil)
     }
 
@@ -83,7 +83,7 @@ public class API {
                 return
             }
 
-            switch self.responseBodyEncoding().decode(data) {
+            switch self.responseBodyParser().parseData(data) {
             case .Failure(let box):
                 dispatch_async(mainQueue, { handler(.Failure(Box(box.unbox))) })
 

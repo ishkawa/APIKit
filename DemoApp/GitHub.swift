@@ -11,7 +11,7 @@ class GitHub: API {
         return .JSON(nil)
     }
 
-    override class func responseBodyEncoding() -> ResponseBodyEncoding {
+    override class func responseBodyParser() -> ResponseBodyParser {
         return .JSON(nil)
     }
 

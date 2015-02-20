@@ -1,12 +1,12 @@
 import Foundation
 import LlamaKit
 
-public enum ResponseBodyEncoding {
+public enum ResponseBodyParser {
     case JSON(NSJSONReadingOptions)
     case URL(NSStringEncoding)
     case Custom(NSData -> Result<AnyObject, NSError>)
 
-    public func decode(data: NSData) -> Result<AnyObject, NSError> {
+    public func parseData(data: NSData) -> Result<AnyObject, NSError> {
         var result: Result<AnyObject, NSError>
 
         switch self {

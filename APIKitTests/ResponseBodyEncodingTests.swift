@@ -3,13 +3,13 @@ import APIKit
 import LlamaKit
 import XCTest
 
-class ResponseBodyEncodingTests: XCTestCase {
+class ResponseBodyParserTests: XCTestCase {
     func testJSONSuccess() {
         let string = "{\"foo\": 1, \"bar\": 2, \"baz\": 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let encoding = ResponseBodyEncoding.JSON(nil)
+        let parser = ResponseBodyParser.JSON(nil)
 
-        switch encoding.decode(data) {
+        switch parser.parseData(data) {
         case .Success(let box):
             let dictionary = box.unbox as [String: Int]
             XCTAssertEqual(dictionary["foo"]!, 1)
@@ -24,9 +24,9 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testJSONFailure() {
         let string = "{\"foo\": 1, \"bar\": 2, \" 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let encoding = ResponseBodyEncoding.JSON(nil)
+        let parser = ResponseBodyParser.JSON(nil)
 
-        switch encoding.decode(data) {
+        switch parser.parseData(data) {
         case .Success:
             XCTFail()
 
@@ -40,9 +40,9 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testURLSuccess() {
         let string = "foo=1&bar=2&baz=3"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let encoding = ResponseBodyEncoding.URL(NSUTF8StringEncoding)
+        let parser = ResponseBodyParser.URL(NSUTF8StringEncoding)
 
-        switch encoding.decode(data) {
+        switch parser.parseData(data) {
         case .Success(let box):
             let dictionary = box.unbox as [String: String]
             XCTAssertEqual(dictionary["foo"]!, "1")
@@ -57,11 +57,11 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testCustomSuccess() {
         let expectedDictionary = ["foo": 1]
         let data = NSData()
-        let encoding = ResponseBodyEncoding.Custom({ data in
+        let parser = ResponseBodyParser.Custom({ data in
             return Result.Success(Box(expectedDictionary))
         })
 
-        switch encoding.decode(data) {
+        switch parser.parseData(data) {
         case .Success(let box):
             let dictionary = box.unbox as [String: Int]
             XCTAssertEqual(dictionary, expectedDictionary)
@@ -74,11 +74,11 @@ class ResponseBodyEncodingTests: XCTestCase {
     func testCustomFailure() {
         let expectedError = NSError()
         let data = NSData()
-        let encoding = ResponseBodyEncoding.Custom({ data in
+        let parser = ResponseBodyParser.Custom({ data in
             return Result.Failure(Box(expectedError))
         })
 
-        switch encoding.decode(data) {
+        switch parser.parseData(data) {
         case .Success:
             XCTFail()
 
