@@ -35,7 +35,7 @@ class GitHub: API {
             let sort: Sort
             let order: Order
 
-            var URLRequest: NSURLRequest {
+            var URLRequest: NSURLRequest? {
                 return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
             }
 
@@ -79,7 +79,7 @@ class GitHub: API {
             let sort: Sort
             let order: Order
 
-            var URLRequest: NSURLRequest {
+            var URLRequest: NSURLRequest? {
                 return GitHub.URLRequest(.GET, "/search/users", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
             }
 
