@@ -6,7 +6,7 @@ dependencies:
   override:
     - sudo gem install xcpretty
     - brew install carthage
-    - carthage update --use-submodule --verbose
+    - carthage update --use-submodule --verbose --platform Mac
 
 test:
   override:
