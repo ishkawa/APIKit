@@ -43,8 +43,15 @@ public class API {
 
         switch method {
         case .GET:
-            // TODO: escape values
-            components.query = join("&", parameters.keys.map({ "\($0)=\(parameters[$0]!)" })) as String
+            var queryItems = [NSURLQueryItem]()
+            
+            for (key, value) in parameters {
+                let string = (value as? String) ?? "\(value)"
+                let queryItem = NSURLQueryItem(name: key, value: string)
+                queryItems.append(queryItem)
+            }
+            
+            components.queryItems = queryItems
 
         case .POST:
             switch requestBodyBuilder().buildBodyFromObject(parameters) {
