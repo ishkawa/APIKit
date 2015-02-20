@@ -6,8 +6,7 @@ dependencies:
   override:
     - sudo gem install xcpretty
     - brew install carthage
-    - carthage update --use-submodule --platform iOS
-    - /var/folders/jm/fw86rxds0xn69sk40d18y69m0000gp/T/*.log
+    - carthage update --use-submodule --verbose
 
 test:
   override:
