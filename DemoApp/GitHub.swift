@@ -35,39 +35,4 @@ class GitHub: API {
             setValue("application/json", forHTTPHeaderField: "Accept")
         }
     }
-    
-    class func sendRequest<T : APIKit.Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = { r in }) {
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request.URLRequest) { data, URLResponse, connectionError in
-            let mainQueue = dispatch_get_main_queue()
-
-            if let error = connectionError {
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
-                return
-            }
-
-            var parseError: NSError?
-            let JSONObject: AnyObject! = NSJSONSerialization.JSONObjectWithData(data,
-                options: nil,
-                error: &parseError)
-
-            if let error = parseError {
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
-                return
-            }
-
-            let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode
-            switch (statusCode, request.responseFromObject(JSONObject)) {
-            case (.Some(200..<300), .Some(let response)):
-                dispatch_async(mainQueue, { handler(.Success(Box(response))) })
-
-            default:
-                let userInfo = [NSLocalizedDescriptionKey: "unresolved error occurred."]
-                let error = NSError(domain: "GitHubErrorDomain", code: 0, userInfo: userInfo)
-                dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
-            }
-        }
-        
-        task.resume()
-    }
 }
