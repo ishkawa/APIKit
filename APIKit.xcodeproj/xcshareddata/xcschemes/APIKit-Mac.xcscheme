@@ -28,7 +28,26 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7F0869931A978790001AD3E1"
+               BuildableName = "APIKitTests.xctest"
+               BlueprintName = "APIKitTests-Mac"
+               ReferencedContainer = "container:APIKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7F45FCFD1A94D04D006863BB"
+            BuildableName = "APIKit.framework"
+            BlueprintName = "APIKit-Mac"
+            ReferencedContainer = "container:APIKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
