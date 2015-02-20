@@ -11,10 +11,16 @@ public protocol Request {
     func responseFromObject(object: AnyObject) -> Response?
 }
 
-// TODO: add methods
 public enum Method: String {
     case GET = "GET"
     case POST = "POST"
+    case PUT = "PUT"
+    case HEAD = "HEAD"
+    case DELETE = "DELETE"
+    case PATCH = "PATCH"
+    case TRACE = "TRACE"
+    case OPTIONS = "OPTIONS"
+    case CONNECT = "CONNECT"
 }
 
 public class API {
@@ -41,10 +47,10 @@ public class API {
             let request = NSMutableURLRequest()
             
             switch method {
-            case .GET:
+            case .GET, .HEAD, .DELETE:
                 components.query = URLEncodedSerialization.stringFromObject(parameters, encoding: NSUTF8StringEncoding)
                 
-            case .POST:
+            default:
                 switch requestBodyBuilder().buildBodyFromObject(parameters) {
                 case .Success(let box):
                     request.HTTPBody = box.unbox
