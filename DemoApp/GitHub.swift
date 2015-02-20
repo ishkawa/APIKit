@@ -104,12 +104,4 @@ class GitHub: API {
             }
         }
     }
-
-    // NOTE: I don't know why this class is needed to avoid segmentation fault in Swift 1.1
-    private class SegmentationFaultWorkaround: NSMutableURLRequest {
-        convenience init(method: String) {
-            self.init()
-            HTTPBody = NSJSONSerialization.dataWithJSONObject(NSDictionary(), options: nil, error: nil)
-        }
-    }
 }
