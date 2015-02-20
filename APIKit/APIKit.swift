@@ -11,61 +11,64 @@ public protocol Request {
     func responseFromObject(object: AnyObject) -> Response?
 }
 
+// TODO: add methods
+public enum Method: String {
+    case GET = "GET"
+    case POST = "POST"
+}
+
 public class API {
     // configurations
+    public class func baseURL() -> NSURL {
+        return NSURL()
+    }
+
     public class func URLSession() -> NSURLSession {
         return NSURLSession.sharedSession()
+    }
+
+    public class func requestBodyEncoding() -> RequestBodyEncoding {
+        return .JSON(nil)
     }
 
     public class func responseBodyEncoding() -> ResponseBodyEncoding {
         return .JSON(nil)
     }
 
-    public enum ResponseBodyEncoding {
-        case JSON(NSJSONReadingOptions)
-        case URL(NSStringEncoding)
-        case Custom(NSData -> Result<AnyObject, NSError>)
+    // build NSURLRequest
+    public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) -> NSURLRequest {
+        // TODO: remove force unwrapping
+        let components = NSURLComponents(URL: baseURL(), resolvingAgainstBaseURL: true)!
+        let request = NSMutableURLRequest()
 
-        public func decode(data: NSData) -> Result<AnyObject, NSError> {
-            var result: Result<AnyObject, NSError>
+        switch method {
+        case .GET:
+            // TODO: escape values
+            components.query = join("&", parameters.keys.map({ "\($0)=\(parameters[$0]!)" })) as String
 
-            switch self {
-            case .JSON(let readingOptions):
-                var error: NSError?
-                if let object: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: &error) {
-                    result = Result.Success(Box(object))
-                } else {
-                    // According to doc of NSJSONSerialization, error must occur if return value is nil.
-                    result = Result.Failure(Box(error!))
-                }
+        case .POST:
+            switch requestBodyEncoding().encode(parameters) {
+            case .Success(let box):
+                request.HTTPBody = box.unbox
 
-            case .URL(let encoding):
-                var dictionary = [String: AnyObject]()
-
-                if let string = NSString(data: data, encoding: encoding) as? String {
-                    let URLComponents = NSURLComponents()
-                    URLComponents.query = string
-
-                    if let queryItems = URLComponents.queryItems as? [NSURLQueryItem] {
-                        for queryItem in queryItems {
-                            dictionary[queryItem.name] = queryItem.value
-                        }
-                    }
-                }
-
-                result = Result.Success(Box(dictionary))
-
-            case .Custom(let decode):
-                result = decode(data)
+            case .Failure(let box):
+                // FIXME: notify error
+                request.HTTPBody = nil
             }
-
-            return result
         }
+
+        components.path = (components.path ?? "").stringByAppendingPathComponent(path)
+        request.URL = components.URL
+        request.HTTPMethod = method.rawValue
+
+        return request
     }
 
+    // send request and build response object
     public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) {
         let session = URLSession()
         let task = session.dataTaskWithRequest(request.URLRequest) { data, URLResponse, connectionError in
+            println(request.URLRequest)
             let mainQueue = dispatch_get_main_queue()
             if let error = connectionError {
                 dispatch_async(mainQueue, { handler(.Failure(Box(error))) })

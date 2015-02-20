@@ -3,36 +3,113 @@ import APIKit
 import LlamaKit
 
 class GitHub: API {
-    enum Method: String {
-        case GET = "GET"
-        case POST = "POST"
+    override class func baseURL() -> NSURL {
+        return NSURL(string: "https://api.github.com")!
     }
-    
-    class URLRequest: NSMutableURLRequest {
-        let scheme = "https"
-        let host = "api.github.com"
-        
-        convenience init(_ method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) {
-            self.init()
-            
-            let components = NSURLComponents()
-            
-            switch method {
-            case .GET:
-                // TODO: escape values
-                components.query = join("&", parameters.keys.map({ "\($0)=\(parameters[$0]!)" })) as String
-                
-            case .POST:
-                HTTPBody = NSJSONSerialization.dataWithJSONObject(parameters, options: nil, error: nil)
+
+    override class func requestBodyEncoding() -> RequestBodyEncoding {
+        return .JSON(nil)
+    }
+
+    override class func responseBodyEncoding() -> ResponseBodyEncoding {
+        return .JSON(nil)
+    }
+
+    class Request {
+        // https://developer.github.com/v3/search/#search-repositories
+        class SearchRepositories: APIKit.Request {
+            enum Sort: String {
+                case Stars = "stars"
+                case Forks = "forks"
+                case Updated = "updated"
             }
-            
-            components.scheme = scheme
-            components.host = host
-            components.path = path
-            
-            URL = components.URL
-            HTTPMethod = method.rawValue
-            setValue("application/json", forHTTPHeaderField: "Accept")
+
+            enum Order: String {
+                case Ascending = "asc"
+                case Descending = "desc"
+            }
+
+            typealias Response = [Repository]
+
+            let query: String
+            let sort: Sort
+            let order: Order
+
+            var URLRequest: NSURLRequest {
+                return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+            }
+
+            init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
+                self.query = query
+                self.sort = sort
+                self.order = order
+            }
+
+            func responseFromObject(object: AnyObject) -> Response? {
+                var repositories = [Repository]()
+
+                if let dictionaries = object["items"] as? [NSDictionary] {
+                    for dictionary in dictionaries {
+                        if let repository = Repository(dictionary: dictionary) {
+                            repositories.append(repository)
+                        }
+                    }
+                }
+
+                return repositories
+            }
+        }
+
+        // https://developer.github.com/v3/search/#search-users
+        class SearchUsers: APIKit.Request {
+            enum Sort: String {
+                case Followers = "followers"
+                case Repositories = "repositories"
+                case Joined = "joined"
+            }
+
+            enum Order: String {
+                case Ascending = "asc"
+                case Descending = "desc"
+            }
+
+            typealias Response = [User]
+
+            let query: String
+            let sort: Sort
+            let order: Order
+
+            var URLRequest: NSURLRequest {
+                return GitHub.URLRequest(.GET, "/search/users", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+            }
+
+            init(query: String, sort: Sort = .Followers, order: Order = .Ascending) {
+                self.query = query
+                self.sort = sort
+                self.order = order
+            }
+
+            func responseFromObject(object: AnyObject) -> Response? {
+                var users = [User]()
+
+                if let dictionaries = object["items"] as? [NSDictionary] {
+                    for dictionary in dictionaries {
+                        if let user = User(dictionary: dictionary) {
+                            users.append(user)
+                        }
+                    }
+                }
+                
+                return users
+            }
+        }
+    }
+
+    // NOTE: I don't know why this class is needed to avoid segmentation fault in Swift 1.1
+    private class SegmentationFaultWorkaround: NSMutableURLRequest {
+        convenience init(method: String) {
+            self.init()
+            HTTPBody = NSJSONSerialization.dataWithJSONObject(NSDictionary(), options: nil, error: nil)
         }
     }
 }
