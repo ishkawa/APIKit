@@ -68,7 +68,6 @@ public class API {
     public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) {
         let session = URLSession()
         let task = session.dataTaskWithRequest(request.URLRequest) { data, URLResponse, connectionError in
-            println(request.URLRequest)
             let mainQueue = dispatch_get_main_queue()
             if let error = connectionError {
                 dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
