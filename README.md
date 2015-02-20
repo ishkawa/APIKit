@@ -42,11 +42,13 @@ You have 2 choices.
 
 ## Usage
 
-1. Create subclass of `API` that represents target web API.
+1. Create subclass of `APIKit.API` that represents target web API.
 2. Set base URL by overriding `baseURL()`.
 3. Set encoding of request body by overriding `requestBodyBuilder()`.
 4. Set encoding of response body by overriding `responseBodyParser()`.
 5. Define request classes that conforms to `APIKit.Request` for each endpoints.
+
+### Example
 
 ```swift
 class GitHub: API {
