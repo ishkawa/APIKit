@@ -6,8 +6,8 @@ dependencies:
   override:
     - sudo gem install xcpretty
     - brew install carthage
-    - carthage update --use-submodule --verbose --platform Mac
+    - carthage bootstrap --platform Mac
 
 test:
   override:
-    - make test && cp build/test-report.xml $CIRCLE_TEST_REPORTS
+    - set -o pipefail && xcodebuild test -scheme APIKit-Mac | xcpretty -c -r junit -o build/test-report.xml
