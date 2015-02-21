@@ -1,6 +1,6 @@
 import Foundation
 
-#if DYNAMIC_FRAMEWORK
+#if APIKIT_DYNAMIC_FRAMEWORK
 import LlamaKit
 #endif
 
