@@ -1,5 +1,8 @@
 import Foundation
+
+#if DYNAMIC_FRAMEWORK
 import LlamaKit
+#endif
 
 public let APIKitRequestBodyBuidlerErrorDomain = "APIKitRequestBodyBuidlerErrorDomain"
 
