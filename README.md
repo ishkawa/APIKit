@@ -8,7 +8,7 @@ A networking library for building type safe web API client in Swift.
 
 ```swift
 // parameters of request are validated by type system of Swift
-let request = GitHub.Request.SearchRepositories(query: "APIKit", sort: .Stars)
+let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
 
 GitHub.sendRequest(request) { response in
     // no optional bindings are required to get response and error (thanks to LlamaKit.Result)
@@ -28,16 +28,25 @@ GitHub.sendRequest(request) { response in
 
 ## Requirements
 
-- iOS 8.0 or later (7.0 will be supported in future version)
+- iOS 7.0 or later
 - Mac OS 10.9 or later
 
 
 ## Installation
 
-You have 2 choices.
+You have 2 choices. If your app supports iOS 7.0, you can only choose copying source files.
 
-- Embed `APIKit.framework` to your project.
-- add `github "ishkawa/APIKit"` to your [Cartfile](https://github.com/Carthage/Carthage).
+#### 1. Using Carthage (Recommended)
+
+- Install [Carthage](https://github.com/Carthage/Carthage).
+- Insert `github "ishkawa/APIKit"` to your Cartfile.
+- Run `carthage update`.
+
+
+#### 2. Copying source files
+
+- Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`.
+- Copy `APIKit/*.swift` and `Carthage/Checkouts/LlamaKit/LlamaKit/*.swift` to your project.
 
 
 ## Usage
@@ -64,9 +73,9 @@ class GitHub: API {
         return .JSON(nil)
     }
 
-    class Request {
+    class Endpoint {
         // https://developer.github.com/v3/search/#search-repositories
-        class SearchRepositories: APIKit.Request {
+        class SearchRepositories: Request {
             enum Sort: String {
                 case Stars = "stars"
                 case Forks = "forks"
@@ -110,7 +119,7 @@ class GitHub: API {
         }
 
         // https://developer.github.com/v3/search/#search-users
-        class SearchUsers: APIKit.Request {
+        class SearchUsers: Request {
             enum Sort: String {
                 case Followers = "followers"
                 case Repositories = "repositories"
