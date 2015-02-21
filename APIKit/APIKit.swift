@@ -1,5 +1,8 @@
 import Foundation
+
+#if APIKIT_DYNAMIC_FRAMEWORK
 import LlamaKit
+#endif
 
 public let APIKitErrorDomain = "APIKitErrorDomain"
 
