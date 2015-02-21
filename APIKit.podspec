@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "7.0"
   s.osx.deployment_target = "10.9"
 
-  s.source_files = "APIKit/*.swift", "Carthage/Checkouts/LlamaKit/LlamaKit/*.swift"
+  s.source_files = "APIKit/*.swift"
   s.source = {
       :git => "https://github.com/ishkawa/APIKit.git",
       :tag => "#{s.version}",
@@ -26,4 +26,8 @@ Pod::Spec.new do |s|
       THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	LICENSE
   }
+
+  s.subspec 'LlamaKit' do |ss|
+    ss.source_files = "Carthage/Checkouts/LlamaKit/LlamaKit/*.swift"
+  end
 end
