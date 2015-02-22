@@ -5,7 +5,7 @@ import LlamaKit
 #endif
 
 public enum ResponseBodyParser {
-    case JSON(readingOption: NSJSONReadingOptions)
+    case JSON(readingOptions: NSJSONReadingOptions)
     case URL(encoding: NSStringEncoding)
     case Custom(acceptHeader: String, parseData: NSData -> Result<AnyObject, NSError>)
     

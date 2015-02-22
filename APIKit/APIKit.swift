@@ -41,7 +41,7 @@ public class API {
     }
 
     public class func responseBodyParser() -> ResponseBodyParser {
-        return .JSON(readingOption: nil)
+        return .JSON(readingOptions: nil)
     }
 
     // build NSURLRequest
