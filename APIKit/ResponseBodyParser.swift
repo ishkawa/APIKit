@@ -5,9 +5,22 @@ import LlamaKit
 #endif
 
 public enum ResponseBodyParser {
-    case JSON(NSJSONReadingOptions)
-    case URL(NSStringEncoding)
-    case Custom(NSData -> Result<AnyObject, NSError>)
+    case JSON(readingOptions: NSJSONReadingOptions)
+    case URL(encoding: NSStringEncoding)
+    case Custom(acceptHeader: String, parseData: NSData -> Result<AnyObject, NSError>)
+    
+    public var acceptHeader: String {
+        switch self {
+        case .JSON:
+            return "application/json"
+            
+        case .URL:
+            return "application/x-www-form-urlencoded"
+            
+        case .Custom(let (type, _)):
+            return type
+        }
+    }
 
     public func parseData(data: NSData) -> Result<AnyObject, NSError> {
         var result: Result<AnyObject, NSError>
@@ -29,10 +42,12 @@ public enum ResponseBodyParser {
                 result = Result.Failure(Box(error!))
             }
 
-        case .Custom(let parseData):
+        case .Custom(let (accept, parseData)):
             result = parseData(data)
         }
 
         return result
     }
+    
+    
 }

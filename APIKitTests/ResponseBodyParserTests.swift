@@ -4,10 +4,15 @@ import LlamaKit
 import XCTest
 
 class ResponseBodyParserTests: XCTestCase {
+    func testJSONAcceptHeader() {
+        let parser = ResponseBodyParser.JSON(readingOptions: nil)
+        XCTAssertEqual(parser.acceptHeader, "application/json")
+    }
+    
     func testJSONSuccess() {
         let string = "{\"foo\": 1, \"bar\": 2, \"baz\": 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = ResponseBodyParser.JSON(nil)
+        let parser = ResponseBodyParser.JSON(readingOptions: nil)
 
         switch parser.parseData(data) {
         case .Success(let box):
@@ -24,7 +29,7 @@ class ResponseBodyParserTests: XCTestCase {
     func testJSONFailure() {
         let string = "{\"foo\": 1, \"bar\": 2, \" 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = ResponseBodyParser.JSON(nil)
+        let parser = ResponseBodyParser.JSON(readingOptions: nil)
 
         switch parser.parseData(data) {
         case .Success:
@@ -37,10 +42,15 @@ class ResponseBodyParserTests: XCTestCase {
         }
     }
 
+    func testURLAcceptHeader() {
+        let parser = ResponseBodyParser.URL(encoding: NSUTF8StringEncoding)
+        XCTAssertEqual(parser.acceptHeader, "application/x-www-form-urlencoded")
+    }
+    
     func testURLSuccess() {
         let string = "foo=1&bar=2&baz=3"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = ResponseBodyParser.URL(NSUTF8StringEncoding)
+        let parser = ResponseBodyParser.URL(encoding: NSUTF8StringEncoding)
 
         switch parser.parseData(data) {
         case .Success(let box):
@@ -53,11 +63,16 @@ class ResponseBodyParserTests: XCTestCase {
             XCTFail()
         }
     }
+    
+    func testCustomAcceptHeader() {
+        let parser = ResponseBodyParser.Custom(acceptHeader: "foo", parseData: { d in Result.Success(Box(d)) })
+        XCTAssertEqual(parser.acceptHeader, "foo")
+    }
 
     func testCustomSuccess() {
         let expectedDictionary = ["foo": 1]
         let data = NSData()
-        let parser = ResponseBodyParser.Custom({ data in
+        let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
             return Result.Success(Box(expectedDictionary))
         })
 
@@ -74,7 +89,7 @@ class ResponseBodyParserTests: XCTestCase {
     func testCustomFailure() {
         let expectedError = NSError()
         let data = NSData()
-        let parser = ResponseBodyParser.Custom({ data in
+        let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
             return Result.Failure(Box(expectedError))
         })
 

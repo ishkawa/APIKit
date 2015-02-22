@@ -51,11 +51,11 @@ You have 2 choices. If your app supports iOS 7.0, you can only choose copying so
 
 ## Usage
 
-1. Create subclass of `APIKit.API` that represents target web API.
+1. Create subclass of `API` that represents target web API.
 2. Set base URL by overriding `baseURL()`.
 3. Set encoding of request body by overriding `requestBodyBuilder()`.
 4. Set encoding of response body by overriding `responseBodyParser()`.
-5. Define request classes that conforms to `APIKit.Request` for each endpoints.
+5. Define request classes that conforms to `Request` for each endpoints.
 
 ### Example
 
@@ -66,11 +66,11 @@ class GitHub: API {
     }
 
     override class func requestBodyBuilder() -> RequestBodyBuilder {
-        return .JSON(nil)
+        return .JSON(writingOptions: nil)
     }
 
     override class func responseBodyParser() -> ResponseBodyParser {
-        return .JSON(nil)
+        return .JSON(readingOptions: nil)
     }
 
     class Endpoint {
