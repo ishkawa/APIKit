@@ -41,7 +41,7 @@ public class API {
     }
 
     public class func responseBodyParser() -> ResponseBodyParser {
-        return .JSON(nil)
+        return .JSON(readingOption: nil)
     }
 
     // build NSURLRequest
@@ -66,6 +66,7 @@ public class API {
             components.path = (components.path ?? "").stringByAppendingPathComponent(path)
             request.URL = components.URL
             request.HTTPMethod = method.rawValue
+            request.setValue(responseBodyParser().acceptHeader, forHTTPHeaderField: "Accept")
             
             return request
         } else {
