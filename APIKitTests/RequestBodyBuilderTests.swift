@@ -4,9 +4,14 @@ import LlamaKit
 import XCTest
 
 class RequestBodyBuilderTests: XCTestCase {
+    func testJSONHeader() {
+        let builder = RequestBodyBuilder.JSON(writingOptions: nil)
+        XCTAssertEqual(builder.contentTypeHeader, "application/json")
+    }
+    
     func testJSONSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
-        let builder = RequestBodyBuilder.JSON(nil)
+        let builder = RequestBodyBuilder.JSON(writingOptions: nil)
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let box):
@@ -22,7 +27,7 @@ class RequestBodyBuilderTests: XCTestCase {
     
     func testJSONFailure() {
         let object = NSObject()
-        let builder = RequestBodyBuilder.JSON(nil)
+        let builder = RequestBodyBuilder.JSON(writingOptions: nil)
 
         switch builder.buildBodyFromObject(object) {
         case .Success:
@@ -35,9 +40,14 @@ class RequestBodyBuilderTests: XCTestCase {
         }
     }
     
+    func testURLHeader() {
+        let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
+        XCTAssertEqual(builder.contentTypeHeader, "application/x-www-form-urlencoded")
+    }
+    
     func testURLSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
-        let builder = RequestBodyBuilder.URL(NSUTF8StringEncoding)
+        let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let box):
@@ -49,10 +59,15 @@ class RequestBodyBuilderTests: XCTestCase {
         }
     }
     
+    func testCustomHeader() {
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in Result.Success(Box(o as NSData)) })
+        XCTAssertEqual(builder.contentTypeHeader, "foo")
+    }
+    
     func testCustomSuccess() {
         let string = "foo"
         let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let builder = RequestBodyBuilder.Custom({ object in
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
             return Result.Success(Box(expectedData))
         })
 
@@ -68,7 +83,7 @@ class RequestBodyBuilderTests: XCTestCase {
     func testCustomFailure() {
         let string = "foo"
         let expectedError = NSError()
-        let builder = RequestBodyBuilder.Custom({ object in
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
             return Result.Failure(Box(expectedError))
         })
 

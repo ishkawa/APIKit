@@ -7,9 +7,22 @@ import LlamaKit
 public let APIKitRequestBodyBuidlerErrorDomain = "APIKitRequestBodyBuidlerErrorDomain"
 
 public enum RequestBodyBuilder {
-    case JSON(NSJSONWritingOptions)
-    case URL(NSStringEncoding)
-    case Custom(AnyObject -> Result<NSData, NSError>)
+    case JSON(writingOptions: NSJSONWritingOptions)
+    case URL(encoding: NSStringEncoding)
+    case Custom(contentTypeHeader: String, buildBodyFromObject: AnyObject -> Result<NSData, NSError>)
+    
+    public var contentTypeHeader: String {
+        switch self {
+        case .JSON:
+            return "application/json"
+            
+        case .URL:
+            return "application/x-www-form-urlencoded"
+            
+        case .Custom(let (type, _)):
+            return type
+        }
+    }
 
     public func buildBodyFromObject(object: AnyObject) -> Result<NSData, NSError> {
         var result: Result<NSData, NSError>
@@ -38,7 +51,7 @@ public enum RequestBodyBuilder {
                 result = Result.Failure(Box(error!))
             }
 
-        case .Custom(let buildBodyFromObject):
+        case .Custom(let (_, buildBodyFromObject)):
             result = buildBodyFromObject(object)
         }
 
