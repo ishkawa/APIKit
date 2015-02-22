@@ -12,7 +12,7 @@ class GitHub: API {
     }
 
     override class func responseBodyParser() -> ResponseBodyParser {
-        return .JSON(nil)
+        return .JSON(readingOptions: nil)
     }
 
     class Request {
