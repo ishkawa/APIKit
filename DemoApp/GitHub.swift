@@ -8,7 +8,7 @@ class GitHub: API {
     }
 
     override class func requestBodyBuilder() -> RequestBodyBuilder {
-        return .JSON(nil)
+        return .JSON(writingOptions: nil)
     }
 
     override class func responseBodyParser() -> ResponseBodyParser {
