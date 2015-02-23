@@ -94,27 +94,25 @@ public class API {
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
                     return
                 }
-                
-                switch self.responseBodyParser().parseData(data) {
-                case .Failure(let box):
-                    dispatch_async(mainQueue, { handler(.Failure(Box(box.unbox))) })
-                    
-                case .Success(let box):
-                    if let response = request.responseFromObject(box.unbox) {
-                        dispatch_async(mainQueue, { handler(.Success(Box(response))) })
+
+                let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser().parseData(data).flatMap { rawResponse in
+                    if let response = request.responseFromObject(rawResponse) {
+                        return success(response)
                     } else {
                         let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
                         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                        dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                        return failure(error)
                     }
+
                 }
+                dispatch_async(mainQueue, { handler(mappedResponse) })
             }
             
             task.resume()            
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+            dispatch_async(mainQueue, { handler(failure(error)) })
         }
     }
 }

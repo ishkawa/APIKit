@@ -60,7 +60,7 @@ class RequestBodyBuilderTests: XCTestCase {
     }
     
     func testCustomHeader() {
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in Result.Success(Box(o as NSData)) })
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in success(o as NSData) })
         XCTAssertEqual(builder.contentTypeHeader, "foo")
     }
     
@@ -68,7 +68,7 @@ class RequestBodyBuilderTests: XCTestCase {
         let string = "foo"
         let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
-            return Result.Success(Box(expectedData))
+            return success(expectedData)
         })
 
         switch builder.buildBodyFromObject(string) {
