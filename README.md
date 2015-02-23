@@ -1,7 +1,7 @@
 APIKit
 ======
 
-[![Circle CI](https://img.shields.io/circleci/project/ishkawa/APIKit.svg?style=flat)](https://circleci.com/gh/ishkawa/APIKit)
+[![Circle CI](https://img.shields.io/circleci/project/ishkawa/APIKit/master.svg?style=flat)](https://circleci.com/gh/ishkawa/APIKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 A networking library for building type safe web API client in Swift.
