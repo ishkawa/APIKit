@@ -38,6 +38,10 @@
 		7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; };
 		7FEC5A211A96FFD300B1D3C0 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; };
 		7FEC5A231A97001D00B1D3C0 /* LlamaKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDB0CCDB1A9B2ECD00BADAC5 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */; };
+		CDB0CCDC1A9B2ED600BADAC5 /* Assertions.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDB0CCDE1A9B2F6100BADAC5 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB0CCDD1A9B2F6100BADAC5 /* Assertions.framework */; };
+		CDB0CCDF1A9B2F6700BADAC5 /* Assertions.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CDB0CCDD1A9B2F6100BADAC5 /* Assertions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +75,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CDB0CCDF1A9B2F6700BADAC5 /* Assertions.framework in CopyFiles */,
 				7F0869A41A9787E3001AD3E1 /* LlamaKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,6 +98,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CDB0CCDC1A9B2ED600BADAC5 /* Assertions.framework in CopyFiles */,
 				7FEC5A231A97001D00B1D3C0 /* LlamaKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,6 +130,8 @@
 		7FEC5A141A96FE2600B1D3C0 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FEC5A171A96FE2600B1D3C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseBodyParserTests.swift; sourceTree = "<group>"; };
+		CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = "<group>"; };
+		CDB0CCDD1A9B2F6100BADAC5 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F08699A1A978790001AD3E1 /* APIKit.framework in Frameworks */,
+				CDB0CCDE1A9B2F6100BADAC5 /* Assertions.framework in Frameworks */,
 				7F0869A31A9787E1001AD3E1 /* LlamaKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -166,6 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */,
+				CDB0CCDB1A9B2ECD00BADAC5 /* Assertions.framework in Frameworks */,
 				7FEC5A211A96FFD300B1D3C0 /* LlamaKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,6 +247,7 @@
 		7F45FD1B1A94D1B4006863BB /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */,
 				7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */,
 			);
 			path = iOS;
@@ -245,6 +256,7 @@
 		7F45FD1D1A94D1B4006863BB /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				CDB0CCDD1A9B2F6100BADAC5 /* Assertions.framework */,
 				7F45FD1E1A94D1B4006863BB /* LlamaKit.framework */,
 			);
 			path = Mac;
