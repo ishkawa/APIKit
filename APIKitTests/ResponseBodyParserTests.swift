@@ -1,12 +1,13 @@
 import Foundation
 import APIKit
+import Assertions
 import LlamaKit
 import XCTest
 
 class ResponseBodyParserTests: XCTestCase {
     func testJSONAcceptHeader() {
         let parser = ResponseBodyParser.JSON(readingOptions: nil)
-        XCTAssertEqual(parser.acceptHeader, "application/json")
+        assertEqual(parser.acceptHeader, "application/json")
     }
     
     func testJSONSuccess() {
@@ -17,9 +18,9 @@ class ResponseBodyParserTests: XCTestCase {
         switch parser.parseData(data) {
         case .Success(let box):
             let dictionary = box.unbox as [String: Int]
-            XCTAssertEqual(dictionary["foo"]!, 1)
-            XCTAssertEqual(dictionary["bar"]!, 2)
-            XCTAssertEqual(dictionary["baz"]!, 3)
+            assertEqual(dictionary["foo"], 1)
+            assertEqual(dictionary["bar"], 2)
+            assertEqual(dictionary["baz"], 3)
 
         case .Failure:
             XCTFail()
@@ -37,14 +38,14 @@ class ResponseBodyParserTests: XCTestCase {
 
         case .Failure(let box):
             let error = box.unbox
-            XCTAssertEqual(error.domain, NSCocoaErrorDomain)
-            XCTAssertEqual(error.code, 3840)
+            assert(error.domain, ==, NSCocoaErrorDomain)
+            assertEqual(error.code, 3840)
         }
     }
 
     func testURLAcceptHeader() {
         let parser = ResponseBodyParser.URL(encoding: NSUTF8StringEncoding)
-        XCTAssertEqual(parser.acceptHeader, "application/x-www-form-urlencoded")
+        assertEqual(parser.acceptHeader, "application/x-www-form-urlencoded")
     }
     
     func testURLSuccess() {
@@ -55,9 +56,9 @@ class ResponseBodyParserTests: XCTestCase {
         switch parser.parseData(data) {
         case .Success(let box):
             let dictionary = box.unbox as [String: String]
-            XCTAssertEqual(dictionary["foo"]!, "1")
-            XCTAssertEqual(dictionary["bar"]!, "2")
-            XCTAssertEqual(dictionary["baz"]!, "3")
+            assertEqual(dictionary["foo"], "1")
+            assertEqual(dictionary["bar"], "2")
+            assertEqual(dictionary["baz"], "3")
 
         case .Failure:
             XCTFail()
@@ -66,7 +67,7 @@ class ResponseBodyParserTests: XCTestCase {
     
     func testCustomAcceptHeader() {
         let parser = ResponseBodyParser.Custom(acceptHeader: "foo", parseData: { d in success(d) })
-        XCTAssertEqual(parser.acceptHeader, "foo")
+        assertEqual(parser.acceptHeader, "foo")
     }
 
     func testCustomSuccess() {
@@ -79,7 +80,7 @@ class ResponseBodyParserTests: XCTestCase {
         switch parser.parseData(data) {
         case .Success(let box):
             let dictionary = box.unbox as [String: Int]
-            XCTAssertEqual(dictionary, expectedDictionary)
+            assertEqual(dictionary, expectedDictionary)
 
         case .Failure:
             XCTFail()
@@ -98,7 +99,7 @@ class ResponseBodyParserTests: XCTestCase {
             XCTFail()
 
         case .Failure(let box):
-            XCTAssertEqual(box.unbox, expectedError)
+            assertEqual(box.unbox, expectedError)
         }
     }
 }
