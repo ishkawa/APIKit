@@ -25,30 +25,25 @@ public enum RequestBodyBuilder {
     }
 
     public func buildBodyFromObject(object: AnyObject) -> Result<NSData, NSError> {
-        var result: Result<NSData, NSError>
-
         switch self {
         case .JSON(let writingOptions):
             if !NSJSONSerialization.isValidJSONObject(object) {
                 let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
                 let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                result = failure(error)
-                break
+                return failure(error)
             }
 
-            result = try { error in
+            return try { error in
                 return NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: error)
             }
 
         case .URL(let encoding):
-            result = try { error in
+            return try { error in
                 return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
             }
 
         case .Custom(let (_, buildBodyFromObject)):
-            result = buildBodyFromObject(object)
+            return buildBodyFromObject(object)
         }
-
-        return result
     }
 }
