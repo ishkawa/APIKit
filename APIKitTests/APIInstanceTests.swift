@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 import Assertions
 import APIKit
 import XCTest
