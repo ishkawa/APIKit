@@ -26,22 +26,53 @@ public enum Method: String {
     case CONNECT = "CONNECT"
 }
 
-public class API {
+public class API: NSObject, NSURLSessionDelegate {
     // configurations
     public class func baseURL() -> NSURL {
         return NSURL()
     }
-
-    public class func URLSession() -> NSURLSession {
-        return NSURLSession.sharedSession()
-    }
-
+    
     public class func requestBodyBuilder() -> RequestBodyBuilder {
         return .JSON(writingOptions: nil)
     }
 
     public class func responseBodyParser() -> ResponseBodyParser {
         return .JSON(readingOptions: nil)
+    }
+    
+    public class func URLSessionConfiguration() -> NSURLSessionConfiguration {
+        return NSURLSessionConfiguration.defaultSessionConfiguration()
+    }
+    
+    // prevent instantiation
+    override private init() {
+        super.init()
+    }
+    
+    // create session and instance of API for each subclasses
+    private final class var instancePair: (API, NSURLSession) {
+        struct Singleton {
+            static var dictionary = [String: (API, NSURLSession)]()
+        }
+        
+        let className = NSStringFromClass(self)
+        var pair: (API, NSURLSession) = Singleton.dictionary[className] ?? {
+            let instance = (self as NSObject.Type)() as API
+            let configuration = self.URLSessionConfiguration()
+            let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: nil)
+            Singleton.dictionary[className] = (instance, session)
+            return (instance, session)
+        }()
+        
+        return pair
+    }
+    
+    public final class var instance: API {
+        return instancePair.0
+    }
+    
+    public final class var URLSession: NSURLSession {
+        return instancePair.1
     }
 
     // build NSURLRequest
@@ -77,7 +108,7 @@ public class API {
 
     // send request and build response object
     public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        let session = URLSession()
+        let session = URLSession
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
