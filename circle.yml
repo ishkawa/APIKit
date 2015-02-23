@@ -7,7 +7,7 @@ dependencies:
     - ./script/import-certificates
     - sudo gem install xcpretty
     - brew install carthage
-    - carthage bootstrap --platform Mac
+    - carthage bootstrap
 
 test:
   override:
