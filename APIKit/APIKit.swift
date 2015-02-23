@@ -76,7 +76,7 @@ public class API {
     }
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) {
+    public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         let session = URLSession()
         let mainQueue = dispatch_get_main_queue()
         
@@ -108,11 +108,15 @@ public class API {
                 dispatch_async(mainQueue, { handler(mappedResponse) })
             }
             
-            task.resume()            
+            task.resume()
+
+            return task
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
             dispatch_async(mainQueue, { handler(failure(error)) })
+
+            return nil
         }
     }
 }
