@@ -9,7 +9,7 @@ private func unescape(string: String) -> String {
 }
 
 public class URLEncodedSerialization {
-    public class func objectFromData(data: NSData, encoding: NSStringEncoding, inout error: NSError?) -> AnyObject? {
+    public class func objectFromData(data: NSData, encoding: NSStringEncoding, error: NSErrorPointer) -> AnyObject? {
         var dictionary: [String: AnyObject]?
         
         if let string = NSString(data: data, encoding: encoding) as? String {
@@ -26,19 +26,19 @@ public class URLEncodedSerialization {
         
         if dictionary == nil {
             let userInfo = [NSLocalizedDescriptionKey: "failed to decode urlencoded string."]
-            error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+            error.memory = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
         }
         
         return dictionary
     }
     
-    public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding, inout error: NSError?) -> NSData? {
+    public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding, error: NSErrorPointer) -> NSData? {
         let string = stringFromObject(object, encoding: encoding)
         let data = string.dataUsingEncoding(encoding, allowLossyConversion: false)
         
         if data == nil {
             let userInfo = [NSLocalizedDescriptionKey: "failed to decode urlencoded string."]
-            error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+            error.memory = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
         }
         
         return data

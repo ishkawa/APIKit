@@ -35,20 +35,14 @@ public enum RequestBodyBuilder {
                 result = failure(error)
                 break
             }
-            
-            var error: NSError?
-            if let data = NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: &error) {
-                result = success(data)
-            } else {
-                result = failure(error!)
+
+            result = try { error in
+                return NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: error)
             }
 
         case .URL(let encoding):
-            var error: NSError?
-            if let data = URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: &error) {
-                result = success(data)
-            } else {
-                result = failure(error!)
+            result = try { error in
+                return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
             }
 
         case .Custom(let (_, buildBodyFromObject)):

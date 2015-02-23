@@ -27,19 +27,13 @@ public enum ResponseBodyParser {
 
         switch self {
         case .JSON(let readingOptions):
-            var error: NSError?
-            if let object: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: &error) {
-                result = success(object)
-            } else {
-                result = failure(error!)
+            result = try { error in
+                return NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: error)
             }
 
         case .URL(let encoding):
-            var error: NSError?
-            if let object: AnyObject = URLEncodedSerialization.objectFromData(data, encoding: encoding, error: &error) {
-                result = success(object)
-            } else {
-                result = failure(error!)
+            result = try { error in
+                return URLEncodedSerialization.objectFromData(data, encoding: encoding, error: error)
             }
 
         case .Custom(let (accept, parseData)):
