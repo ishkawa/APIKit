@@ -30,7 +30,7 @@ public enum RequestBodyBuilder {
         switch self {
         case .JSON(let writingOptions):
             if !NSJSONSerialization.isValidJSONObject(object) {
-                let userInfo = [NSLocalizedDescriptionKey: "invalidate object for JSON passed."]
+                let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
                 let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
                 result = Result.Failure(Box(error))
                 break
