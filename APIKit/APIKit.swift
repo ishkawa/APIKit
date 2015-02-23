@@ -97,15 +97,15 @@ public class API {
                 
                 switch self.responseBodyParser().parseData(data) {
                 case .Failure(let box):
-                    dispatch_async(mainQueue, { handler(.Failure(Box(box.unbox))) })
+                    dispatch_async(mainQueue, { handler(failure(box.unbox)) })
                     
                 case .Success(let box):
                     if let response = request.responseFromObject(box.unbox) {
-                        dispatch_async(mainQueue, { handler(.Success(Box(response))) })
+                        dispatch_async(mainQueue, { handler(success(response)) })
                     } else {
                         let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
                         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                        dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                        dispatch_async(mainQueue, { handler(failure(error)) })
                     }
                 }
             }
@@ -114,7 +114,7 @@ public class API {
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+            dispatch_async(mainQueue, { handler(failure(error)) })
         }
     }
 }

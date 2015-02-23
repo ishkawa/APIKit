@@ -32,23 +32,23 @@ public enum RequestBodyBuilder {
             if !NSJSONSerialization.isValidJSONObject(object) {
                 let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
                 let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                result = Result.Failure(Box(error))
+                result = failure(error)
                 break
             }
             
             var error: NSError?
             if let data = NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: &error) {
-                result = Result.Success(Box(data))
+                result = success(data)
             } else {
-                result = Result.Failure(Box(error!))
+                result = failure(error!)
             }
 
         case .URL(let encoding):
             var error: NSError?
             if let data = URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: &error) {
-                result = Result.Success(Box(data))
+                result = success(data)
             } else {
-                result = Result.Failure(Box(error!))
+                result = failure(error!)
             }
 
         case .Custom(let (_, buildBodyFromObject)):

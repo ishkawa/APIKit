@@ -29,17 +29,17 @@ public enum ResponseBodyParser {
         case .JSON(let readingOptions):
             var error: NSError?
             if let object: AnyObject = NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: &error) {
-                result = Result.Success(Box(object))
+                result = success(object)
             } else {
-                result = Result.Failure(Box(error!))
+                result = failure(error!)
             }
 
         case .URL(let encoding):
             var error: NSError?
             if let object: AnyObject = URLEncodedSerialization.objectFromData(data, encoding: encoding, error: &error) {
-                result = Result.Success(Box(object))
+                result = success(object)
             } else {
-                result = Result.Failure(Box(error!))
+                result = failure(error!)
             }
 
         case .Custom(let (accept, parseData)):
