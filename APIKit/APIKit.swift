@@ -48,6 +48,12 @@ public class API: NSObject, NSURLSessionDelegate {
         return NSURLSessionConfiguration.defaultSessionConfiguration()
     }
     
+    public class func URLSessionDelegateQueue() -> NSOperationQueue? {
+        // nil indicates NSURLSession creates its own serial operation queue.
+        // see doc of NSURLSession.init(configuration:delegate:delegateQueue:) for more details.
+        return nil
+    }
+    
     // prevent instantiation
     override private init() {
         super.init()
@@ -61,7 +67,8 @@ public class API: NSObject, NSURLSessionDelegate {
         let pair: (API, NSURLSession) = instancePairDictionary[className] ?? {
             let instance = self.init()
             let configuration = self.URLSessionConfiguration()
-            let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: nil)
+            let queue = self.URLSessionDelegateQueue()
+            let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: queue)
             let pair = (instance, session)
             instancePairDictionary[className] = pair
             return pair
