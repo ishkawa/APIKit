@@ -26,11 +26,36 @@ public enum Method: String {
     case CONNECT = "CONNECT"
 }
 
+private var dataTaskResponseBufferKey = 0
+private var dataTaskCompletionHandlerKey = 0
+
+private extension NSURLSessionDataTask {
+    private var responseBuffer: NSMutableData {
+        if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
+            return responseBuffer
+        } else {
+            let responseBuffer = NSMutableData()
+            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            return responseBuffer
+        }
+    }
+    
+    private var completionHandler: Box<(NSData!, NSURLResponse!, NSError!) -> Void>? {
+        get {
+            return objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData!, NSURLResponse!, NSError!) -> Void>
+        }
+        
+        set {
+            objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, newValue, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        }
+    }
+}
+
 // use private, global scope variable until we can use stored class var in Swift 1.2
 private var instancePairDictionary = [String: (API, NSURLSession)]()
 private let instancePairSemaphore = dispatch_semaphore_create(1)
 
-public class API: NSObject, NSURLSessionDelegate {
+public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     // configurations
     public class func baseURL() -> NSURL {
         fatalError("API.baseURL() must be overrided in subclasses.")
@@ -123,7 +148,9 @@ public class API: NSObject, NSURLSessionDelegate {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
-            let task = session.dataTaskWithRequest(URLRequest) { data, URLResponse, connectionError in
+            let task = session.dataTaskWithRequest(URLRequest)
+            
+            task.completionHandler = Box({ data, URLResponse, connectionError in
                 if let error = connectionError {
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
                     return
@@ -148,7 +175,7 @@ public class API: NSObject, NSURLSessionDelegate {
 
                 }
                 dispatch_async(mainQueue, { handler(mappedResponse) })
-            }
+            })
             
             task.resume()
 
@@ -160,5 +187,28 @@ public class API: NSObject, NSURLSessionDelegate {
 
             return nil
         }
+    }
+    
+    // MARK: NSURLSessionDelegate
+    public func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void) {
+        completionHandler(.PerformDefaultHandling, nil)
+    }
+    
+    // MARK: NSURLSessionTaskDelegate
+    public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
+        if let dataTask = task as? NSURLSessionDataTask {
+            if let completionHandler = dataTask.completionHandler?.unbox {
+                completionHandler(dataTask.responseBuffer, dataTask.response, connectionError)
+            }
+        }
+    }
+
+    // MARK: NSURLSessionDataDelegate
+    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+        completionHandler(.Allow)
+    }
+    
+    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
+        dataTask.responseBuffer.appendData(data)
     }
 }
