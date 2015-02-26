@@ -28,6 +28,7 @@ public enum Method: String {
 
 // use private, global scope variable until we can use stored class var in Swift 1.2
 private var instancePairDictionary = [String: (API, NSURLSession)]()
+private let instancePairSemaphore = dispatch_semaphore_create(1)
 
 public class API: NSObject, NSURLSessionDelegate {
     // configurations
@@ -55,6 +56,8 @@ public class API: NSObject, NSURLSessionDelegate {
     // create session and instance of API for each subclasses
     private final class var instancePair: (API, NSURLSession) {
         let className = NSStringFromClass(self)
+        
+        dispatch_semaphore_wait(instancePairSemaphore, DISPATCH_TIME_FOREVER)
         let pair: (API, NSURLSession) = instancePairDictionary[className] ?? {
             let instance = self.init()
             let configuration = self.URLSessionConfiguration()
@@ -63,6 +66,7 @@ public class API: NSObject, NSURLSessionDelegate {
             instancePairDictionary[className] = pair
             return pair
         }()
+        dispatch_semaphore_signal(instancePairSemaphore)
         
         return pair
     }
