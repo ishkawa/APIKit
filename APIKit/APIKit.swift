@@ -40,13 +40,13 @@ private extension NSURLSessionDataTask {
         }
     }
     
-    private var completionHandler: Box<(NSData!, NSURLResponse!, NSError!) -> Void>? {
+    private var completionHandler: ((NSData!, NSURLResponse!, NSError!) -> Void)? {
         get {
-            return objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData!, NSURLResponse!, NSError!) -> Void>
+            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData!, NSURLResponse!, NSError!) -> Void>)?.unbox
         }
         
         set {
-            objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, newValue, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(newValue), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
         }
     }
 }
@@ -150,7 +150,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         if let URLRequest = request.URLRequest {
             let task = session.dataTaskWithRequest(URLRequest)
             
-            task.completionHandler = Box({ data, URLResponse, connectionError in
+            task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
                     return
@@ -175,7 +175,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
 
                 }
                 dispatch_async(mainQueue, { handler(mappedResponse) })
-            })
+            }
             
             task.resume()
 
@@ -197,9 +197,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     // MARK: NSURLSessionTaskDelegate
     public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
         if let dataTask = task as? NSURLSessionDataTask {
-            if let completionHandler = dataTask.completionHandler?.unbox {
-                completionHandler(dataTask.responseBuffer, dataTask.response, connectionError)
-            }
+            dataTask.completionHandler?(dataTask.responseBuffer, dataTask.response, connectionError)
         }
     }
 
