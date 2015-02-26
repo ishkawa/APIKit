@@ -32,7 +32,7 @@ private var instancePairDictionary = [String: (API, NSURLSession)]()
 public class API: NSObject, NSURLSessionDelegate {
     // configurations
     public class func baseURL() -> NSURL {
-        return NSURL()
+        fatalError("API.baseURL() must be overrided in subclasses.")
     }
     
     public class func requestBodyBuilder() -> RequestBodyBuilder {
