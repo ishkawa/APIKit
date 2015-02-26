@@ -28,7 +28,7 @@ class APIInstanceTests: XCTestCase {
     }
     
     func testDelegateOfSessions() {
-        assert(Foo.URLSession.delegate, { $0 is Foo })
-        assert(Bar.URLSession.delegate, { $0 is Bar })
+        assertNotNil(Foo.URLSession.delegate as? Foo)
+        assertNotNil(Bar.URLSession.delegate as? Bar)
     }
 }

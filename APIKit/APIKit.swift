@@ -90,7 +90,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         
         dispatch_semaphore_wait(instancePairSemaphore, DISPATCH_TIME_FOREVER)
         let pair: (API, NSURLSession) = instancePairDictionary[className] ?? {
-            let instance = self.init()
+            let instance = (self as NSObject.Type)() as API
             let configuration = self.URLSessionConfiguration()
             let queue = self.URLSessionDelegateQueue()
             let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: queue)
