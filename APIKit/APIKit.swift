@@ -26,6 +26,9 @@ public enum Method: String {
     case CONNECT = "CONNECT"
 }
 
+// use private, global scope variable until we can use stored class var in Swift 1.2
+private var instancePairDictionary = [String: (API, NSURLSession)]()
+
 public class API: NSObject, NSURLSessionDelegate {
     // configurations
     public class func baseURL() -> NSURL {
@@ -51,17 +54,14 @@ public class API: NSObject, NSURLSessionDelegate {
     
     // create session and instance of API for each subclasses
     private final class var instancePair: (API, NSURLSession) {
-        struct Singleton {
-            static var dictionary = [String: (API, NSURLSession)]()
-        }
-        
         let className = NSStringFromClass(self)
-        var pair: (API, NSURLSession) = Singleton.dictionary[className] ?? {
-            let instance = (self as NSObject.Type)() as API
+        let pair: (API, NSURLSession) = instancePairDictionary[className] ?? {
+            let instance = self.init()
             let configuration = self.URLSessionConfiguration()
             let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: nil)
-            Singleton.dictionary[className] = (instance, session)
-            return (instance, session)
+            let pair = (instance, session)
+            instancePairDictionary[className] = pair
+            return pair
         }()
         
         return pair
