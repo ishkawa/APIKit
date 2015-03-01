@@ -43,8 +43,6 @@
 		7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; };
 		7FEC5A211A96FFD300B1D3C0 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; };
 		7FEC5A231A97001D00B1D3C0 /* LlamaKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		7FED27F11A9B702A0091C900 /* APIInstanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FED27F01A9B702A0091C900 /* APIInstanceTests.swift */; };
-		7FED27F21A9B70320091C900 /* APIInstanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FED27F01A9B702A0091C900 /* APIInstanceTests.swift */; };
 		CDB0CCDB1A9B2ECD00BADAC5 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */; };
 		CDB0CCDC1A9B2ED600BADAC5 /* Assertions.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CDB0CCDE1A9B2F6100BADAC5 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB0CCDD1A9B2F6100BADAC5 /* Assertions.framework */; };
@@ -141,7 +139,6 @@
 		7FEC5A141A96FE2600B1D3C0 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FEC5A171A96FE2600B1D3C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseBodyParserTests.swift; sourceTree = "<group>"; };
-		7FED27F01A9B702A0091C900 /* APIInstanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIInstanceTests.swift; sourceTree = "<group>"; };
 		CDB0CCDA1A9B2ECD00BADAC5 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = "<group>"; };
 		CDB0CCDD1A9B2F6100BADAC5 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -304,10 +301,9 @@
 		7FEC5A151A96FE2600B1D3C0 /* APIKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				7F1B190A1AA2CA1300C7AFCF /* APITests.swift */,
 				7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */,
 				7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */,
-				7FED27F01A9B702A0091C900 /* APIInstanceTests.swift */,
-				7F1B190A1AA2CA1300C7AFCF /* APITests.swift */,
 				7FEC5A161A96FE2600B1D3C0 /* Supporting Files */,
 			);
 			path = APIKitTests;
@@ -530,7 +526,6 @@
 			files = (
 				7F1B190C1AA2CA1300C7AFCF /* APITests.swift in Sources */,
 				7F0869A01A9787AF001AD3E1 /* RequestBodyBuilderTests.swift in Sources */,
-				7FED27F21A9B70320091C900 /* APIInstanceTests.swift in Sources */,
 				7F0869A11A9787AF001AD3E1 /* ResponseBodyParserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -574,7 +569,6 @@
 			files = (
 				7F1B190B1AA2CA1300C7AFCF /* APITests.swift in Sources */,
 				7FEC5A191A96FE2600B1D3C0 /* ResponseBodyParserTests.swift in Sources */,
-				7FED27F11A9B702A0091C900 /* APIInstanceTests.swift in Sources */,
 				7F30A8561A975BD600A8C136 /* RequestBodyBuilderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
