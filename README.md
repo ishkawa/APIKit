@@ -168,7 +168,7 @@ class GitHub: API {
 ## Advanced usage
 
 
-## NSURLSessionDelegate
+### NSURLSessionDelegate
 
 APIKit creates singleton instances for each subclasses of API and set them as delegates of NSURLSession,
 so you can add following features by implementing delegate methods.
@@ -185,7 +185,7 @@ API class also uses delegate methods of NSURLSession to implement wrapper of NSU
 - `func URLSession(session:dataTask:didReceiveData:)`
 
 
-## License
+### License
 
 Copyright (c) 2015 Yosuke Ishikawa
 
