@@ -177,7 +177,7 @@ so you can add following features by implementing delegate methods.
 - Handle authentication challenges
 - Convert task to NSURLSessionDownloadTask
 
-### Overriding methods that implemented by API
+#### Overriding methods that implemented by API
 
 API class also uses delegate methods of NSURLSession to implement wrapper of NSURLSession, so you should call super if you override following methods.
 
