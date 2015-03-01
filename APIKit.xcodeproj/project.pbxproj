@@ -39,6 +39,7 @@
 		7FCBE9DE1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */; };
 		7FCBE9E01A9734950075AFD9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */; };
 		7FCBE9E11A9734950075AFD9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */; };
+		7FD65B141AA306BB008DCA2C /* OHHTTPStubs.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7FAC259E1AA2C01100E92500 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7FEC5A191A96FE2600B1D3C0 /* ResponseBodyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */; };
 		7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; };
 		7FEC5A211A96FFD300B1D3C0 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; };
@@ -82,6 +83,7 @@
 			files = (
 				CDB0CCDF1A9B2F6700BADAC5 /* Assertions.framework in CopyFiles */,
 				7F0869A41A9787E3001AD3E1 /* LlamaKit.framework in CopyFiles */,
+				7FD65B141AA306BB008DCA2C /* OHHTTPStubs.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
