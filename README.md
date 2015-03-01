@@ -165,6 +165,26 @@ class GitHub: API {
 }
 ```
 
+## Advanced usage
+
+
+## NSURLSessionDelegate
+
+APIKit creates singleton instances for each subclasses of API and set them as delegates of NSURLSession,
+so you can add following features by implementing delegate methods.
+
+- Hook events of NSURLSession
+- Handle authentication challenges
+- Convert task to NSURLSessionDownloadTask
+
+### Overriding methods that implemented by API
+
+API class also uses delegate methods of NSURLSession to implement wrapper of NSURLSession, so you should call super if you override following methods.
+
+- `func URLSession(session:task:didCompleteWithError:)`
+- `func URLSession(session:dataTask:didReceiveData:)`
+
+
 ## License
 
 Copyright (c) 2015 Yosuke Ishikawa
