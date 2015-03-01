@@ -46,7 +46,11 @@ private extension NSURLSessionDataTask {
         }
         
         set {
-            objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(newValue), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            if let value = newValue  {
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
         }
     }
 }
