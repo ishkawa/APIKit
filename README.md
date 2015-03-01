@@ -185,7 +185,7 @@ API class also uses delegate methods of NSURLSession to implement wrapper of NSU
 - `func URLSession(session:dataTask:didReceiveData:)`
 
 
-### License
+## License
 
 Copyright (c) 2015 Yosuke Ishikawa
 
