@@ -2,4 +2,8 @@
 	path = Carthage/Checkouts/LlamaKit
 	url = https://github.com/LlamaKit/LlamaKit.git
 [submodule "Carthage/Checkouts/Assertions"]
-	url = https://github.com/neilpa/Assertions.git
+	path = Carthage/Checkouts/Assertions
+	url = https://github.com/ikesyo/Assertions.git
+[submodule "Carthage/Checkouts/OHHTTPStubs"]
+	path = Carthage/Checkouts/OHHTTPStubs
+	url = https://github.com/AliSoftware/OHHTTPStubs.git

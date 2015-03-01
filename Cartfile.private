@@ -1,1 +1,2 @@
 github "ikesyo/Assertions" "swift-1.1"
+github "AliSoftware/OHHTTPStubs" "master"
