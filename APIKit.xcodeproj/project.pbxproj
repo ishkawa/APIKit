@@ -15,6 +15,8 @@
 		7F0869A61A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */; };
 		7F0869A71A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */; };
 		7F0869A81A979088001AD3E1 /* APIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45FD171A94D085006863BB /* APIKit.swift */; };
+		7F1B190B1AA2CA1300C7AFCF /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B190A1AA2CA1300C7AFCF /* APITests.swift */; };
+		7F1B190C1AA2CA1300C7AFCF /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B190A1AA2CA1300C7AFCF /* APITests.swift */; };
 		7F30A8561A975BD600A8C136 /* RequestBodyBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */; };
 		7F45FD181A94D085006863BB /* APIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F45FD171A94D085006863BB /* APIKit.swift */; };
 		7F45FD421A94D1CC006863BB /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FD1C1A94D1B4006863BB /* LlamaKit.framework */; };
@@ -114,6 +116,7 @@
 /* Begin PBXFileReference section */
 		7F0869941A978790001AD3E1 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
+		7F1B190A1AA2CA1300C7AFCF /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilderTests.swift; sourceTree = "<group>"; };
 		7F45FCDD1A94D02C006863BB /* APIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F45FCE11A94D02C006863BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -304,6 +307,7 @@
 				7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */,
 				7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */,
 				7FED27F01A9B702A0091C900 /* APIInstanceTests.swift */,
+				7F1B190A1AA2CA1300C7AFCF /* APITests.swift */,
 				7FEC5A161A96FE2600B1D3C0 /* Supporting Files */,
 			);
 			path = APIKitTests;
@@ -524,6 +528,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F1B190C1AA2CA1300C7AFCF /* APITests.swift in Sources */,
 				7F0869A01A9787AF001AD3E1 /* RequestBodyBuilderTests.swift in Sources */,
 				7FED27F21A9B70320091C900 /* APIInstanceTests.swift in Sources */,
 				7F0869A11A9787AF001AD3E1 /* ResponseBodyParserTests.swift in Sources */,
@@ -567,6 +572,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F1B190B1AA2CA1300C7AFCF /* APITests.swift in Sources */,
 				7FEC5A191A96FE2600B1D3C0 /* ResponseBodyParserTests.swift in Sources */,
 				7FED27F11A9B702A0091C900 /* APIInstanceTests.swift in Sources */,
 				7F30A8561A975BD600A8C136 /* RequestBodyBuilderTests.swift in Sources */,
