@@ -103,7 +103,8 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                assert(box.unbox, ==, error)
+                assertEqual(box.unbox.domain, error.domain)
+                assertEqual(box.unbox.code, error.code)
             }
             
             expectation.fulfill()
