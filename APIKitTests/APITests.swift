@@ -103,8 +103,9 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                assertEqual(box.unbox.domain, error.domain)
-                assertEqual(box.unbox.code, error.code)
+                let error = box.unbox
+                assertEqual(error.domain, error.domain)
+                assertEqual(error.code, error.code)
             }
             
             expectation.fulfill()
@@ -129,8 +130,9 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                assert(box.unbox.domain, ==, APIKitErrorDomain)
-                assertEqual(box.unbox.code, 400)
+                let error = box.unbox
+                assertEqual(error.domain, APIKitErrorDomain)
+                assertEqual(error.code, 400)
             }
             
             expectation.fulfill()
