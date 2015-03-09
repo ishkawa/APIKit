@@ -193,11 +193,6 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         }
     }
     
-    // MARK: - NSURLSessionDelegate
-    public func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void) {
-        completionHandler(.PerformDefaultHandling, nil)
-    }
-    
     // MARK: - NSURLSessionTaskDelegate
     // TODO: add attributes like NS_REQUIRES_SUPER when it is available in future version of Swift.
     public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
