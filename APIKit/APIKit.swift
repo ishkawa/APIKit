@@ -42,7 +42,7 @@ private extension NSURLSessionDataTask {
     
     private var completionHandler: ((NSData, NSURLResponse?, NSError?) -> Void)? {
         get {
-            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData?, NSURLResponse?, NSError?) -> Void>)?.unbox
+            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData, NSURLResponse?, NSError?) -> Void>)?.unbox
         }
         
         set {
