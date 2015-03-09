@@ -40,7 +40,7 @@ private extension NSURLSessionDataTask {
         }
     }
     
-    private var completionHandler: ((NSData?, NSURLResponse?, NSError?) -> Void)? {
+    private var completionHandler: ((NSData, NSURLResponse?, NSError?) -> Void)? {
         get {
             return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData?, NSURLResponse?, NSError?) -> Void>)?.unbox
         }
@@ -168,23 +168,17 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                     return
                 }
                 
-                if let data = data {
-                    let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser().parseData(data).flatMap { rawResponse in
-                        if let response = request.responseFromObject(rawResponse) {
-                            return success(response)
-                        } else {
-                            let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
-                            let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                            return failure(error)
-                        }
-                        
+                let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser().parseData(data).flatMap { rawResponse in
+                    if let response = request.responseFromObject(rawResponse) {
+                        return success(response)
+                    } else {
+                        let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
+                        let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+                        return failure(error)
                     }
-                    dispatch_async(mainQueue, { handler(mappedResponse) })
-                } else {
-                    let userInfo = [NSLocalizedDescriptionKey: "unable to get response body despite NSURLSession raised no error."]
-                    let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                    
                 }
+                dispatch_async(mainQueue, { handler(mappedResponse) })
             }
             
             task.resume()
