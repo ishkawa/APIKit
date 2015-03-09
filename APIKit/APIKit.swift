@@ -202,10 +202,6 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     }
 
     // MARK: - NSURLSessionDataDelegate
-    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
-        completionHandler(.Allow)
-    }
-    
     // TODO: add attributes like NS_REQUIRES_SUPER when it is available in future version of Swift.
     public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
         dataTask.responseBuffer.appendData(data)
