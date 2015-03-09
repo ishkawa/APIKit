@@ -175,7 +175,7 @@ so you can add following features by implementing delegate methods.
 
 - Hook events of NSURLSession
 - Handle authentication challenges
-- Convert task to NSURLSessionDownloadTask
+- Convert a data task to NSURLSessionDownloadTask
 
 #### Overriding delegate methods implemented by API
 
