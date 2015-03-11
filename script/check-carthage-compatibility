@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_DIR=$(mktemp -d ${TMPDIR}XXXXXX)
+PROJECT_DIR=$(mktemp -d ${TMPDIR}APIKit-check-carthage-compatibility.XXXXXX)
 REPOSITORY_DIR=$PWD
 
 cd $PROJECT_DIR
