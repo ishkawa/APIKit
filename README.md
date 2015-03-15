@@ -28,9 +28,11 @@ GitHub.sendRequest(request) { response in
 
 ## Requirements
 
+- Swift 1.1
 - iOS 7.0 or later
 - Mac OS 10.9 or later
 
+If you want to use APIKit with Swift 1.2, try `swift-1.2` branch.
 
 ## Installation
 
