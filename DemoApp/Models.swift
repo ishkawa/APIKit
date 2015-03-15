@@ -1,38 +1,40 @@
 import Foundation
 
-class Repository {
-    let id: Int!
-    let name: String!
-    let owner: User!
+struct Repository {
+    let id: Int
+    let name: String
+    let owner: User
     
     init?(dictionary: NSDictionary) {
-        id = dictionary["id"] as? Int
-        name = dictionary["name"] as? String
-        
-        if let userDictionary = dictionary["owner"] as? NSDictionary {
-            owner = User(dictionary: userDictionary)
-        }
-        
-        if id == nil || name == nil || owner == nil {
+        if 
+        let id = dictionary["id"] as? Int,
+        let userDictionary = dictionary["owner"] as? NSDictionary,
+        let name = dictionary["name"] as? String,
+        let user = User(dictionary: userDictionary) {
+            self.id = id
+            self.name = name
+            self.owner = user
+        } else {
             return nil
         }
     }
 }
 
-class User {
-    let id: Int!
-    let login: String!
-    let avatarURL: NSURL!
+struct User {
+    let id: Int
+    let login: String
+    let avatarURL: NSURL
     
     init?(dictionary: NSDictionary) {
-        id = dictionary["id"] as? Int
-        login = dictionary["login"] as? String
-        
-        if let string = dictionary["avatar_url"] as? String {
-            avatarURL = NSURL(string: string)
-        }
-        
-        if id == nil || login == nil || avatarURL == nil {
+        if
+        let id = dictionary["id"] as? Int,
+        let login = dictionary["login"] as? String,
+        let string = dictionary["avatar_url"] as? String,
+        let avatarURL = NSURL(string: string) {
+            self.id = id
+            self.login = login
+            self.avatarURL = avatarURL
+        } else {
             return nil
         }
     }
