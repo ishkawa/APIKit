@@ -55,11 +55,10 @@ private extension NSURLSessionDataTask {
     }
 }
 
-// use private, global scope variable until we can use stored class var in Swift 1.2
-private var instancePairDictionary = [String: (API, NSURLSession)]()
-private let instancePairSemaphore = dispatch_semaphore_create(1)
-
 public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
+    private static var instancePairDictionary = [String: (API, NSURLSession)]()
+    private static let instancePairSemaphore = dispatch_semaphore_create(1)
+
     // configurations
     public class func baseURL() -> NSURL {
         fatalError("API.baseURL() must be overrided in subclasses.")
@@ -99,7 +98,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
             let queue = self.URLSessionDelegateQueue()
             let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: queue)
             let pair = (instance, session)
-            instancePairDictionary[className] = pair
+            self.instancePairDictionary[className] = pair
             return pair
         }()
         dispatch_semaphore_signal(instancePairSemaphore)
