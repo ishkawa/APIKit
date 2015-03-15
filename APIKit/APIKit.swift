@@ -155,7 +155,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
             
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
-                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                    dispatch_async(mainQueue, { handler(failure(error)) })
                     return
                 }
                 
@@ -163,7 +163,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                 if !contains(200..<300, statusCode) {
                     let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
                     let error = NSError(domain: APIKitErrorDomain, code: statusCode, userInfo: userInfo)
-                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                    dispatch_async(mainQueue, { handler(failure(error)) })
                     return
                 }
                 
