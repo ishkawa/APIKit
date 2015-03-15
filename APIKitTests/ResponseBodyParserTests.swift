@@ -17,10 +17,10 @@ class ResponseBodyParserTests: XCTestCase {
 
         switch parser.parseData(data) {
         case .Success(let box):
-            let dictionary = box.unbox as [String: Int]
-            assertEqual(dictionary["foo"], 1)
-            assertEqual(dictionary["bar"], 2)
-            assertEqual(dictionary["baz"], 3)
+            let dictionary = box.unbox as? [String: Int]
+            assertEqual(dictionary?["foo"], 1)
+            assertEqual(dictionary?["bar"], 2)
+            assertEqual(dictionary?["baz"], 3)
 
         case .Failure:
             XCTFail()
@@ -55,10 +55,10 @@ class ResponseBodyParserTests: XCTestCase {
 
         switch parser.parseData(data) {
         case .Success(let box):
-            let dictionary = box.unbox as [String: String]
-            assertEqual(dictionary["foo"], "1")
-            assertEqual(dictionary["bar"], "2")
-            assertEqual(dictionary["baz"], "3")
+            let dictionary = box.unbox as? [String: String]
+            assertEqual(dictionary?["foo"], "1")
+            assertEqual(dictionary?["bar"], "2")
+            assertEqual(dictionary?["baz"], "3")
 
         case .Failure:
             XCTFail()
@@ -79,7 +79,7 @@ class ResponseBodyParserTests: XCTestCase {
 
         switch parser.parseData(data) {
         case .Success(let box):
-            let dictionary = box.unbox as [String: Int]
+            let dictionary = box.unbox as? [String: Int]
             assertEqual(dictionary, expectedDictionary)
 
         case .Failure:
