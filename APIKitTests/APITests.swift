@@ -41,21 +41,6 @@ class APITests: XCTestCase {
         super.tearDown()
     }
     
-    // MARK: - instance tests
-    func testDifferentSessionsAreCreatedForEachClasses() {
-        assert(MockAPI.URLSession, !=, AnotherMockAPI.URLSession)
-    }
-    
-    func testSameSessionsAreUsedInSameClasses() {
-        assertEqual(MockAPI.URLSession, MockAPI.URLSession)
-        assertEqual(AnotherMockAPI.URLSession, AnotherMockAPI.URLSession)
-    }
-    
-    func testDelegateOfSessions() {
-        assertNotNil(MockAPI.URLSession.delegate as? MockAPI)
-        assertNotNil(AnotherMockAPI.URLSession.delegate as? AnotherMockAPI)
-    }
-    
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
