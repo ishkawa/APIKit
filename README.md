@@ -17,7 +17,7 @@ GitHub.sendRequest(request) { response in
         // type of response is inferred from type of request
         self.repositories = box.unbox
         self.tableView?.reloadData()
-        
+
     case .Failure(let box):
         // if request fails, value in box is a NSError
         println(box.unbox)
@@ -28,7 +28,7 @@ GitHub.sendRequest(request) { response in
 
 ## Requirements
 
-- iOS 7.0 or later
+- iOS 8.0 or later (if you use Carthage), iOS 7.0 if you copy sources
 - Mac OS 10.9 or later
 
 
@@ -157,7 +157,7 @@ class GitHub: API {
                         }
                     }
                 }
-                
+
                 return users
             }
         }
