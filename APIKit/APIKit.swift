@@ -111,12 +111,13 @@ public class API {
         }
     }
 
-    // send request and build response object
+    // this methods can be removed in Swift 1.2
     public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         return sendRequest(request, URLSession: defaultURLSession, handler: handler)
     }
 
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    // send request and build response object
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
