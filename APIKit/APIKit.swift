@@ -166,7 +166,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
                 if !contains(self.acceptableStatusCodeRange, statusCode) {
-                    var error: NSError = {
+                    let error: NSError = {
                         switch self.responseBodyParser().parseData(data) {
                         case .Success(let box): return self.responseErrorFromObject(box.unbox)
                         case .Failure(let box): return box.unbox
