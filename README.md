@@ -4,7 +4,21 @@ APIKit
 [![Circle CI](https://img.shields.io/circleci/project/ishkawa/APIKit/master.svg?style=flat)](https://circleci.com/gh/ishkawa/APIKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-A networking library for building type safe web API client in Swift.
+APIKit is a networking library for building type safe web API client in Swift.
+By taking advantage of Swift, APIKit provides following features: 
+
+- Enumerate all endpoints in nested class.
+- Validate request parameters by type.
+- Associate type of response with type of request using generics.
+- Return model object or `NSError` as a non-optional value in handler (thanks to [LlamaKit](https://github.com/LlamaKit/LlamaKit)).
+
+so you can:
+
+- Call API without looking API documentation.
+- Receive response as a non-optional model object.
+- Write exhaustive completion handler easily.
+
+See the demo code below to understand good points of APIKit.
 
 ```swift
 // parameters of request are validated by type system of Swift
