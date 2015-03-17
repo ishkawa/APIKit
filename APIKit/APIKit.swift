@@ -115,6 +115,10 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         return instancePair.1
     }
 
+    public class var acceptableStatusCodes: [Int] {
+        return [Int](200..<300)
+    }
+
     // build NSURLRequest
     public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) -> NSURLRequest? {
         if let components = NSURLComponents(URL: baseURL(), resolvingAgainstBaseURL: true) {
@@ -161,10 +165,15 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                 }
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
-                if !contains(200..<300, statusCode) {
-                    let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
-                    let error = NSError(domain: APIKitErrorDomain, code: statusCode, userInfo: userInfo)
-                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                if !contains(self.acceptableStatusCodes, statusCode) {
+                    let error: NSError = {
+                        switch self.responseBodyParser().parseData(data) {
+                        case .Success(let box): return self.responseErrorFromObject(box.unbox)
+                        case .Failure(let box): return box.unbox
+                        }
+                    }()
+
+                    dispatch_async(mainQueue) { handler(failure(error)) }
                     return
                 }
                 
@@ -176,8 +185,8 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
                         return failure(error)
                     }
-                    
                 }
+
                 dispatch_async(mainQueue, { handler(mappedResponse) })
             }
             
@@ -192,7 +201,13 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
             return nil
         }
     }
-    
+
+    public class func responseErrorFromObject(object: AnyObject) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
+        let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+        return error
+    }
+
     // MARK: - NSURLSessionTaskDelegate
     // TODO: add attributes like NS_REQUIRES_SUPER when it is available in future version of Swift.
     public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {

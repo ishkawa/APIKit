@@ -17,6 +17,10 @@ class APITests: XCTestCase {
         override class func responseBodyParser() -> ResponseBodyParser {
             return .JSON(readingOptions: nil)
         }
+
+        override class func responseErrorFromObject(object: AnyObject) -> NSError {
+            return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
+        }
         
         class Endpoint {
             class Get: Request {
@@ -118,7 +122,8 @@ class APITests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
         }, withStubResponse: { request in
-            return OHHTTPStubsResponse(data: NSData(), statusCode: 400, headers: nil)
+            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            return OHHTTPStubsResponse(data: data, statusCode: 400, headers: nil)
         })
         
         let expectation = expectationWithDescription("wait for response")
@@ -131,8 +136,8 @@ class APITests: XCTestCase {
                 
             case .Failure(let box):
                 let error = box.unbox
-                assertEqual(error.domain, APIKitErrorDomain)
-                assertEqual(error.code, 400)
+                assertEqual(error.domain, "MockAPIErrorDomain")
+                assertEqual(error.code, 10000)
             }
             
             expectation.fulfill()
