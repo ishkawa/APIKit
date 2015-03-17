@@ -115,6 +115,10 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         return instancePair.1
     }
 
+    public class var acceptableStatusCodeRange: Range<Int> {
+        return 200..<300
+    }
+
     // build NSURLRequest
     public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) -> NSURLRequest? {
         if let components = NSURLComponents(URL: baseURL(), resolvingAgainstBaseURL: true) {
@@ -161,7 +165,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                 }
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
-                if !contains(200..<300, statusCode) {
+                if !contains(self.acceptableStatusCodeRange, statusCode) {
                     let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
                     let error = NSError(domain: APIKitErrorDomain, code: statusCode, userInfo: userInfo)
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
