@@ -115,8 +115,8 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         return instancePair.1
     }
 
-    public class var acceptableStatusCodeRange: Range<Int> {
-        return 200..<300
+    public class var acceptableStatusCodes: [Int] {
+        return [Int](200..<300)
     }
 
     // build NSURLRequest
@@ -165,7 +165,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                 }
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
-                if !contains(self.acceptableStatusCodeRange, statusCode) {
+                if !contains(self.acceptableStatusCodes, statusCode) {
                     let error: NSError = {
                         switch self.responseBodyParser().parseData(data) {
                         case .Success(let box): return self.responseErrorFromObject(box.unbox)
