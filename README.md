@@ -171,11 +171,11 @@ class GitHub: API {
 
 ### NSURLSessionDelegate
 
-You can add custom behavior of `NSURLSession` by following steps:
+You can add custom behaviors of `NSURLSession` by following steps:
 
-1. Create subclass of `URLSessionDelegate` (e.g. `MyAPIURLSessionDelegate`).
+1. Create a subclass of `URLSessionDelegate` (e.g. `MyAPIURLSessionDelegate`).
 2. Implement additional delegate methods in it.
-3. Override `defaultURLSession` of `API` and return `NSURLSession` that has `MyURLSessionDelegate` as a delegate.
+3. Override `defaultURLSession` of `API` and return `NSURLSession` that has `MyURLSessionDelegate` as its delegate.
 
 This can add following features:
 
