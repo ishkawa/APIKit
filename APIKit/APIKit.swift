@@ -111,13 +111,18 @@ public class API {
         }
     }
 
-    // this methods can be removed in Swift 1.2
+    // In Swift 1.1, we could not omit `URLSession` argument of `func send(request:URLSession(=default):handler(=default):)`
+    // with trailing closure, so we provide following 2 methods
+    // - `func sendRequest(request:handler(=default):)`
+    // - `func sendRequest(request:URLSession:handler(=default):)`.
+    // In Swift 1.2, we can omit default arguments with trailing closure, so they should be replaced with
+    // - `func sendRequest(request:URLSession(=default):handler(=default):)`
     public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         return sendRequest(request, URLSession: defaultURLSession, handler: handler)
     }
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
