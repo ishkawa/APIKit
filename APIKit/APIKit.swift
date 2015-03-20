@@ -26,8 +26,28 @@ public enum Method: String {
     case CONNECT = "CONNECT"
 }
 
+private var taskRequestKey = 0
 private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
+
+private extension NSURLSessionTask {
+    // - `var request: Request?` is not available in both of Swift 1.1 and 1.2 ("protocol can only be used as a generic constraint")
+    // - `var request: Any?` is not available in Swift 1.1 (Swift compliler fails with segmentation fault)
+    // so Box<Any>? is used here for now
+    private var request: Box<Any>? {
+        get {
+            return objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>
+        }
+        
+        set {
+            if let value = newValue {
+                objc_setAssociatedObject(self, &taskRequestKey, value, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+}
 
 private extension NSURLSessionDataTask {
     private var responseBuffer: NSMutableData {
@@ -132,6 +152,7 @@ public class API {
         if let URLRequest = request.URLRequest {
             let task = URLSession.dataTaskWithRequest(URLRequest)
             
+            task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
@@ -173,6 +194,28 @@ public class API {
             dispatch_async(mainQueue, { handler(failure(error)) })
 
             return nil
+        }
+    }
+    
+    public class func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+        cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
+    }
+    
+    public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+        URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
+            if let tasks = dataTasks + uploadTasks + downloadTasks as? [NSURLSessionTask] {
+                let matchedTasks = tasks.filter { task in
+                    if let request = task.request?.unbox as? T {
+                        return test(request)
+                    } else {
+                        return false
+                    }
+                }
+                
+                for task in matchedTasks {
+                    task.cancel()
+                }
+            }
         }
     }
     
