@@ -30,7 +30,7 @@ private var taskRequestKey = 0
 private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
 
-private extension NSURLSessionTask {
+private extension NSURLSessionDataTask {
     // - `var request: Request?` is not available in both of Swift 1.1 and 1.2 ("protocol can only be used as a generic constraint")
     // - `var request: Any?` is not available in Swift 1.1 (Swift compliler fails with segmentation fault)
     // so Box<Any>? is used here for now
@@ -47,9 +47,7 @@ private extension NSURLSessionTask {
             }
         }
     }
-}
-
-private extension NSURLSessionDataTask {
+    
     private var responseBuffer: NSMutableData {
         if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
             return responseBuffer
@@ -203,18 +201,16 @@ public class API {
     
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            if let tasks = dataTasks + uploadTasks + downloadTasks as? [NSURLSessionTask] {
-                let matchedTasks = tasks.filter { task in
-                    if let request = task.request?.unbox as? T {
-                        return test(request)
-                    } else {
-                        return false
-                    }
+            let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
+                if let request = (task as? NSURLSessionDataTask)?.request?.unbox as? T {
+                    return test(request)
+                } else {
+                    return false
                 }
-                
-                for task in matchedTasks {
-                    task.cancel()
-                }
+            }
+            
+            for task in tasks {
+                task.cancel()
             }
         }
     }
