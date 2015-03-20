@@ -159,4 +159,51 @@ class APITests: XCTestCase {
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
+    
+    // MARK: cancelling
+    func testFailureByCanceling() {
+        let expectation = expectationWithDescription("wait for response")
+        let request = MockAPI.Endpoint.Get()
+        
+        MockAPI.sendRequest(request) { response in
+            switch response {
+            case .Success:
+                XCTFail()
+                
+            case .Failure(let box):
+                let error = box.unbox
+                assert(error.domain, ==, NSURLErrorDomain)
+                assertEqual(error.code, NSURLErrorCancelled)
+            }
+            
+            expectation.fulfill()
+        }
+        
+        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self)
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSuccessIfCancelingTestReturnsFalse() {
+        let expectation = expectationWithDescription("wait for response")
+        let request = MockAPI.Endpoint.Get()
+        
+        MockAPI.sendRequest(request) { response in
+            switch response {
+            case .Success:
+                break
+                
+            case .Failure(let box):
+                XCTFail()
+            }
+            
+            expectation.fulfill()
+        }
+        
+        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self) { request in
+            return false
+        }
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
 }
