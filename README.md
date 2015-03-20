@@ -134,49 +134,7 @@ class GitHub: API {
             }
         }
 
-        // https://developer.github.com/v3/search/#search-users
-        class SearchUsers: Request {
-            enum Sort: String {
-                case Followers = "followers"
-                case Repositories = "repositories"
-                case Joined = "joined"
-            }
-
-            enum Order: String {
-                case Ascending = "asc"
-                case Descending = "desc"
-            }
-
-            typealias Response = [User]
-
-            let query: String
-            let sort: Sort
-            let order: Order
-
-            var URLRequest: NSURLRequest? {
-                return GitHub.URLRequest(.GET, "/search/users", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
-            }
-
-            init(query: String, sort: Sort = .Followers, order: Order = .Ascending) {
-                self.query = query
-                self.sort = sort
-                self.order = order
-            }
-
-            func responseFromObject(object: AnyObject) -> Response? {
-                var users = [User]()
-
-                if let dictionaries = object["items"] as? [NSDictionary] {
-                    for dictionary in dictionaries {
-                        if let user = User(dictionary: dictionary) {
-                            users.append(user)
-                        }
-                    }
-                }
-                
-                return users
-            }
-        }
+        // define other requests here
     }
 }
 ```
