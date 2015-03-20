@@ -139,6 +139,8 @@ class GitHub: API {
 }
 ```
 
+## Advanced usage
+
 ### Creating NSError from response object
 
 You can create detailed error using response object from Web API.
@@ -163,8 +165,6 @@ public override class func responseErrorFromObject(object: AnyObject) -> NSError
     }
 }
 ```
-
-## Advanced usage
 
 ### NSURLSessionDelegate
 
