@@ -166,7 +166,8 @@ class APITests: XCTestCase {
             return true
         }, withStubResponse: { request in
             let response = OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
-            response.requestTime = 1.0
+            response.requestTime = 0.1
+            response.responseTime = 0.1
             return response
         })
         
@@ -199,6 +200,7 @@ class APITests: XCTestCase {
             let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
             let response = OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
             response.requestTime = 0.1
+            response.responseTime = 0.1
             return response
         })
         
