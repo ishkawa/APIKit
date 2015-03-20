@@ -139,6 +139,31 @@ class GitHub: API {
 }
 ```
 
+### Creating NSError from response object
+
+You can create detailed error using response object from Web API.
+For example, [GitHub API](https://developer.github.com/v3/#client-errors) returns error like this:
+
+```json
+{
+    "message": "Validation Failed"
+}
+```
+
+To create error that contains `message` in response, override `API.responseErrorFromObject(object:)` and return `NSError` using response object.
+
+```swift
+public override class func responseErrorFromObject(object: AnyObject) -> NSError {
+    if let message = (object as? NSDictionary)?["message"] as? String {
+        let userInfo = [NSLocalizedDescriptionKey: message]
+        return NSError(domain: "YourAppAPIErrorDomain", code: 40000, userInfo: userInfo)
+    } else {
+        let userInfo = [NSLocalizedDescriptionKey: "unresolved error occurred."]
+        return NSError(domain: "YourAppAPIErrorDomain", code: 40001, userInfo: userInfo)
+    }
+}
+```
+
 ## Advanced usage
 
 ### NSURLSessionDelegate
