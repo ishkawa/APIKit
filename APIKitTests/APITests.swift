@@ -162,6 +162,14 @@ class APITests: XCTestCase {
     
     // MARK: cancelling
     func testFailureByCanceling() {
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            let response = OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            response.requestTime = 1.0
+            return response
+        })
+        
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
@@ -185,6 +193,15 @@ class APITests: XCTestCase {
     }
     
     func testSuccessIfCancelingTestReturnsFalse() {
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            let response = OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+            response.requestTime = 0.1
+            return response
+        })
+        
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
