@@ -56,10 +56,13 @@ private extension NSURLSessionDataTask {
 }
 
 // use private, global scope variable until we can use stored class var in Swift 1.2
-private var instancePairDictionary = [String: (API, NSURLSession)]()
-private let instancePairSemaphore = dispatch_semaphore_create(1)
+private let internalDefaultURLSession = NSURLSession(
+    configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+    delegate: URLSessionDelegate(),
+    delegateQueue: nil
+)
 
-public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
+public class API {
     // configurations
     public class func baseURL() -> NSURL {
         fatalError("API.baseURL() must be overrided in subclasses.")
@@ -72,47 +75,13 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     public class func responseBodyParser() -> ResponseBodyParser {
         return .JSON(readingOptions: nil)
     }
-    
-    public class func URLSessionConfiguration() -> NSURLSessionConfiguration {
-        return NSURLSessionConfiguration.defaultSessionConfiguration()
+
+    public class var defaultURLSession: NSURLSession {
+        return internalDefaultURLSession
     }
-    
-    public class func URLSessionDelegateQueue() -> NSOperationQueue? {
-        // nil indicates NSURLSession creates its own serial operation queue.
-        // see doc of NSURLSession.init(configuration:delegate:delegateQueue:) for more details.
-        return nil
-    }
-    
-    // prevent instantiation
-    override private init() {
-        super.init()
-    }
-    
-    // create session and instance of API for each subclasses
-    private final class var instancePair: (API, NSURLSession) {
-        let className = NSStringFromClass(self)
-        
-        dispatch_semaphore_wait(instancePairSemaphore, DISPATCH_TIME_FOREVER)
-        let pair: (API, NSURLSession) = instancePairDictionary[className] ?? {
-            let instance = (self as NSObject.Type)() as API
-            let configuration = self.URLSessionConfiguration()
-            let queue = self.URLSessionDelegateQueue()
-            let session = NSURLSession(configuration: configuration, delegate: instance, delegateQueue: queue)
-            let pair = (instance, session)
-            instancePairDictionary[className] = pair
-            return pair
-        }()
-        dispatch_semaphore_signal(instancePairSemaphore)
-        
-        return pair
-    }
-    
-    public final class var instance: API {
-        return instancePair.0
-    }
-    
-    public final class var URLSession: NSURLSession {
-        return instancePair.1
+
+    public class var acceptableStatusCodes: [Int] {
+        return [Int](200..<300)
     }
 
     // build NSURLRequest
@@ -146,13 +115,22 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         }
     }
 
-    // send request and build response object
+    // In Swift 1.1, we could not omit `URLSession` argument of `func send(request:URLSession(=default):handler(=default):)`
+    // with trailing closure, so we provide following 2 methods
+    // - `func sendRequest(request:handler(=default):)`
+    // - `func sendRequest(request:URLSession:handler(=default):)`.
+    // In Swift 1.2, we can omit default arguments with trailing closure, so they should be replaced with
+    // - `func sendRequest(request:URLSession(=default):handler(=default):)`
     public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        let session = URLSession
+        return sendRequest(request, URLSession: defaultURLSession, handler: handler)
+    }
+
+    // send request and build response object
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
-            let task = session.dataTaskWithRequest(URLRequest)
+            let task = URLSession.dataTaskWithRequest(URLRequest)
             
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
@@ -161,10 +139,15 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                 }
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
-                if !contains(200..<300, statusCode) {
-                    let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
-                    let error = NSError(domain: APIKitErrorDomain, code: statusCode, userInfo: userInfo)
-                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                if !contains(self.acceptableStatusCodes, statusCode) {
+                    let error: NSError = {
+                        switch self.responseBodyParser().parseData(data) {
+                        case .Success(let box): return self.responseErrorFromObject(box.unbox)
+                        case .Failure(let box): return box.unbox
+                        }
+                    }()
+
+                    dispatch_async(mainQueue) { handler(failure(error)) }
                     return
                 }
                 
@@ -176,8 +159,8 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
                         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
                         return failure(error)
                     }
-                    
                 }
+
                 dispatch_async(mainQueue, { handler(mappedResponse) })
             }
             
@@ -193,8 +176,15 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
         }
     }
     
+    public class func responseErrorFromObject(object: AnyObject) -> NSError {
+        let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
+        let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+        return error
+    }
+}
+
+public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     // MARK: - NSURLSessionTaskDelegate
-    // TODO: add attributes like NS_REQUIRES_SUPER when it is available in future version of Swift.
     public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
         if let dataTask = task as? NSURLSessionDataTask {
             dataTask.completionHandler?(dataTask.responseBuffer, dataTask.response, connectionError)
@@ -202,8 +192,7 @@ public class API: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     }
 
     // MARK: - NSURLSessionDataDelegate
-    // TODO: add attributes like NS_REQUIRES_SUPER when it is available in future version of Swift.
     public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
         dataTask.responseBuffer.appendData(data)
-    }
+    }    
 }
