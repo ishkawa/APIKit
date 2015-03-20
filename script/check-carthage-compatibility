@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PROJECT_DIR=$(mktemp -d ${TMPDIR}APIKit-check-carthage-compatibility.XXXXXX)
+REPOSITORY_DIR=$PWD
+
+cd $PROJECT_DIR
+echo "git \"$REPOSITORY_DIR\"" > Cartfile
+carthage update
+
+if [ ! -d Carthage/Build/iOS/APIKit.framework ]
+then
+    echo "error: failed to build iOS framework."
+    exit 1
+fi
+
+if [ ! -d Carthage/Build/Mac/APIKit.framework ]
+then
+    echo "error: failed to build Mac framework."
+    exit 1
+fi
+
+echo "done."
+
