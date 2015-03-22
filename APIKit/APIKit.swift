@@ -32,12 +32,12 @@ private var dataTaskCompletionHandlerKey = 0
 
 extension NSURLSessionTask {
     public override class func initialize() {
-        let dataTask: AnyObject = NSURLSession.sharedSession().dataTaskWithRequest(NSURLRequest())
-        let downloadTask: AnyObject = NSURLSession.sharedSession().downloadTaskWithRequest(NSURLRequest())
-        let uploadTask: AnyObject = NSURLSession.sharedSession().uploadTaskWithRequest(NSURLRequest(), fromData: NSData())
+        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(NSURLRequest())
+        let downloadTask = NSURLSession.sharedSession().downloadTaskWithRequest(NSURLRequest())
+        let uploadTask = NSURLSession.sharedSession().uploadTaskWithRequest(NSURLRequest(), fromData: NSData())
         
-        // On iOS 7 and Mac OS 10.9, `dataTask is NSURLSessionTask` returns false
-        if !(dataTask is NSURLSessionTask) {
+        // On iOS 7 and Mac OS 10.9, `(dataTask as AnyObject) is NSURLSessionTask` returns false
+        if !((dataTask as AnyObject) is NSURLSessionTask) {
             func bindClass(concreteClass: AnyClass, withClass abstractClass: AnyClass) {
                 let method = class_getInstanceMethod(concreteClass, "isKindOfClass:")
                 let block: @objc_block (AnyObject, AnyClass) -> Bool = { object, targetClass in
