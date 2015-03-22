@@ -36,7 +36,7 @@ extension NSURLSessionTask {
         let downloadTask: AnyObject = NSURLSession.sharedSession().downloadTaskWithRequest(NSURLRequest())
         let uploadTask: AnyObject = NSURLSession.sharedSession().uploadTaskWithRequest(NSURLRequest(), fromData: NSData())
         
-        // On iOS 7, `dataTask is NSURLSessionTask` returns false
+        // On iOS 7 and Mac OS 10.9, `dataTask is NSURLSessionTask` returns false
         if !(dataTask is NSURLSessionTask) {
             func bindClass(concreteClass: AnyClass, withClass abstractClass: AnyClass) {
                 let method = class_getInstanceMethod(concreteClass, "isKindOfClass:")
