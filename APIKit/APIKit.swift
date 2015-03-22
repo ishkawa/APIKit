@@ -30,7 +30,34 @@ private var taskRequestKey = 0
 private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
 
-private extension NSURLSessionDataTask {
+extension NSURLSessionTask {
+    public override class func initialize() {
+        let dataTask: AnyObject = NSURLSession.sharedSession().dataTaskWithRequest(NSURLRequest())
+        let downloadTask: AnyObject = NSURLSession.sharedSession().downloadTaskWithRequest(NSURLRequest())
+        let uploadTask: AnyObject = NSURLSession.sharedSession().uploadTaskWithRequest(NSURLRequest(), fromData: NSData())
+        
+        // On iOS 7, `dataTask is NSURLSessionTask` returns false
+        if !(dataTask is NSURLSessionTask) {
+            func bindClass(concreteClass: AnyClass, withClass abstractClass: AnyClass) {
+                let method = class_getInstanceMethod(concreteClass, "isKindOfClass:")
+                let block: @objc_block (AnyObject, AnyClass) -> Bool = { object, targetClass in
+                    return (
+                        object.dynamicType.isSubclassOfClass(targetClass) ||
+                        targetClass === NSURLSessionTask.self ||
+                        targetClass === abstractClass
+                    )
+                }
+                
+                let implementation = imp_implementationWithBlock(unsafeBitCast(block, AnyObject.self))
+                method_setImplementation(method, implementation)
+            }
+            
+            bindClass(dataTask.dynamicType, withClass: NSURLSessionDataTask.self)
+            bindClass(downloadTask.dynamicType, withClass: NSURLSessionDownloadTask.self)
+            bindClass(uploadTask.dynamicType, withClass: NSURLSessionUploadTask.self)
+        }
+    }
+
     // - `var request: Request?` is not available in both of Swift 1.1 and 1.2 ("protocol can only be used as a generic constraint")
     // - `var request: Any?` is not available in Swift 1.1 (Swift compliler fails with segmentation fault)
     // so Box<Any>? is used here for now
@@ -47,7 +74,9 @@ private extension NSURLSessionDataTask {
             }
         }
     }
-    
+}
+
+private extension NSURLSessionDataTask {
     private var responseBuffer: NSMutableData {
         if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
             return responseBuffer
@@ -202,7 +231,7 @@ public class API {
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
-                if let request = (task as? NSURLSessionDataTask)?.request?.unbox as? T {
+                if let request = (task as? NSURLSessionTask)?.request?.unbox as? T {
                     return test(request)
                 } else {
                     return false
