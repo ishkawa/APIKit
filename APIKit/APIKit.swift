@@ -58,17 +58,16 @@ extension NSURLSessionTask {
         }
     }
 
-    // - `var request: Request?` is not available in both of Swift 1.1 and 1.2 ("protocol can only be used as a generic constraint")
-    // - `var request: Any?` is not available in Swift 1.1 (Swift compliler fails with segmentation fault)
-    // so Box<Any>? is used here for now
-    private var request: Box<Any>? {
+    // `var request: Request?` is not available in both of Swift 1.1 and 1.2
+    // ("protocol can only be used as a generic constraint")
+    private var request: Any? {
         get {
-            return objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>
+            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
         }
         
         set {
             if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
             } else {
                 objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
             }
@@ -179,7 +178,7 @@ public class API {
         if let URLRequest = request.URLRequest {
             let task = URLSession.dataTaskWithRequest(URLRequest)
             
-            task.request = Box(request)
+            task.request = request
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
@@ -231,7 +230,7 @@ public class API {
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
-                if let request = (task as? NSURLSessionTask)?.request?.unbox as? T {
+                if let request = (task as? NSURLSessionTask)?.request as? T {
                     return test(request)
                 } else {
                     return false
