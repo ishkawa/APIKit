@@ -30,34 +30,7 @@ private var taskRequestKey = 0
 private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
 
-extension NSURLSessionTask {
-    public override class func initialize() {
-        let dataTask = NSURLSession.sharedSession().dataTaskWithRequest(NSURLRequest())
-        let downloadTask = NSURLSession.sharedSession().downloadTaskWithRequest(NSURLRequest())
-        let uploadTask = NSURLSession.sharedSession().uploadTaskWithRequest(NSURLRequest(), fromData: NSData())
-        
-        // On iOS 7 and Mac OS 10.9, `(dataTask as AnyObject) is NSURLSessionTask` returns false
-        if !((dataTask as AnyObject) is NSURLSessionTask) {
-            func bindClass(concreteClass: AnyClass, withClass abstractClass: AnyClass) {
-                let method = class_getInstanceMethod(concreteClass, "isKindOfClass:")
-                let block: @objc_block (AnyObject, AnyClass) -> Bool = { object, targetClass in
-                    return (
-                        object.dynamicType.isSubclassOfClass(targetClass) ||
-                        targetClass === NSURLSessionTask.self ||
-                        targetClass === abstractClass
-                    )
-                }
-                
-                let implementation = imp_implementationWithBlock(unsafeBitCast(block, AnyObject.self))
-                method_setImplementation(method, implementation)
-            }
-            
-            bindClass(dataTask.dynamicType, withClass: NSURLSessionDataTask.self)
-            bindClass(downloadTask.dynamicType, withClass: NSURLSessionDownloadTask.self)
-            bindClass(uploadTask.dynamicType, withClass: NSURLSessionUploadTask.self)
-        }
-    }
-
+private extension NSURLSessionDataTask {
     // `var request: Request?` is not available in both of Swift 1.1 and 1.2
     // ("protocol can only be used as a generic constraint")
     private var request: Any? {
@@ -73,9 +46,7 @@ extension NSURLSessionTask {
             }
         }
     }
-}
-
-private extension NSURLSessionDataTask {
+    
     private var responseBuffer: NSMutableData {
         if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
             return responseBuffer
@@ -96,6 +67,22 @@ private extension NSURLSessionDataTask {
                 objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
             } else {
                 objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+}
+
+extension NSURLSessionDownloadTask {
+    private var request: Any? {
+        get {
+            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
+        }
+        
+        set {
+            if let value = newValue {
+                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
             }
         }
     }
@@ -230,7 +217,19 @@ public class API {
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
-                if let request = (task as? NSURLSessionTask)?.request as? T {
+                var request: T?
+                switch task {
+                case let x as NSURLSessionDataTask:
+                    request = x.request as? T
+                    
+                case let x as NSURLSessionDownloadTask:
+                    request = x.request as? T
+                    
+                default:
+                    break
+                }
+                
+                if let request = request {
                     return test(request)
                 } else {
                     return false
