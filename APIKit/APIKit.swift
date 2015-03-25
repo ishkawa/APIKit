@@ -260,5 +260,9 @@ public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDat
     // MARK: - NSURLSessionDataDelegate
     public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
         dataTask.responseBuffer.appendData(data)
-    }    
+    }
+    
+    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
+        downloadTask.request = dataTask.request
+    }
 }
