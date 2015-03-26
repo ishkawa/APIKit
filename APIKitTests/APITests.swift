@@ -159,4 +159,70 @@ class APITests: XCTestCase {
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
+    
+    // MARK: cancelling
+    func testFailureByCanceling() {
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            let response = OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
+            response.requestTime = 0.1
+            response.responseTime = 0.1
+            return response
+        })
+        
+        let expectation = expectationWithDescription("wait for response")
+        let request = MockAPI.Endpoint.Get()
+        
+        MockAPI.sendRequest(request) { response in
+            switch response {
+            case .Success:
+                XCTFail()
+                
+            case .Failure(let box):
+                let error = box.unbox
+                assert(error.domain, ==, NSURLErrorDomain)
+                assertEqual(error.code, NSURLErrorCancelled)
+            }
+            
+            expectation.fulfill()
+        }
+        
+        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self)
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testSuccessIfCancelingTestReturnsFalse() {
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            let response = OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+            response.requestTime = 0.1
+            response.responseTime = 0.1
+            return response
+        })
+        
+        let expectation = expectationWithDescription("wait for response")
+        let request = MockAPI.Endpoint.Get()
+        
+        MockAPI.sendRequest(request) { response in
+            switch response {
+            case .Success:
+                break
+                
+            case .Failure(let box):
+                XCTFail()
+            }
+            
+            expectation.fulfill()
+        }
+        
+        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self) { request in
+            return false
+        }
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
 }

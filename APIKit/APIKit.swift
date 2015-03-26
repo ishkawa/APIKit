@@ -26,10 +26,27 @@ public enum Method: String {
     case CONNECT = "CONNECT"
 }
 
+private var taskRequestKey = 0
 private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
 
 private extension NSURLSessionDataTask {
+    // `var request: Request?` is not available in both of Swift 1.1 and 1.2
+    // ("protocol can only be used as a generic constraint")
+    private var request: Any? {
+        get {
+            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
+        }
+        
+        set {
+            if let value = newValue {
+                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+    
     private var responseBuffer: NSMutableData {
         if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
             return responseBuffer
@@ -50,6 +67,22 @@ private extension NSURLSessionDataTask {
                 objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
             } else {
                 objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+}
+
+extension NSURLSessionDownloadTask {
+    private var request: Any? {
+        get {
+            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
+        }
+        
+        set {
+            if let value = newValue {
+                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
             }
         }
     }
@@ -132,6 +165,7 @@ public class API {
         if let URLRequest = request.URLRequest {
             let task = URLSession.dataTaskWithRequest(URLRequest)
             
+            task.request = request
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
                     dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
@@ -176,6 +210,38 @@ public class API {
         }
     }
     
+    public class func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+        cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
+    }
+    
+    public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+        URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
+            let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
+                var request: T?
+                switch task {
+                case let x as NSURLSessionDataTask:
+                    request = x.request as? T
+                    
+                case let x as NSURLSessionDownloadTask:
+                    request = x.request as? T
+                    
+                default:
+                    break
+                }
+                
+                if let request = request {
+                    return test(request)
+                } else {
+                    return false
+                }
+            }
+            
+            for task in tasks {
+                task.cancel()
+            }
+        }
+    }
+    
     public class func responseErrorFromObject(object: AnyObject) -> NSError {
         let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
@@ -194,5 +260,9 @@ public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDat
     // MARK: - NSURLSessionDataDelegate
     public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
         dataTask.responseBuffer.appendData(data)
-    }    
+    }
+    
+    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
+        downloadTask.request = dataTask.request
+    }
 }
