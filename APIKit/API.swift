@@ -6,88 +6,6 @@ import LlamaKit
 
 public let APIKitErrorDomain = "APIKitErrorDomain"
 
-public protocol Request {
-    typealias Response: Any
-    
-    var URLRequest: NSURLRequest? { get }
-    
-    func responseFromObject(object: AnyObject) -> Response?
-}
-
-public enum Method: String {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case HEAD = "HEAD"
-    case DELETE = "DELETE"
-    case PATCH = "PATCH"
-    case TRACE = "TRACE"
-    case OPTIONS = "OPTIONS"
-    case CONNECT = "CONNECT"
-}
-
-private var taskRequestKey = 0
-private var dataTaskResponseBufferKey = 0
-private var dataTaskCompletionHandlerKey = 0
-
-private extension NSURLSessionDataTask {
-    // `var request: Request?` is not available in both of Swift 1.1 and 1.2
-    // ("protocol can only be used as a generic constraint")
-    private var request: Any? {
-        get {
-            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
-        }
-        
-        set {
-            if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            }
-        }
-    }
-    
-    private var responseBuffer: NSMutableData {
-        if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
-            return responseBuffer
-        } else {
-            let responseBuffer = NSMutableData()
-            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            return responseBuffer
-        }
-    }
-    
-    private var completionHandler: ((NSData, NSURLResponse?, NSError?) -> Void)? {
-        get {
-            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData, NSURLResponse?, NSError?) -> Void>)?.unbox
-        }
-        
-        set {
-            if let value = newValue  {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            } else {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            }
-        }
-    }
-}
-
-extension NSURLSessionDownloadTask {
-    private var request: Any? {
-        get {
-            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
-        }
-        
-        set {
-            if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-            }
-        }
-    }
-}
-
 // use private, global scope variable until we can use stored class var in Swift 1.2
 private let internalDefaultURLSession = NSURLSession(
     configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -249,15 +167,16 @@ public class API {
     }
 }
 
+// MARK: - default implementation of URLSessionDelegate
 public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
-    // MARK: - NSURLSessionTaskDelegate
+    // MARK: NSURLSessionTaskDelegate
     public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
         if let dataTask = task as? NSURLSessionDataTask {
             dataTask.completionHandler?(dataTask.responseBuffer, dataTask.response, connectionError)
         }
     }
 
-    // MARK: - NSURLSessionDataDelegate
+    // MARK: NSURLSessionDataDelegate
     public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
         dataTask.responseBuffer.appendData(data)
     }
@@ -266,3 +185,67 @@ public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDat
         downloadTask.request = dataTask.request
     }
 }
+
+// MARK: - NSURLSessionTask extensions
+private var taskRequestKey = 0
+private var dataTaskResponseBufferKey = 0
+private var dataTaskCompletionHandlerKey = 0
+
+private extension NSURLSessionDataTask {
+    // `var request: Request?` is not available in both of Swift 1.1 and 1.2
+    // ("protocol can only be used as a generic constraint")
+    private var request: Any? {
+        get {
+            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
+        }
+        
+        set {
+            if let value = newValue {
+                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+    
+    private var responseBuffer: NSMutableData {
+        if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
+            return responseBuffer
+        } else {
+            let responseBuffer = NSMutableData()
+            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            return responseBuffer
+        }
+    }
+    
+    private var completionHandler: ((NSData, NSURLResponse?, NSError?) -> Void)? {
+        get {
+            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData, NSURLResponse?, NSError?) -> Void>)?.unbox
+        }
+        
+        set {
+            if let value = newValue  {
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+}
+
+extension NSURLSessionDownloadTask {
+    private var request: Any? {
+        get {
+            return (objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>)?.unbox
+        }
+        
+        set {
+            if let value = newValue {
+                objc_setAssociatedObject(self, &taskRequestKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            } else {
+                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            }
+        }
+    }
+}
+
