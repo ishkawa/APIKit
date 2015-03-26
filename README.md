@@ -50,16 +50,20 @@ If you want to use APIKit with Swift 1.2, try `swift-1.2` branch.
 
 ## Installation
 
-You have 2 choices. If your app supports iOS 7.0, you can only choose copying source files.
+You have 3 choices. If your app supports iOS 7.0, you can only choose copying source files.
 
 #### 1. Using Carthage (Recommended)
 
-- Install [Carthage](https://github.com/Carthage/Carthage).
 - Insert `github "ishkawa/APIKit"` to your Cartfile.
 - Run `carthage update`.
 
+#### 2. Using CocoaPods
 
-#### 2. Copying source files
+- Insert `use_frameworks!` to your Podfile.
+- Insert `pod "APIKit"` to your Podfile.
+- Run `pod install`.
+
+#### 3. Copying source files
 
 - Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`.
 - Copy `APIKit/*.swift` and `Carthage/Checkouts/LlamaKit/LlamaKit/*.swift` to your project.
