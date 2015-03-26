@@ -212,8 +212,9 @@ This can add following features:
 
 NOTE: `URLSessionDelegate` also implements delegate methods of `NSURLSession` to implement wrapper of `NSURLSession`, so you should call super if you override following methods.
 
-- `func URLSession(session:task:didCompleteWithError:)`
-- `func URLSession(session:dataTask:didReceiveData:)`
+- `func URLSession(_:task:didCompleteWithError:)`
+- `func URLSession(_:dataTask:didReceiveData:)`
+- `func URLSession(_:dataTask:didBecomeDownloadTask:)`
 
 
 ## License
