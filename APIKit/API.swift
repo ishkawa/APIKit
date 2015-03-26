@@ -1,6 +1,6 @@
 import Foundation
 
-#if APIKIT_DYNAMIC_FRAMEWORK
+#if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
 import LlamaKit
 #endif
 
