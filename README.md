@@ -50,16 +50,20 @@ If you want to use APIKit with Swift 1.2, try `swift-1.2` branch.
 
 ## Installation
 
-You have 2 choices. If your app supports iOS 7.0, you can only choose copying source files.
+You have 3 choices. If your app supports iOS 7.0, you can only choose copying source files.
 
 #### 1. Using Carthage (Recommended)
 
-- Install [Carthage](https://github.com/Carthage/Carthage).
 - Insert `github "ishkawa/APIKit"` to your Cartfile.
 - Run `carthage update`.
 
+#### 2. Using CocoaPods
 
-#### 2. Copying source files
+- Insert `use_frameworks!` to your Podfile.
+- Insert `pod "APIKit"` to your Podfile.
+- Run `pod install`.
+
+#### 3. Copying source files
 
 - Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`.
 - Copy `APIKit/*.swift` and `Carthage/Checkouts/LlamaKit/LlamaKit/*.swift` to your project.
@@ -139,6 +143,36 @@ class GitHub: API {
 }
 ```
 
+### Sending request
+
+```swift
+let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
+
+GitHub.sendRequest(request) { response in
+    switch response {
+    case .Success(let box):
+        // type of `box.unbox` is `[Repository]` (model object)
+        
+    case .Failure(let box):
+        // type of `box.unbox` is `NSError`
+    }
+}
+```
+
+### Canceling request
+
+```swift
+GitHub.cancelRequest(GitHub.Endpoint.SearchRepositories.self)
+```
+
+If you want to filter requests to be cancelled, add closure that identifies the request shoule be cancelled or not.
+
+```swift
+GitHub.cancelRequest(GitHub.Endpoint.SearchRepositories.self) { request in
+    return request.query == "APIKit"
+}
+```
+
 ## Advanced usage
 
 ### Creating NSError from response object
@@ -182,8 +216,9 @@ This can add following features:
 
 NOTE: `URLSessionDelegate` also implements delegate methods of `NSURLSession` to implement wrapper of `NSURLSession`, so you should call super if you override following methods.
 
-- `func URLSession(session:task:didCompleteWithError:)`
-- `func URLSession(session:dataTask:didReceiveData:)`
+- `func URLSession(_:task:didCompleteWithError:)`
+- `func URLSession(_:dataTask:didReceiveData:)`
+- `func URLSession(_:dataTask:didBecomeDownloadTask:)`
 
 
 ## License
