@@ -86,7 +86,7 @@ public class API {
             task.request = request
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
-                    dispatch_async(mainQueue, { handler(.Failure(Box(error))) })
+                    dispatch_async(mainQueue, { handler(failure(error)) })
                     return
                 }
                 
