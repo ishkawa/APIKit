@@ -104,7 +104,7 @@ public class API {
                 }
                 
                 let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser().parseData(data).flatMap { rawResponse in
-                    if let response = request.responseFromObject(rawResponse) {
+                    if let response = T.responseFromObject(rawResponse) {
                         return success(response)
                     } else {
                         let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
