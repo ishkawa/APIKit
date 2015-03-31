@@ -123,7 +123,7 @@ class GitHub: API {
                 self.order = order
             }
 
-            func responseFromObject(object: AnyObject) -> Response? {
+            class func responseFromObject(object: AnyObject) -> Response? {
                 var repositories = [Repository]()
 
                 if let dictionaries = object["items"] as? [NSDictionary] {
