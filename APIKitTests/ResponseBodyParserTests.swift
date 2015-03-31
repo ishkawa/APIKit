@@ -91,7 +91,7 @@ class ResponseBodyParserTests: XCTestCase {
         let expectedError = NSError()
         let data = NSData()
         let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
-            return Result.Failure(Box(expectedError))
+            return failure(expectedError)
         })
 
         switch parser.parseData(data) {
