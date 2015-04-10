@@ -1,2 +1,1 @@
-# use forked repo until https://github.com/LlamaKit/LlamaKit/pull/38 is merged.
-github "modocache/LlamaKit" "try-trailing-closure"
+github "LlamaKit/LlamaKit" ~> 0.6.0
