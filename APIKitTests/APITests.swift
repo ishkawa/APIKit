@@ -6,15 +6,15 @@ import OHHTTPStubs
 
 class APITests: XCTestCase {
     class MockAPI: API {
-        override class func baseURL() -> NSURL {
+        override class var baseURL: NSURL {
             return NSURL(string: "https://api.github.com")!
         }
         
-        override class func requestBodyBuilder() -> RequestBodyBuilder {
+        override class var requestBodyBuilder: RequestBodyBuilder {
             return .JSON(writingOptions: nil)
         }
         
-        override class func responseBodyParser() -> ResponseBodyParser {
+        override class var responseBodyParser: ResponseBodyParser {
             return .JSON(readingOptions: nil)
         }
 

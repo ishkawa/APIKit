@@ -10,7 +10,7 @@ class ViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        let request = GitHub.Request.SearchRepositories(query: "APIKit")
+        let request = GitHub.Endpoint.SearchRepositories(query: "APIKit")
         
         GitHub.sendRequest(request) { response in
             switch response {

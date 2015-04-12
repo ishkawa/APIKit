@@ -8,15 +8,15 @@ public let APIKitErrorDomain = "APIKitErrorDomain"
 
 public class API {
     // configurations
-    public class func baseURL() -> NSURL {
+    public class var baseURL: NSURL {
         fatalError("API.baseURL() must be overrided in subclasses.")
     }
     
-    public class func requestBodyBuilder() -> RequestBodyBuilder {
+    public class var requestBodyBuilder: RequestBodyBuilder {
         return .JSON(writingOptions: nil)
     }
 
-    public class func responseBodyParser() -> ResponseBodyParser {
+    public class var responseBodyParser: ResponseBodyParser {
         return .JSON(readingOptions: nil)
     }
 
@@ -36,7 +36,7 @@ public class API {
 
     // build NSURLRequest
     public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) -> NSURLRequest? {
-        if let components = NSURLComponents(URL: baseURL(), resolvingAgainstBaseURL: true) {
+        if let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) {
             let request = NSMutableURLRequest()
             
             switch method {
@@ -44,7 +44,7 @@ public class API {
                 components.query = URLEncodedSerialization.stringFromObject(parameters, encoding: NSUTF8StringEncoding)
                 
             default:
-                switch requestBodyBuilder().buildBodyFromObject(parameters) {
+                switch requestBodyBuilder.buildBodyFromObject(parameters) {
                 case .Success(let box):
                     request.HTTPBody = box.unbox
                     
@@ -56,8 +56,8 @@ public class API {
             components.path = (components.path ?? "").stringByAppendingPathComponent(path)
             request.URL = components.URL
             request.HTTPMethod = method.rawValue
-            request.setValue(requestBodyBuilder().contentTypeHeader, forHTTPHeaderField: "Content-Type")
-            request.setValue(responseBodyParser().acceptHeader, forHTTPHeaderField: "Accept")
+            request.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
+            request.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
             
             return request
         } else {
@@ -82,7 +82,7 @@ public class API {
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
                 if !contains(self.acceptableStatusCodes, statusCode) {
                     let error: NSError = {
-                        switch self.responseBodyParser().parseData(data) {
+                        switch self.responseBodyParser.parseData(data) {
                         case .Success(let box): return self.responseErrorFromObject(box.unbox)
                         case .Failure(let box): return box.unbox
                         }
@@ -92,7 +92,7 @@ public class API {
                     return
                 }
                 
-                let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser().parseData(data).flatMap { rawResponse in
+                let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser.parseData(data).flatMap { rawResponse in
                     if let response = request.responseFromObject(rawResponse) {
                         return success(response)
                     } else {
