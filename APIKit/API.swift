@@ -65,18 +65,8 @@ public class API {
         }
     }
 
-    // In Swift 1.1, we could not omit `URLSession` argument of `func send(request:URLSession(=default):handler(=default):)`
-    // with trailing closure, so we provide following 2 methods
-    // - `func sendRequest(request:handler(=default):)`
-    // - `func sendRequest(request:URLSession:handler(=default):)`.
-    // In Swift 1.2, we can omit default arguments with trailing closure, so they should be replaced with
-    // - `func sendRequest(request:URLSession(=default):handler(=default):)`
-    public class func sendRequest<T: Request>(request: T, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        return sendRequest(request, URLSession: defaultURLSession, handler: handler)
-    }
-
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
@@ -191,7 +181,7 @@ private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
 
 private extension NSURLSessionDataTask {
-    // `var request: Request?` is not available in both of Swift 1.1 and 1.2
+    // `var request: Request?` is not available in Swift 1.2
     // ("protocol can only be used as a generic constraint")
     private var request: Any? {
         get {
@@ -247,4 +237,3 @@ extension NSURLSessionDownloadTask {
         }
     }
 }
-
