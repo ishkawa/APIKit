@@ -9,7 +9,7 @@ public let APIKitErrorDomain = "APIKitErrorDomain"
 public class API {
     // configurations
     public class var baseURL: NSURL {
-        fatalError("API.baseURL() must be overrided in subclasses.")
+        fatalError("API.baseURL must be overrided in subclasses.")
     }
     
     public class var requestBodyBuilder: RequestBodyBuilder {
