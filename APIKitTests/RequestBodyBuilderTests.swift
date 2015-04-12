@@ -87,7 +87,7 @@ class RequestBodyBuilderTests: XCTestCase {
         let string = "foo"
         let expectedError = NSError()
         let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
-            return Result.Failure(Box(expectedError))
+            return failure(expectedError)
         })
 
         switch builder.buildBodyFromObject(string) {

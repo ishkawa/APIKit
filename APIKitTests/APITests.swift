@@ -30,7 +30,7 @@ class APITests: XCTestCase {
                     return MockAPI.URLRequest(.GET, "/")
                 }
                 
-                func responseFromObject(object: AnyObject) -> Response? {
+                class func responseFromObject(object: AnyObject) -> Response? {
                     return object as? [String: AnyObject]
                 }
             }
