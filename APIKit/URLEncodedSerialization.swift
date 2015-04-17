@@ -1,11 +1,11 @@
 import Foundation
 
 private func escape(string: String) -> String {
-    return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue)
+    return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue) as String
 }
 
 private func unescape(string: String) -> String {
-    return CFURLCreateStringByReplacingPercentEscapes(nil, string, nil)
+    return CFURLCreateStringByReplacingPercentEscapes(nil, string, nil) as String
 }
 
 public class URLEncodedSerialization {
@@ -15,8 +15,8 @@ public class URLEncodedSerialization {
         if let string = NSString(data: data, encoding: encoding) as? String {
             dictionary = [String: AnyObject]()
             
-            for pair in split(string, { $0 == "&" }) {
-                let contents = split(pair, { $0 == "=" })
+            for pair in string.componentsSeparatedByString("&") {
+                let contents = pair.componentsSeparatedByString("=")
                 
                 if contents.count == 2 {
                     dictionary?[contents[0]] = unescape(contents[1])

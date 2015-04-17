@@ -16,10 +16,10 @@ class RequestBodyBuilderTests: XCTestCase {
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let box):
-            let dictionary = NSJSONSerialization.JSONObjectWithData(box.unbox, options: nil, error: nil) as [String: Int]
-            assertEqual(dictionary["foo"], 1)
-            assertEqual(dictionary["bar"], 2)
-            assertEqual(dictionary["baz"], 3)
+            let dictionary = NSJSONSerialization.JSONObjectWithData(box.unbox, options: nil, error: nil) as? [String: Int]
+            assertEqual(dictionary?["foo"], 1)
+            assertEqual(dictionary?["bar"], 2)
+            assertEqual(dictionary?["baz"], 3)
 
         case .Failure:
             XCTFail()
@@ -52,10 +52,10 @@ class RequestBodyBuilderTests: XCTestCase {
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let box):
-            let dictionary =  URLEncodedSerialization.objectFromData(box.unbox, encoding: NSUTF8StringEncoding, error: nil) as [String: String]
-            assertEqual(dictionary["foo"], "1")
-            assertEqual(dictionary["bar"], "2")
-            assertEqual(dictionary["baz"], "3")
+            let dictionary =  URLEncodedSerialization.objectFromData(box.unbox, encoding: NSUTF8StringEncoding, error: nil) as? [String: String]
+            assertEqual(dictionary?["foo"], "1")
+            assertEqual(dictionary?["bar"], "2")
+            assertEqual(dictionary?["baz"], "3")
 
         case .Failure:
             XCTFail()
@@ -63,7 +63,7 @@ class RequestBodyBuilderTests: XCTestCase {
     }
     
     func testCustomHeader() {
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in success(o as NSData) })
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in success(o as! NSData) })
         assertEqual(builder.contentTypeHeader, "foo")
     }
     

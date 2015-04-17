@@ -5,5 +5,5 @@ public protocol Request {
     
     var URLRequest: NSURLRequest? { get }
     
-    class func responseFromObject(object: AnyObject) -> Response?
+    static func responseFromObject(object: AnyObject) -> Response?
 }

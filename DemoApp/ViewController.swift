@@ -10,7 +10,7 @@ class ViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        let request = GitHub.Request.SearchRepositories(query: "APIKit")
+        let request = GitHub.Endpoint.SearchRepositories(query: "APIKit")
         
         GitHub.sendRequest(request) { response in
             switch response {
@@ -32,7 +32,7 @@ class ViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
         let repository = repositories[indexPath.row]
         
         cell.textLabel?.text = "\(repository.owner.login)/\(repository.name)"

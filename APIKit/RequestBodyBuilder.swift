@@ -33,14 +33,14 @@ public enum RequestBodyBuilder {
                 return failure(error)
             }
 
-            return try { error in
+            return try({ error in
                 return NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: error)
-            }
+            })
 
         case .URL(let encoding):
-            return try { error in
+            return try({ error in
                 return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
-            }
+            })
 
         case .Custom(let (_, buildBodyFromObject)):
             return buildBodyFromObject(object)

@@ -3,19 +3,19 @@ import APIKit
 import LlamaKit
 
 class GitHub: API {
-    override class func baseURL() -> NSURL {
+    override class var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 
-    override class func requestBodyBuilder() -> RequestBodyBuilder {
+    override class var requestBodyBuilder: RequestBodyBuilder {
         return .JSON(writingOptions: nil)
     }
 
-    override class func responseBodyParser() -> ResponseBodyParser {
+    override class var responseBodyParser: ResponseBodyParser {
         return .JSON(readingOptions: nil)
     }
 
-    class Request {
+    class Endpoint {
         // https://developer.github.com/v3/search/#search-repositories
         class SearchRepositories: APIKit.Request {
             enum Sort: String {

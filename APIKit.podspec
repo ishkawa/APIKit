@@ -27,5 +27,5 @@ Pod::Spec.new do |s|
     LICENSE
   }
 
-  s.dependency "LlamaKit", "~> 0.5.0"
+  s.dependency "LlamaKit", "~> 0.6.0"
 end

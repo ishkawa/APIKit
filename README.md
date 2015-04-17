@@ -31,7 +31,7 @@ GitHub.sendRequest(request) { response in
         // type of response is inferred from type of request
         self.repositories = box.unbox
         self.tableView?.reloadData()
-        
+
     case .Failure(let box):
         // if request fails, value in box is a NSError
         println(box.unbox)
@@ -42,11 +42,11 @@ GitHub.sendRequest(request) { response in
 
 ## Requirements
 
-- Swift 1.1
-- iOS 7.0 or later
+- Swift 1.2
+- iOS 8.0 or later (if you use Carthage), iOS 7.0 if you copy sources
 - Mac OS 10.9 or later
 
-If you want to use APIKit with Swift 1.2, try `swift-1.2` branch.
+If you want to use APIKit with Swift 1.1, try [0.6.0](https://github.com/ishkawa/APIKit/releases/tag/0.6.0).
 
 ## Installation
 
@@ -72,24 +72,24 @@ You have 3 choices. If your app supports iOS 7.0, you can only choose copying so
 ## Usage
 
 1. Create subclass of `API` that represents target web API.
-2. Set base URL by overriding `baseURL()`.
-3. Set encoding of request body by overriding `requestBodyBuilder()`.
-4. Set encoding of response body by overriding `responseBodyParser()`.
+2. Set base URL by overriding `baseURL`.
+3. Set encoding of request body by overriding `requestBodyBuilder`.
+4. Set encoding of response body by overriding `responseBodyParser`.
 5. Define request classes that conforms to `Request` for each endpoints.
 
 ### Example
 
 ```swift
 class GitHub: API {
-    override class func baseURL() -> NSURL {
+    override class var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 
-    override class func requestBodyBuilder() -> RequestBodyBuilder {
+    override class var requestBodyBuilder: RequestBodyBuilder {
         return .JSON(writingOptions: nil)
     }
 
-    override class func responseBodyParser() -> ResponseBodyParser {
+    override class var responseBodyParser: ResponseBodyParser {
         return .JSON(readingOptions: nil)
     }
 
