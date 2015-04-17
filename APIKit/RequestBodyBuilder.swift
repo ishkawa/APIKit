@@ -38,7 +38,7 @@ public enum RequestBodyBuilder {
             })
 
         case .URL(let encoding):
-            return try ({ error in
+            return try({ error in
                 return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
             })
 
