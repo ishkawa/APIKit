@@ -1,11 +1,11 @@
 import Foundation
 
 private func escape(string: String) -> String {
-    return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue) as! String
+    return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue) as String
 }
 
 private func unescape(string: String) -> String {
-    return CFURLCreateStringByReplacingPercentEscapes(nil, string, nil) as! String
+    return CFURLCreateStringByReplacingPercentEscapes(nil, string, nil) as String
 }
 
 public class URLEncodedSerialization {
