@@ -24,8 +24,8 @@ public class API {
         return internalDefaultURLSession
     }
 
-    public class var acceptableStatusCodes: [Int] {
-        return [Int](200..<300)
+    public class var acceptableStatusCodes: Set<Int> {
+        return Set(200..<300)
     }
 
     private static let internalDefaultURLSession = NSURLSession(
