@@ -7,14 +7,6 @@ class GitHub: API {
         return NSURL(string: "https://api.github.com")!
     }
 
-    override class var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: nil)
-    }
-
-    override class var responseBodyParser: ResponseBodyParser {
-        return .JSON(readingOptions: nil)
-    }
-
     class Endpoint {
         // https://developer.github.com/v3/search/#search-repositories
         class SearchRepositories: APIKit.Request {
