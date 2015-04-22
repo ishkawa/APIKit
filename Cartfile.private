@@ -1,2 +1,2 @@
 github "antitypical/Assertions" "master"
-github "ishkawa/OHHTTPStubs" "master"
+github "AliSoftware/OHHTTPStubs" ~> 4.0.0
