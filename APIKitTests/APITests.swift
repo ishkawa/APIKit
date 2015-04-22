@@ -10,14 +10,6 @@ class APITests: XCTestCase {
             return NSURL(string: "https://api.github.com")!
         }
         
-        override class var requestBodyBuilder: RequestBodyBuilder {
-            return .JSON(writingOptions: nil)
-        }
-        
-        override class var responseBodyParser: ResponseBodyParser {
-            return .JSON(readingOptions: nil)
-        }
-
         override class func responseErrorFromObject(object: AnyObject) -> NSError {
             return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
         }
