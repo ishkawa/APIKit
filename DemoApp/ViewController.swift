@@ -15,10 +15,10 @@ class ViewController: UITableViewController {
         GitHub.sendRequest(request) { response in
             switch response {
             case .Success(let box):
-                self.repositories = box.unbox
+                self.repositories = box.value
                 
             case .Failure(let box):
-                let alertController = UIAlertController(title: "Error", message: box.unbox.localizedDescription, preferredStyle: .Alert)
+                let alertController = UIAlertController(title: "Error", message: box.value.localizedDescription, preferredStyle: .Alert)
                 let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
                 alertController.addAction(action)
                 self.presentViewController(alertController, animated: true, completion: nil)

@@ -1,7 +1,8 @@
 import Foundation
 
 #if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
-import LlamaKit
+import Result
+import Box
 #endif
 
 public let APIKitErrorDomain = "APIKitErrorDomain"
@@ -46,7 +47,7 @@ public class API {
             default:
                 switch requestBodyBuilder.buildBodyFromObject(parameters) {
                 case .Success(let box):
-                    request.HTTPBody = box.unbox
+                    request.HTTPBody = box.value
                     
                 case .Failure(let box):
                     return nil
@@ -75,7 +76,7 @@ public class API {
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
-                    dispatch_async(mainQueue, { handler(failure(error)) })
+                    dispatch_async(mainQueue, { handler(Result.failure(error)) })
                     return
                 }
                 
@@ -83,22 +84,22 @@ public class API {
                 if !contains(self.acceptableStatusCodes, statusCode) {
                     let error: NSError = {
                         switch self.responseBodyParser.parseData(data) {
-                        case .Success(let box): return self.responseErrorFromObject(box.unbox)
-                        case .Failure(let box): return box.unbox
+                        case .Success(let box): return self.responseErrorFromObject(box.value)
+                        case .Failure(let box): return box.value
                         }
                     }()
 
-                    dispatch_async(mainQueue) { handler(failure(error)) }
+                    dispatch_async(mainQueue) { handler(Result.failure(error)) }
                     return
                 }
                 
                 let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser.parseData(data).flatMap { rawResponse in
                     if let response = T.responseFromObject(rawResponse) {
-                        return success(response)
+                        return Result.success(response)
                     } else {
                         let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
                         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                        return failure(error)
+                        return Result.failure(error)
                     }
                 }
 
@@ -111,7 +112,7 @@ public class API {
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue, { handler(failure(error)) })
+            dispatch_async(mainQueue, { handler(Result.failure(error)) })
 
             return nil
         }
@@ -127,10 +128,10 @@ public class API {
                 var request: T?
                 switch task {
                 case let x as NSURLSessionDataTask:
-                    request = x.request?.unbox as? T
+                    request = x.request?.value as? T
                     
                 case let x as NSURLSessionDownloadTask:
-                    request = x.request?.unbox as? T
+                    request = x.request?.value as? T
                     
                 default:
                     break
@@ -209,7 +210,7 @@ private extension NSURLSessionDataTask {
     
     private var completionHandler: ((NSData, NSURLResponse?, NSError?) -> Void)? {
         get {
-            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData, NSURLResponse?, NSError?) -> Void>)?.unbox
+            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData, NSURLResponse?, NSError?) -> Void>)?.value
         }
         
         set {

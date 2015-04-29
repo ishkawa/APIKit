@@ -1,7 +1,7 @@
 import Foundation
 import APIKit
 import Assertions
-import LlamaKit
+import Result
 import XCTest
 
 class ResponseBodyParserTests: XCTestCase {
@@ -17,7 +17,7 @@ class ResponseBodyParserTests: XCTestCase {
 
         switch parser.parseData(data) {
         case .Success(let box):
-            let dictionary = box.unbox as? [String: Int]
+            let dictionary = box.value as? [String: Int]
             assertEqual(dictionary?["foo"], 1)
             assertEqual(dictionary?["bar"], 2)
             assertEqual(dictionary?["baz"], 3)
@@ -37,7 +37,7 @@ class ResponseBodyParserTests: XCTestCase {
             XCTFail()
 
         case .Failure(let box):
-            let error = box.unbox
+            let error = box.value
             assert(error.domain, ==, NSCocoaErrorDomain)
             assertEqual(error.code, 3840)
         }
@@ -55,7 +55,7 @@ class ResponseBodyParserTests: XCTestCase {
 
         switch parser.parseData(data) {
         case .Success(let box):
-            let dictionary = box.unbox as? [String: String]
+            let dictionary = box.value as? [String: String]
             assertEqual(dictionary?["foo"], "1")
             assertEqual(dictionary?["bar"], "2")
             assertEqual(dictionary?["baz"], "3")
@@ -66,7 +66,7 @@ class ResponseBodyParserTests: XCTestCase {
     }
     
     func testCustomAcceptHeader() {
-        let parser = ResponseBodyParser.Custom(acceptHeader: "foo", parseData: { d in success(d) })
+        let parser = ResponseBodyParser.Custom(acceptHeader: "foo", parseData: { d in Result.success(d) })
         assertEqual(parser.acceptHeader, "foo")
     }
 
@@ -74,12 +74,12 @@ class ResponseBodyParserTests: XCTestCase {
         let expectedDictionary = ["foo": 1]
         let data = NSData()
         let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
-            return success(expectedDictionary)
+            return Result.success(expectedDictionary)
         })
 
         switch parser.parseData(data) {
         case .Success(let box):
-            let dictionary = box.unbox as? [String: Int]
+            let dictionary = box.value as? [String: Int]
             assertEqual(dictionary, expectedDictionary)
 
         case .Failure:
@@ -91,7 +91,7 @@ class ResponseBodyParserTests: XCTestCase {
         let expectedError = NSError()
         let data = NSData()
         let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
-            return failure(expectedError)
+            return Result.failure(expectedError)
         })
 
         switch parser.parseData(data) {
@@ -99,7 +99,7 @@ class ResponseBodyParserTests: XCTestCase {
             XCTFail()
 
         case .Failure(let box):
-            assertEqual(box.unbox, expectedError)
+            assertEqual(box.value, expectedError)
         }
     }
 }

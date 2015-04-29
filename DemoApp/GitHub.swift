@@ -1,6 +1,5 @@
 import Foundation
 import APIKit
-import LlamaKit
 
 class GitHub: API {
     override class var baseURL: NSURL {

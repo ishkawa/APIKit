@@ -1,7 +1,7 @@
 import Foundation
 import APIKit
 import Assertions
-import LlamaKit
+import Result
 import XCTest
 
 class RequestBodyBuilderTests: XCTestCase {
@@ -16,7 +16,7 @@ class RequestBodyBuilderTests: XCTestCase {
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let box):
-            let dictionary = NSJSONSerialization.JSONObjectWithData(box.unbox, options: nil, error: nil) as? [String: Int]
+            let dictionary = NSJSONSerialization.JSONObjectWithData(box.value, options: nil, error: nil) as? [String: Int]
             assertEqual(dictionary?["foo"], 1)
             assertEqual(dictionary?["bar"], 2)
             assertEqual(dictionary?["baz"], 3)
@@ -35,7 +35,7 @@ class RequestBodyBuilderTests: XCTestCase {
             XCTFail()
             
         case .Failure(let box):
-            let error =  box.unbox
+            let error =  box.value
             assertEqual(error.domain, APIKitRequestBodyBuidlerErrorDomain)
             assertEqual(error.code, 0)
         }
@@ -52,7 +52,7 @@ class RequestBodyBuilderTests: XCTestCase {
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let box):
-            let dictionary =  URLEncodedSerialization.objectFromData(box.unbox, encoding: NSUTF8StringEncoding, error: nil) as? [String: String]
+            let dictionary =  URLEncodedSerialization.objectFromData(box.value, encoding: NSUTF8StringEncoding, error: nil) as? [String: String]
             assertEqual(dictionary?["foo"], "1")
             assertEqual(dictionary?["bar"], "2")
             assertEqual(dictionary?["baz"], "3")
@@ -63,7 +63,7 @@ class RequestBodyBuilderTests: XCTestCase {
     }
     
     func testCustomHeader() {
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in success(o as! NSData) })
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in Result.success(o as! NSData) })
         assertEqual(builder.contentTypeHeader, "foo")
     }
     
@@ -71,12 +71,12 @@ class RequestBodyBuilderTests: XCTestCase {
         let string = "foo"
         let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
-            return success(expectedData)
+            return Result.success(expectedData)
         })
 
         switch builder.buildBodyFromObject(string) {
         case .Success(let box):
-            assertEqual(box.unbox, expectedData)
+            assertEqual(box.value, expectedData)
 
         case .Failure:
             XCTFail()
@@ -87,7 +87,7 @@ class RequestBodyBuilderTests: XCTestCase {
         let string = "foo"
         let expectedError = NSError()
         let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
-            return failure(expectedError)
+            return Result.failure(expectedError)
         })
 
         switch builder.buildBodyFromObject(string) {
@@ -95,7 +95,7 @@ class RequestBodyBuilderTests: XCTestCase {
             XCTFail()
 
         case .Failure(let box):
-            assertEqual(box.unbox, expectedError)
+            assertEqual(box.value, expectedError)
         }
     }
 }
