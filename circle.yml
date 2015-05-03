@@ -9,6 +9,7 @@ dependencies:
     - ./script/import-certificates
     - sudo gem install cocoapods
     - sudo gem install xcpretty
+    - brew update
     - brew install carthage
     - carthage bootstrap
 
