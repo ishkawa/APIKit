@@ -35,7 +35,7 @@ public class API {
     )
 
     // build NSURLRequest
-    public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:]) -> NSURLRequest? {
+    public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSURLRequest? {
         if let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) {
             let request = NSMutableURLRequest()
             
