@@ -19,7 +19,7 @@ class APITests: XCTestCase {
                 typealias Response = [String: AnyObject]
                 
                 var URLRequest: NSURLRequest? {
-                    return MockAPI.URLRequest(.GET, "/")
+                    return MockAPI.URLRequest(method: .GET, path: "/")
                 }
                 
                 class func responseFromObject(object: AnyObject) -> Response? {

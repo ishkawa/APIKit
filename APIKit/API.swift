@@ -35,7 +35,7 @@ public class API {
     )
 
     // build NSURLRequest
-    public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSURLRequest? {
+    public class func URLRequest(#method: Method, path: String, parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSURLRequest? {
         if let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) {
             let request = NSMutableURLRequest()
             
@@ -63,6 +63,11 @@ public class API {
         } else {
             return nil
         }
+    }
+    
+    @availability(*, unavailable, renamed="URLRequest(method:path:parameters:requestBodyBuilder)")
+    public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSURLRequest? {
+        return URLRequest(method: method, path: path, parameters: parameters, requestBodyBuilder: requestBodyBuilder)
     }
 
     // send request and build response object
