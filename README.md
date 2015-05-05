@@ -29,12 +29,12 @@ GitHub.sendRequest(request) { response in
     switch response {
     case .Success(let box):
         // type of response is inferred from type of request
-        self.repositories = box.unbox
+        self.repositories = box.value
         self.tableView?.reloadData()
 
     case .Failure(let box):
         // if request fails, value in box is a NSError
-        println(box.unbox)
+        println(box.value)
     }
 }
 ```
@@ -151,10 +151,10 @@ let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
 GitHub.sendRequest(request) { response in
     switch response {
     case .Success(let box):
-        // type of `box.unbox` is `[Repository]` (model object)
+        // type of `box.value` is `[Repository]` (model object)
         
     case .Failure(let box):
-        // type of `box.unbox` is `NSError`
+        // type of `box.value` is `NSError`
     }
 }
 ```
