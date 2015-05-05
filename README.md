@@ -114,7 +114,11 @@ class GitHub: API {
             let order: Order
 
             var URLRequest: NSURLRequest? {
-                return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+                return GitHub.URLRequest(
+                    method: .GET,
+                    path: "/search/repositories",
+                    parameters: ["q": query, "sort": sort.rawValue, "order": order.rawValue]
+                )
             }
 
             init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
