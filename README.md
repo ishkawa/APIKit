@@ -10,7 +10,7 @@ By taking advantage of Swift, APIKit provides following features:
 - Enumerate all endpoints in nested class.
 - Validate request parameters by type.
 - Associate type of response with type of request using generics.
-- Return model object or `NSError` as a non-optional value in handler (thanks to [LlamaKit](https://github.com/LlamaKit/LlamaKit)).
+- Return model object or `NSError` as a non-optional value in handler (thanks to [Result](https://github.com/antitypical/Result)).
 
 so you can:
 
@@ -25,16 +25,16 @@ See the demo code below to understand good points of APIKit.
 let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
 
 GitHub.sendRequest(request) { response in
-    // no optional bindings are required to get response and error (thanks to LlamaKit.Result)
+    // no optional bindings are required to get response and error (thanks to Result)
     switch response {
     case .Success(let box):
         // type of response is inferred from type of request
-        self.repositories = box.unbox
+        self.repositories = box.value
         self.tableView?.reloadData()
 
     case .Failure(let box):
         // if request fails, value in box is a NSError
-        println(box.unbox)
+        println(box.value)
     }
 }
 ```
@@ -66,7 +66,7 @@ You have 3 choices. If your app supports iOS 7.0, you can only choose copying so
 #### 3. Copying source files
 
 - Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`.
-- Copy `APIKit/*.swift` and `Carthage/Checkouts/LlamaKit/LlamaKit/*.swift` to your project.
+- Copy `APIKit/*.swift` and `Carthage/Checkouts/Result/Result/*.swift` to your project.
 
 
 ## Usage
@@ -114,7 +114,11 @@ class GitHub: API {
             let order: Order
 
             var URLRequest: NSURLRequest? {
-                return GitHub.URLRequest(.GET, "/search/repositories", ["q": query, "sort": sort.rawValue, "order": order.rawValue])
+                return GitHub.URLRequest(
+                    method: .GET,
+                    path: "/search/repositories",
+                    parameters: ["q": query, "sort": sort.rawValue, "order": order.rawValue]
+                )
             }
 
             init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
@@ -151,10 +155,10 @@ let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
 GitHub.sendRequest(request) { response in
     switch response {
     case .Success(let box):
-        // type of `box.unbox` is `[Repository]` (model object)
+        // type of `box.value` is `[Repository]` (model object)
         
     case .Failure(let box):
-        // type of `box.unbox` is `NSError`
+        // type of `box.value` is `NSError`
     }
 }
 ```

@@ -1,7 +1,7 @@
 import Foundation
 
 #if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
-import LlamaKit
+import Result
 #endif
 
 public let APIKitRequestBodyBuidlerErrorDomain = "APIKitRequestBodyBuidlerErrorDomain"
@@ -30,17 +30,17 @@ public enum RequestBodyBuilder {
             if !NSJSONSerialization.isValidJSONObject(object) {
                 let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
                 let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                return failure(error)
+                return .failure(error)
             }
 
-            return try({ error in
+            return try { error in
                 return NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: error)
-            })
+            }
 
         case .URL(let encoding):
-            return try({ error in
+            return try { error in
                 return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
-            })
+            }
 
         case .Custom(let (_, buildBodyFromObject)):
             return buildBodyFromObject(object)

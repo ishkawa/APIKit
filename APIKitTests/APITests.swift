@@ -19,7 +19,7 @@ class APITests: XCTestCase {
                 typealias Response = [String: AnyObject]
                 
                 var URLRequest: NSURLRequest? {
-                    return MockAPI.URLRequest(.GET, "/")
+                    return MockAPI.URLRequest(method: .GET, path: "/")
                 }
                 
                 class func responseFromObject(object: AnyObject) -> Response? {
@@ -54,7 +54,7 @@ class APITests: XCTestCase {
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success(let box):
-                assert(box.unbox, ==, dictionary)
+                assert(box.value, ==, dictionary)
                 
             case .Failure:
                 XCTFail()
@@ -84,7 +84,7 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                let error = box.unbox
+                let error = box.value
                 assertEqual(error.domain, error.domain)
                 assertEqual(error.code, error.code)
             }
@@ -112,7 +112,7 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                let error = box.unbox
+                let error = box.value
                 assertEqual(error.domain, "MockAPIErrorDomain")
                 assertEqual(error.code, 10000)
             }
@@ -141,7 +141,7 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                let error = box.unbox
+                let error = box.value
                 assert(error.domain, ==, NSCocoaErrorDomain)
                 assertEqual(error.code, 3840)
             }
@@ -172,7 +172,7 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let box):
-                let error = box.unbox
+                let error = box.value
                 assert(error.domain, ==, NSURLErrorDomain)
                 assertEqual(error.code, NSURLErrorCancelled)
             }
