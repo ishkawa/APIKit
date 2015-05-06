@@ -66,7 +66,7 @@ class ResponseBodyParserTests: XCTestCase {
     }
     
     func testCustomAcceptHeader() {
-        let parser = ResponseBodyParser.Custom(acceptHeader: "foo", parseData: { d in Result.success(d) })
+        let parser = ResponseBodyParser.Custom(acceptHeader: "foo", parseData: { d in .success(d) })
         assertEqual(parser.acceptHeader, "foo")
     }
 
@@ -74,7 +74,7 @@ class ResponseBodyParserTests: XCTestCase {
         let expectedDictionary = ["foo": 1]
         let data = NSData()
         let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
-            return Result.success(expectedDictionary)
+            return .success(expectedDictionary)
         })
 
         switch parser.parseData(data) {
@@ -91,7 +91,7 @@ class ResponseBodyParserTests: XCTestCase {
         let expectedError = NSError()
         let data = NSData()
         let parser = ResponseBodyParser.Custom(acceptHeader: "", parseData: { data in
-            return Result.failure(expectedError)
+            return .failure(expectedError)
         })
 
         switch parser.parseData(data) {

@@ -76,7 +76,7 @@ public class API {
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
-                    dispatch_async(mainQueue, { handler(Result.failure(error)) })
+                    dispatch_async(mainQueue, { handler(.failure(error)) })
                     return
                 }
                 
@@ -89,17 +89,17 @@ public class API {
                         }
                     }()
 
-                    dispatch_async(mainQueue) { handler(Result.failure(error)) }
+                    dispatch_async(mainQueue) { handler(.failure(error)) }
                     return
                 }
                 
                 let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser.parseData(data).flatMap { rawResponse in
                     if let response = T.responseFromObject(rawResponse) {
-                        return Result.success(response)
+                        return .success(response)
                     } else {
                         let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
                         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                        return Result.failure(error)
+                        return .failure(error)
                     }
                 }
 
@@ -112,7 +112,7 @@ public class API {
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue, { handler(Result.failure(error)) })
+            dispatch_async(mainQueue, { handler(.failure(error)) })
 
             return nil
         }

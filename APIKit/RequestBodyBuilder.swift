@@ -30,7 +30,7 @@ public enum RequestBodyBuilder {
             if !NSJSONSerialization.isValidJSONObject(object) {
                 let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
                 let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                return Result.failure(error)
+                return .failure(error)
             }
 
             return try { error in
