@@ -82,12 +82,10 @@ public class API {
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
                 if !contains(self.acceptableStatusCodes, statusCode) {
-                    let error: NSError = {
-                        switch self.responseBodyParser.parseData(data) {
-                        case .Success(let box): return self.responseErrorFromObject(box.value)
-                        case .Failure(let box): return box.value
-                        }
-                    }()
+                    let error = self.responseBodyParser.parseData(data).analysis(
+                        ifSuccess: { self.responseErrorFromObject($0) },
+                        ifFailure: { $0 }
+                    )
 
                     dispatch_async(mainQueue) { handler(.failure(error)) }
                     return
