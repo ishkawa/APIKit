@@ -28,6 +28,6 @@ deployment:
   master:
     branch: master
     commands:
-      - (cd Carthage; zip -r APIKit.framework.zip Build -i Build/*/APIKit.framework/**/*)
-      - cp Carthage/APIKit.framework.zip $CIRCLE_ARTIFACTS
+      - carthage archive APIKit
+      - cp APIKit.framework.zip $CIRCLE_ARTIFACTS
 
