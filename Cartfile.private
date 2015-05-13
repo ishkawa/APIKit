@@ -1,2 +1,2 @@
-github "antitypical/Assertions" "master"
+github "antitypical/Assertions" ~> 1.1
 github "AliSoftware/OHHTTPStubs" ~> 4.0.0

@@ -1,4 +1,4 @@
-github "antitypical/Assertions" "19bac03828dcb2f9b9ecb7f829e09bb3900886e5"
-github "robrix/Box" "1.2.1"
+github "antitypical/Assertions" "1.1"
+github "robrix/Box" "1.2.2"
 github "AliSoftware/OHHTTPStubs" "4.0.1"
-github "antitypical/Result" "0.4"
+github "antitypical/Result" "0.4.1"
