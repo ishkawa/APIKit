@@ -10,8 +10,7 @@ dependencies:
     - sudo chown :wheel "/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 8.1.simruntime/Contents/Resources/RuntimeRoot/usr/lib/dyld_sim"
     - sudo chown :wheel "/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 8.2.simruntime/Contents/Resources/RuntimeRoot/usr/lib/dyld_sim"
     - ./script/import-certificates
-    - sudo gem install cocoapods
-    - sudo gem install xcpretty
+    - sudo gem install cocoapods xcpretty --no-ri --no-rdoc
     - brew update
     - brew install carthage
     - carthage bootstrap
