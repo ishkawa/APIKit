@@ -81,7 +81,7 @@ public class API {
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
-                    dispatch_async(mainQueue, { handler(.failure(error)) })
+                    dispatch_async(mainQueue) { handler(.failure(error)) }
                     return
                 }
                 
@@ -106,7 +106,7 @@ public class API {
                     }
                 }
 
-                dispatch_async(mainQueue, { handler(mappedResponse) })
+                dispatch_async(mainQueue) { handler(mappedResponse) }
             }
             
             task.resume()
@@ -115,7 +115,7 @@ public class API {
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue, { handler(.failure(error)) })
+            dispatch_async(mainQueue) { handler(.failure(error)) }
 
             return nil
         }
