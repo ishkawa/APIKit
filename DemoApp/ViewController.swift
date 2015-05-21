@@ -12,7 +12,7 @@ class ViewController: UITableViewController {
         
         let request = GitHub.Endpoint.SearchRepositories(query: "APIKit")
         
-        GitHub.sendRequest(request) { response in
+        GitHub.sendRequest(request) { response,status in
             switch response {
             case .Success(let box):
                 self.repositories = box.value

@@ -72,7 +72,7 @@ public class API {
     }
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (result: Result<T.Response, NSError>, status: Int) -> Void = {(r, s) in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
@@ -81,7 +81,7 @@ public class API {
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
-                    dispatch_async(mainQueue) { handler(.failure(error)) }
+                    dispatch_async(mainQueue) { handler(result: .failure(error), status: 0) }
                     return
                 }
                 
@@ -92,7 +92,7 @@ public class API {
                         ifFailure: { $0 }
                     )
 
-                    dispatch_async(mainQueue) { handler(.failure(error)) }
+                    dispatch_async(mainQueue) { handler(result: .failure(error), status: statusCode) }
                     return
                 }
                 
@@ -106,7 +106,7 @@ public class API {
                     }
                 }
 
-                dispatch_async(mainQueue) { handler(mappedResponse) }
+                dispatch_async(mainQueue) { handler(result: mappedResponse, status: statusCode) }
             }
             
             task.resume()
@@ -115,7 +115,7 @@ public class API {
         } else {
             let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
             let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue) { handler(.failure(error)) }
+            dispatch_async(mainQueue) { handler(result: .failure(error), status: 0) }
 
             return nil
         }
