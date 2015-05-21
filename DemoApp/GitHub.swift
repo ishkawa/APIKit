@@ -41,7 +41,7 @@ class GitHub: API {
                 self.order = order
             }
 
-            class func responseFromObject(object: AnyObject) -> Response? {
+            class func responseFromObject(object: AnyObject, URLRequest: NSHTTPURLResponse) -> Response? {
                 return object["items"].flatMap(decode) ?? []
             }
         }
@@ -79,7 +79,7 @@ class GitHub: API {
                 self.order = order
             }
 
-            class func responseFromObject(object: AnyObject) -> Response? {
+            class func responseFromObject(object: AnyObject, URLRequest: NSHTTPURLResponse) -> Response? {
                 return object["items"].flatMap(decode) ?? []
             }
         }

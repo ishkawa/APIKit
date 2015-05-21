@@ -10,7 +10,7 @@ class APITests: XCTestCase {
             return NSURL(string: "https://api.github.com")!
         }
         
-        override class func responseErrorFromObject(object: AnyObject) -> NSError {
+        override class func responseErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> NSError {
             return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
         }
         
@@ -22,7 +22,7 @@ class APITests: XCTestCase {
                     return MockAPI.URLRequest(method: .GET, path: "/")
                 }
                 
-                class func responseFromObject(object: AnyObject) -> Response? {
+                class func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
                     return object as? [String: AnyObject]
                 }
             }
@@ -51,8 +51,8 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
-            switch response {
+        MockAPI.sendRequest(request) { result in
+            switch result {
             case .Success(let box):
                 assert(box.value, ==, dictionary)
                 
@@ -78,8 +78,8 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
-            switch response {
+        MockAPI.sendRequest(request) { result  in
+            switch result {
             case .Success:
                 XCTFail()
                 
@@ -106,8 +106,8 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
-            switch response {
+        MockAPI.sendRequest(request) { result in
+            switch result {
             case .Success:
                 XCTFail()
                 
@@ -135,8 +135,8 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
-            switch response {
+        MockAPI.sendRequest(request) { result in
+            switch result {
             case .Success:
                 XCTFail()
                 
@@ -166,8 +166,8 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
-            switch response {
+        MockAPI.sendRequest(request) { result in
+            switch result {
             case .Success:
                 XCTFail()
                 
@@ -199,11 +199,10 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
-            switch response {
+        MockAPI.sendRequest(request) { result in
+            switch result {
             case .Success:
                 break
-                
             case .Failure(let box):
                 XCTFail()
             }
