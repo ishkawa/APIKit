@@ -51,7 +51,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
+        MockAPI.sendRequest(request) { response, status in
             switch response {
             case .Success(let box):
                 assert(box.value, ==, dictionary)
@@ -78,7 +78,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
+        MockAPI.sendRequest(request) { response,status in
             switch response {
             case .Success:
                 XCTFail()
@@ -106,7 +106,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
+        MockAPI.sendRequest(request) { response,status in
             switch response {
             case .Success:
                 XCTFail()
@@ -135,7 +135,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
+        MockAPI.sendRequest(request) { response,status in
             switch response {
             case .Success:
                 XCTFail()
@@ -166,7 +166,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
+        MockAPI.sendRequest(request) { response, status in
             switch response {
             case .Success:
                 XCTFail()
@@ -199,9 +199,12 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response in
+        MockAPI.sendRequest(request) { response, status in
             switch response {
             case .Success:
+                if status != 200 {
+                    XCTFail()
+                }
                 break
                 
             case .Failure(let box):
