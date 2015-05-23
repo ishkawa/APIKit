@@ -51,7 +51,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response, status in
+        MockAPI.sendRequest(request) { (response, status) in
             switch response {
             case .Success(let box):
                 assert(box.value, ==, dictionary)
@@ -166,7 +166,7 @@ class APITests: XCTestCase {
         let expectation = expectationWithDescription("wait for response")
         let request = MockAPI.Endpoint.Get()
         
-        MockAPI.sendRequest(request) { response, status in
+        MockAPI.sendRequest(request) { response,status in
             switch response {
             case .Success:
                 XCTFail()
