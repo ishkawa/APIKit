@@ -105,7 +105,7 @@ public class API {
                         return .failure(error)
                     }
                 }
-
+                
                 dispatch_async(mainQueue) { handler(mappedResponse) }
             }
             

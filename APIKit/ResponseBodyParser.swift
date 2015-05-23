@@ -25,6 +25,9 @@ public enum ResponseBodyParser {
     public func parseData(data: NSData) -> Result<AnyObject, NSError> {
         switch self {
         case .JSON(let readingOptions):
+            if data.length == 0 {
+                return .success([:])
+            }
             return try { error in
                 return NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: error)
             }
