@@ -96,31 +96,17 @@ public class API {
                     return
                 }
                 
-                if statusCode == 204 {
-                    let noContentResponse: Result<T.Response, NSError> = {
-                        if let response = T.responseFromObject([:]) {
-                            return .success(response)
-                        } else {
-                            let userInfo = [NSLocalizedDescriptionKey: "failed to create no content response."]
-                            let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                            return .failure(error)
-                        }
-                    }()
-                    dispatch_async(mainQueue) { handler(noContentResponse) }
-                } else {
-                    let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser.parseData(data).flatMap { rawResponse in
-                        if let response = T.responseFromObject(rawResponse) {
-                            return .success(response)
-                        } else {
-                            let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
-                            let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                            return .failure(error)
-                        }
+                let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser.parseData(data).flatMap { rawResponse in
+                    if let response = T.responseFromObject(rawResponse) {
+                        return .success(response)
+                    } else {
+                        let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
+                        let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+                        return .failure(error)
                     }
-                    
-                    dispatch_async(mainQueue) { handler(mappedResponse) }
                 }
-
+                
+                dispatch_async(mainQueue) { handler(mappedResponse) }
             }
             
             task.resume()
