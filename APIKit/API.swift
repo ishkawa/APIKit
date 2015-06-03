@@ -35,8 +35,12 @@ public class API {
         delegateQueue: nil
     )
 
-    // build NSURLRequest
-    public class func URLRequest(#method: Method, path: String, parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSURLRequest? {
+    /// Creates a NSURLRequest instance from the specified HTTP method, path string
+    /// and parameters dictionary.
+    ///
+    /// Returns a mutable URL request instance which is meant to be modified in
+    /// subclasses or in `Request` protocol conforming types.
+    public class func URLRequest(#method: Method, path: String, parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSMutableURLRequest? {
         if let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) {
             let request = NSMutableURLRequest()
             
