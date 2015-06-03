@@ -66,7 +66,8 @@ You have 3 choices. If your app supports iOS 7.0, you can only choose copying so
 #### 3. Copying source files
 
 - Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`.
-- Copy `APIKit/*.swift` and `Carthage/Checkouts/Result/Result/*.swift` to your project.
+- Copy `APIKit/*.swift`, `Carthage/Checkouts/Box/Box/*.swift` and `Carthage/Checkouts/Result/Result/*.swift` to your project.
+- Comment out or delete `import Box` in `Carthage/Checkouts/Result/Result/*.swift`.
 
 
 ## Usage
