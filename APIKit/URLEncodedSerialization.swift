@@ -8,8 +8,8 @@ private func unescape(string: String) -> String {
     return CFURLCreateStringByReplacingPercentEscapes(nil, string, nil) as String
 }
 
-public class URLEncodedSerialization {
-    public class func objectFromData(data: NSData, encoding: NSStringEncoding, error: NSErrorPointer) -> AnyObject? {
+public final class URLEncodedSerialization {
+    public static func objectFromData(data: NSData, encoding: NSStringEncoding, error: NSErrorPointer) -> AnyObject? {
         var dictionary: [String: AnyObject]?
         
         if let string = NSString(data: data, encoding: encoding) as? String {
@@ -32,7 +32,7 @@ public class URLEncodedSerialization {
         return dictionary
     }
     
-    public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding, error: NSErrorPointer) -> NSData? {
+    public static func dataFromObject(object: AnyObject, encoding: NSStringEncoding, error: NSErrorPointer) -> NSData? {
         let string = stringFromObject(object, encoding: encoding)
         let data = string.dataUsingEncoding(encoding, allowLossyConversion: false)
         
@@ -44,7 +44,7 @@ public class URLEncodedSerialization {
         return data
     }
     
-    public class func stringFromObject(object: AnyObject, encoding: NSStringEncoding) -> String {
+    public static func stringFromObject(object: AnyObject, encoding: NSStringEncoding) -> String {
         var pairs = [String]()
         
         if let dictionary = object as? [String: AnyObject] {
