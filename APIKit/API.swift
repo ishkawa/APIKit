@@ -125,11 +125,11 @@ public class API {
         }
     }
     
-    public class func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+    public static func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
     }
     
-    public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+    public static func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
                 var request: T?
