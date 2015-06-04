@@ -11,7 +11,7 @@ dependencies:
     - sudo gem install cocoapods xcpretty --no-ri --no-rdoc
     - brew update
     - brew install carthage
-    - carthage bootstrap --use-submodules --no-use-binaries
+    - carthage bootstrap --use-submodules --no-use-binaries --no-build
   cache_directories:
     - "~/Library/Caches/org.carthage.CarthageKit/binaries/"
     - "~/Library/Caches/org.carthage.CarthageKit/dependencies/"
