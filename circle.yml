@@ -6,14 +6,12 @@ machine:
 
 dependencies:
   override:
-    - sudo chown :wheel "/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 7.1.simruntime/Contents/Resources/RuntimeRoot/usr/lib/dyld_sim"
-    - sudo chown :wheel "/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 8.1.simruntime/Contents/Resources/RuntimeRoot/usr/lib/dyld_sim"
-    - sudo chown :wheel "/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 8.2.simruntime/Contents/Resources/RuntimeRoot/usr/lib/dyld_sim"
+    - sudo chown :wheel /Library/Developer/CoreSimulator/Profiles/Runtimes/iOS\ *.simruntime/Contents/Resources/RuntimeRoot/usr/lib/dyld_sim
     - ./script/import-certificates
     - sudo gem install cocoapods xcpretty --no-ri --no-rdoc
     - brew update
     - brew install carthage
-    - carthage bootstrap
+    - carthage bootstrap --use-submodules --no-use-binaries
   cache_directories:
     - "~/Library/Caches/org.carthage.CarthageKit/binaries/"
     - "~/Library/Caches/org.carthage.CarthageKit/dependencies/"
@@ -22,9 +20,9 @@ test:
   override:
     - carthage build --no-skip-current
     - pod lib lint
-    - set -o pipefail && xcodebuild test -scheme APIKit-iOS | xcpretty -c -r junit -o $CIRCLE_TEST_REPORTS/test-report-ios.xml
-    - set -o pipefail && xcodebuild test -scheme APIKit-Mac | xcpretty -c -r junit -o $CIRCLE_TEST_REPORTS/test-report-mac.xml
-    - set -o pipefail && xcodebuild build -scheme DemoApp -sdk iphonesimulator | xcpretty -c
+    - set -o pipefail && xcodebuild -workspace APIKit.xcworkspace test -scheme APIKit-iOS | xcpretty -c -r junit -o $CIRCLE_TEST_REPORTS/test-report-ios.xml
+    - set -o pipefail && xcodebuild -workspace APIKit.xcworkspace test -scheme APIKit-Mac | xcpretty -c -r junit -o $CIRCLE_TEST_REPORTS/test-report-mac.xml
+    - set -o pipefail && xcodebuild -workspace APIKit.xcworkspace build -scheme DemoApp -sdk iphonesimulator | xcpretty -c
 
 deployment:
   master:
@@ -32,4 +30,3 @@ deployment:
     commands:
       - carthage archive APIKit
       - cp APIKit.framework.zip $CIRCLE_ARTIFACTS
-
