@@ -5,7 +5,7 @@ APIKit
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 APIKit is a networking library for building type safe web API client in Swift.
-By taking advantage of Swift, APIKit provides following features: 
+By taking advantage of Swift, APIKit provides following features:
 
 - Enumerate all endpoints in nested class.
 - Validate request parameters by type.
@@ -43,19 +43,22 @@ GitHub.sendRequest(request) { response in
 ## Requirements
 
 - Swift 1.2
-- iOS 8.0 or later (if you use Carthage), iOS 7.0 if you copy sources
+- iOS 8.0 or later
 - Mac OS 10.9 or later
 
 If you want to use APIKit with Swift 1.1, try [0.6.0](https://github.com/ishkawa/APIKit/releases/tag/0.6.0).
 
 ## Installation
 
-You have 3 choices. If your app supports iOS 7.0, you can only choose copying source files.
+You have 3 choices.
 
 #### 1. Using Carthage (Recommended)
 
 - Insert `github "ishkawa/APIKit"` to your Cartfile.
 - Run `carthage update`.
+- Drag `Carthage/Build` to your project.
+- Select "General" tab in xcodeproj.
+- Add `APIKit.framework`, `Result.framework` and `Box.framework` "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
 
 #### 2. Using CocoaPods
 
@@ -63,12 +66,14 @@ You have 3 choices. If your app supports iOS 7.0, you can only choose copying so
 - Insert `pod "APIKit"` to your Podfile.
 - Run `pod install`.
 
-#### 3. Copying source files
+#### 3. Embedding project
 
-- Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`.
-- Copy `APIKit/*.swift`, `Carthage/Checkouts/Box/Box/*.swift` and `Carthage/Checkouts/Result/Result/*.swift` to your project.
-- Comment out or delete `import Box` in `Carthage/Checkouts/Result/Result/*.swift`.
-
+- Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`
+- Drag `APIKit.xcodeproj`, `Carthage/Checkouts/Result/Result.xcodeproj` and `Carthage/Checkouts/Box/Box.xcodeproj` to your project. The destination must be under your xcodeproj.
+- Select "Build Phase" in xcodeproj.
+- Add `APIKit-iOS`, `Result-iOS` and `Box-iOS` to "Target Dependencies". If you develop Mac App, replace "iOS" in target name with "Mac".
+- Select "General" tab in xcodeproj.
+- Add `APIKit.framework`, `Result.framework` and `Box.framework` to "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
 
 ## Usage
 
@@ -157,7 +162,7 @@ GitHub.sendRequest(request) { response in
     switch response {
     case .Success(let box):
         // type of `box.value` is `[Repository]` (model object)
-        
+
     case .Failure(let box):
         // type of `box.value` is `NSError`
     }
