@@ -58,7 +58,10 @@ You have 3 choices.
 - Run `carthage update`.
 - Drag `Carthage/Build` to your project.
 - Select "General" tab in xcodeproj.
-- Add `APIKit.framework`, `Result.framework` and `Box.framework` "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
+- Add frameworks below to "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
+  - APIKit.framework
+  - Result.framework
+  - Box.framework
 
 #### 2. Using CocoaPods
 
@@ -69,11 +72,20 @@ You have 3 choices.
 #### 3. Embedding project
 
 - Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`
-- Drag `APIKit.xcodeproj`, `Carthage/Checkouts/Result/Result.xcodeproj` and `Carthage/Checkouts/Box/Box.xcodeproj` to your project. The destination must be under your xcodeproj.
+- Drag xcodeproj below to your project. The destination must be under your xcodeproj.
+  - `APIKit.xcodeproj`
+  - `Carthage/Checkouts/Result/Result.xcodeproj`
+  - `Carthage/Checkouts/Box/Box.xcodeproj`
 - Select "Build Phase" in xcodeproj.
-- Add `APIKit-iOS`, `Result-iOS` and `Box-iOS` to "Target Dependencies". If you develop Mac App, replace "iOS" in target name with "Mac".
+- Add build targets below to "Target Dependencies". If you develop Mac App, replace "iOS" in target name with "Mac".
+  - APIKit-iOS
+  - Result-iOS
+  - Box-iOS
 - Select "General" tab in xcodeproj.
-- Add `APIKit.framework`, `Result.framework` and `Box.framework` to "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
+- Add frameworks below to "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
+  - APIKit.framework
+  - Result.framework
+  - Box.framework
 
 ## Usage
 
