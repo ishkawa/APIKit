@@ -55,6 +55,8 @@
 		CD5115321B1FFD9200514240 /* Assertions.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152A1B1FFCB200514240 /* Assertions.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CD9B38231B2556FD00B1A224 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9B38221B2556FD00B1A224 /* Himotoki.framework */; };
+		CD9B38241B25578200B1A224 /* Himotoki.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD9B38221B2556FD00B1A224 /* Himotoki.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CD9B38241B25578200B1A224 /* Himotoki.framework in Embed Frameworks */,
 				7F45FD6D1A94DA28006863BB /* APIKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -149,6 +152,7 @@
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152A1B1FFCB200514240 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD9B38221B2556FD00B1A224 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Himotoki.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +193,7 @@
 				CD5115231B1FFB8E00514240 /* Box.framework in Frameworks */,
 				CD5115291B1FFBA900514240 /* Result.framework in Frameworks */,
 				7F45FD6C1A94DA28006863BB /* APIKit.framework in Frameworks */,
+				CD9B38231B2556FD00B1A224 /* Himotoki.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +277,7 @@
 		7F45FD4A1A94D9A8006863BB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CD9B38221B2556FD00B1A224 /* Himotoki.framework */,
 				7F45FD4B1A94D9A8006863BB /* Info.plist */,
 			);
 			name = "Supporting Files";
