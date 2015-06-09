@@ -1,6 +1,3 @@
-[submodule "Carthage/Checkouts/Assertions"]
-	path = Carthage/Checkouts/Assertions
-	url = https://github.com/antitypical/Assertions.git
 [submodule "Carthage/Checkouts/OHHTTPStubs"]
 	path = Carthage/Checkouts/OHHTTPStubs
 	url = https://github.com/AliSoftware/OHHTTPStubs.git

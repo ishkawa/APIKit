@@ -1,7 +1,6 @@
 import Foundation
 import APIKit
 import XCTest
-import Assertions
 import OHHTTPStubs
 
 class APITests: XCTestCase {
@@ -54,8 +53,8 @@ class APITests: XCTestCase {
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success(let box):
-                assert(box.value, ==, dictionary)
-                
+                XCTAssert(box.value["key"] as? String == "value")
+
             case .Failure:
                 XCTFail()
             }
@@ -85,8 +84,7 @@ class APITests: XCTestCase {
                 
             case .Failure(let box):
                 let error = box.value
-                assertEqual(error.domain, error.domain)
-                assertEqual(error.code, error.code)
+                XCTAssert(error.domain == NSURLErrorDomain)
             }
             
             expectation.fulfill()
@@ -113,8 +111,8 @@ class APITests: XCTestCase {
                 
             case .Failure(let box):
                 let error = box.value
-                assertEqual(error.domain, "MockAPIErrorDomain")
-                assertEqual(error.code, 10000)
+                XCTAssert(error.domain == "MockAPIErrorDomain")
+                XCTAssert(error.code == 10000)
             }
             
             expectation.fulfill()
@@ -142,8 +140,8 @@ class APITests: XCTestCase {
                 
             case .Failure(let box):
                 let error = box.value
-                assert(error.domain, ==, NSCocoaErrorDomain)
-                assertEqual(error.code, 3840)
+                XCTAssert(error.domain == NSCocoaErrorDomain)
+                XCTAssert(error.code == 3840)
             }
             
             expectation.fulfill()
@@ -173,8 +171,8 @@ class APITests: XCTestCase {
                 
             case .Failure(let box):
                 let error = box.value
-                assert(error.domain, ==, NSURLErrorDomain)
-                assertEqual(error.code, NSURLErrorCancelled)
+                XCTAssert(error.domain == NSURLErrorDomain)
+                XCTAssert(error.code == NSURLErrorCancelled)
             }
             
             expectation.fulfill()
