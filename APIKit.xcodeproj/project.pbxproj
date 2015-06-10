@@ -36,11 +36,6 @@
 		7FCBE9E11A9734950075AFD9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */; };
 		7FEC5A191A96FE2600B1D3C0 /* ResponseBodyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */; };
 		7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; };
-		CD51151F1B1FFAC000514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115201B1FFB4F00514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115211B1FFB7000514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115221B1FFB7200514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115231B1FFB8E00514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
 		CD5115251B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
 		CD5115261B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
 		CD5115271B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
@@ -48,10 +43,9 @@
 		CD5115291B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
 		CD51152E1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
 		CD51152F1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
-		CD5115301B1FFD7C00514240 /* Box.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CD5115311B1FFD8F00514240 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,7 +99,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CD5115301B1FFD7C00514240 /* Box.framework in Copy Frameworks */,
 				CD5115311B1FFD8F00514240 /* Result.framework in Copy Frameworks */,
 				CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */,
 				CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */,
@@ -141,7 +134,6 @@
 		7FEC5A141A96FE2600B1D3C0 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FEC5A171A96FE2600B1D3C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseBodyParserTests.swift; sourceTree = "<group>"; };
-		CD51151E1B1FFAC000514240 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Box.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -151,7 +143,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115211B1FFB7000514240 /* Box.framework in Frameworks */,
 				CD5115281B1FFBA900514240 /* Result.framework in Frameworks */,
 				CD51152F1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */,
 				7F08699A1A978790001AD3E1 /* APIKit.framework in Frameworks */,
@@ -162,7 +153,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115201B1FFB4F00514240 /* Box.framework in Frameworks */,
 				CD5115251B1FFBA900514240 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -171,7 +161,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD51151F1B1FFAC000514240 /* Box.framework in Frameworks */,
 				CD5115261B1FFBA900514240 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,7 +169,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115231B1FFB8E00514240 /* Box.framework in Frameworks */,
 				CD5115291B1FFBA900514240 /* Result.framework in Frameworks */,
 				7F45FD6C1A94DA28006863BB /* APIKit.framework in Frameworks */,
 			);
@@ -190,7 +178,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115221B1FFB7200514240 /* Box.framework in Frameworks */,
 				CD5115271B1FFBA900514240 /* Result.framework in Frameworks */,
 				CD51152E1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */,
 				7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */,
@@ -240,7 +227,6 @@
 		7F45FCE01A94D02C006863BB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CD51151E1B1FFAC000514240 /* Box.framework */,
 				CD5115241B1FFBA900514240 /* Result.framework */,
 				7F45FCE11A94D02C006863BB /* Info.plist */,
 			);
@@ -410,7 +396,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Yosuke Ishikawa";
 				TargetAttributes = {
 					7F0869931A978790001AD3E1 = {
@@ -602,6 +588,7 @@
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)Tests";
 				SDKROOT = macosx;
 			};
@@ -615,6 +602,7 @@
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)Tests";
 				SDKROOT = macosx;
 			};
@@ -641,6 +629,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -716,7 +705,8 @@
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DAPIKIT_DYNAMIC_FRAMEWORK";
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -735,7 +725,8 @@
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DAPIKIT_DYNAMIC_FRAMEWORK";
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -761,6 +752,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_SWIFT_FLAGS = "-DAPIKIT_DYNAMIC_FRAMEWORK";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -784,6 +776,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_SWIFT_FLAGS = "-DAPIKIT_DYNAMIC_FRAMEWORK";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -801,6 +794,7 @@
 				);
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 			};
@@ -813,6 +807,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 			};
@@ -827,6 +822,7 @@
 				);
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)Tests";
 				SDKROOT = iphoneos;
 			};
@@ -837,6 +833,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "-.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(PROJECT_NAME)Tests";
 				SDKROOT = iphoneos;
 			};

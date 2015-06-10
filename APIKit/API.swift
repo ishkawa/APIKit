@@ -1,9 +1,5 @@
 import Foundation
-
-#if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
 import Result
-import Box
-#endif
 
 public let APIKitErrorDomain = "APIKitErrorDomain"
 
@@ -13,12 +9,13 @@ public class API {
         fatalError("API.baseURL must be overrided in subclasses.")
     }
     
+    // How can I pass "no options" to
     public class var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: nil)
+        return .JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
     }
 
     public class var responseBodyParser: ResponseBodyParser {
-        return .JSON(readingOptions: nil)
+        return .JSON(readingOptions: NSJSONReadingOptions(rawValue: 0))
     }
 
     public class var defaultURLSession: NSURLSession {
@@ -40,7 +37,7 @@ public class API {
     ///
     /// Returns a mutable URL request instance which is meant to be modified in
     /// subclasses or in `Request` protocol conforming types.
-    public class func URLRequest(#method: Method, path: String, parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSMutableURLRequest? {
+    public class func URLRequest(method method: Method, path: String, parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSMutableURLRequest? {
         if let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) {
             let request = NSMutableURLRequest()
             
@@ -50,10 +47,10 @@ public class API {
                 
             default:
                 switch requestBodyBuilder.buildBodyFromObject(parameters) {
-                case .Success(let box):
-                    request.HTTPBody = box.value
+                case .Success(let result):
+                    request.HTTPBody = result
                     
-                case .Failure(let box):
+                case .Failure:
                     return nil
                 }
             }
@@ -70,11 +67,6 @@ public class API {
         }
     }
     
-    @availability(*, unavailable, renamed="URLRequest(method:path:parameters:requestBodyBuilder)")
-    public class func URLRequest(method: Method, _ path: String, _ parameters: [String: AnyObject] = [:], requestBodyBuilder: RequestBodyBuilder = requestBodyBuilder) -> NSURLRequest? {
-        return URLRequest(method: method, path: path, parameters: parameters, requestBodyBuilder: requestBodyBuilder)
-    }
-
     // send request and build response object
     public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
@@ -82,15 +74,15 @@ public class API {
         if let URLRequest = request.URLRequest {
             let task = URLSession.dataTaskWithRequest(URLRequest)
             
-            task.request = Box(request)
-            task.completionHandler = { data, URLResponse, connectionError in
+            task?.request = Box(request)
+            task?.completionHandler = { data, URLResponse, connectionError in
                 if let error = connectionError {
                     dispatch_async(mainQueue) { handler(.failure(error)) }
                     return
                 }
                 
                 let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
-                if !contains(self.acceptableStatusCodes, statusCode) {
+                if !self.acceptableStatusCodes.contains(statusCode) {
                     let error = self.responseBodyParser.parseData(data).analysis(
                         ifSuccess: { self.responseErrorFromObject($0) },
                         ifFailure: { $0 }
@@ -113,7 +105,7 @@ public class API {
                 dispatch_async(mainQueue) { handler(mappedResponse) }
             }
             
-            task.resume()
+            task?.resume()
 
             return task
         } else {
@@ -131,7 +123,19 @@ public class API {
     
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            let tasks = (dataTasks + uploadTasks + downloadTasks).filter { task in
+            // TODO: replace with cool code
+            var allTasks = [NSURLSessionTask]()
+            for task in dataTasks {
+                allTasks.append(task)
+            }
+            for task in uploadTasks {
+                allTasks.append(task)
+            }
+            for task in downloadTasks {
+                allTasks.append(task)
+            }
+
+            let tasks = allTasks.filter { task in
                 var request: T?
                 switch task {
                 case let x as NSURLSessionDataTask:
@@ -183,6 +187,14 @@ public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDat
     }
 }
 
+// Box<T> is still necessary internally to store struct into associated object
+private final class Box<T> {
+    let value: T
+    init(_ value: T) {
+        self.value = value
+    }
+}
+
 // MARK: - NSURLSessionTask extensions
 private var taskRequestKey = 0
 private var dataTaskResponseBufferKey = 0
@@ -198,9 +210,9 @@ private extension NSURLSessionDataTask {
         
         set {
             if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &taskRequestKey, value, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &taskRequestKey, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
@@ -210,7 +222,7 @@ private extension NSURLSessionDataTask {
             return responseBuffer
         } else {
             let responseBuffer = NSMutableData()
-            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return responseBuffer
         }
     }
@@ -222,9 +234,9 @@ private extension NSURLSessionDataTask {
         
         set {
             if let value = newValue  {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             } else {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
@@ -238,9 +250,9 @@ extension NSURLSessionDownloadTask {
         
         set {
             if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &taskRequestKey, value, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+                objc_setAssociatedObject(self, &taskRequestKey, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }

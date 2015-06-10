@@ -32,6 +32,7 @@ public class URLEncodedSerialization {
         return dictionary
     }
     
+    // TODO: migrate to Swift 2 error handling
     public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding, error: NSErrorPointer) -> NSData? {
         let string = stringFromObject(object, encoding: encoding)
         let data = string.dataUsingEncoding(encoding, allowLossyConversion: false)
@@ -55,6 +56,6 @@ public class URLEncodedSerialization {
             }
         }
         
-        return join("&", pairs)
+        return "&".join(pairs)
     }
 }

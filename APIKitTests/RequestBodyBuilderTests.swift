@@ -5,17 +5,17 @@ import XCTest
 
 class RequestBodyBuilderTests: XCTestCase {
     func testJSONHeader() {
-        let builder = RequestBodyBuilder.JSON(writingOptions: nil)
+        let builder = RequestBodyBuilder.JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
         XCTAssert(builder.contentTypeHeader == "application/json")
     }
     
     func testJSONSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
-        let builder = RequestBodyBuilder.JSON(writingOptions: nil)
+        let builder = RequestBodyBuilder.JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
 
         switch builder.buildBodyFromObject(object) {
-        case .Success(let box):
-            let dictionary = NSJSONSerialization.JSONObjectWithData(box.value, options: nil, error: nil) as? [String: Int]
+        case .Success(let data):
+            let dictionary = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0)) as? [String: Int]
             XCTAssert(dictionary?["foo"] == 1)
             XCTAssert(dictionary?["bar"] == 2)
             XCTAssert(dictionary?["baz"] == 3)
@@ -27,14 +27,13 @@ class RequestBodyBuilderTests: XCTestCase {
     
     func testJSONFailure() {
         let object = NSObject()
-        let builder = RequestBodyBuilder.JSON(writingOptions: nil)
+        let builder = RequestBodyBuilder.JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
 
         switch builder.buildBodyFromObject(object) {
         case .Success:
             XCTFail()
             
-        case .Failure(let box):
-            let error =  box.value
+        case .Failure(let error):
             XCTAssert(error.domain == APIKitRequestBodyBuidlerErrorDomain)
             XCTAssert(error.code == 0)
         }
@@ -50,8 +49,8 @@ class RequestBodyBuilderTests: XCTestCase {
         let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
 
         switch builder.buildBodyFromObject(object) {
-        case .Success(let box):
-            let dictionary =  URLEncodedSerialization.objectFromData(box.value, encoding: NSUTF8StringEncoding, error: nil) as? [String: String]
+        case .Success(let data):
+            let dictionary =  URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding, error: nil) as? [String: String]
             XCTAssert(dictionary?["foo"] == "1")
             XCTAssert(dictionary?["bar"] == "2")
             XCTAssert(dictionary?["baz"] == "3")
@@ -74,8 +73,8 @@ class RequestBodyBuilderTests: XCTestCase {
         })
 
         switch builder.buildBodyFromObject(string) {
-        case .Success(let box):
-            XCTAssert(box.value == expectedData)
+        case .Success(let data):
+            XCTAssert(data == expectedData)
 
         case .Failure:
             XCTFail()
@@ -84,7 +83,7 @@ class RequestBodyBuilderTests: XCTestCase {
 
     func testCustomFailure() {
         let string = "foo"
-        let expectedError = NSError()
+        let expectedError = NSError(domain: "Foo", code: 1234, userInfo: nil)
         let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
             return .failure(expectedError)
         })
@@ -93,8 +92,8 @@ class RequestBodyBuilderTests: XCTestCase {
         case .Success:
             XCTFail()
 
-        case .Failure(let box):
-            XCTAssert(box.value == expectedError)
+        case .Failure(let error):
+            XCTAssert(error == expectedError)
         }
     }
 }

@@ -1,3 +1,2 @@
-github "robrix/Box" "1.2.2"
 github "AliSoftware/OHHTTPStubs" "4.0.2"
-github "antitypical/Result" "0.4.3"
+github "antitypical/Result" "0.5"

@@ -1,8 +1,5 @@
 import Foundation
-
-#if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
 import Result
-#endif
 
 public enum ResponseBodyParser {
     case JSON(readingOptions: NSJSONReadingOptions)
@@ -22,22 +19,29 @@ public enum ResponseBodyParser {
         }
     }
 
+    // TODO: migrate to Swift 2 style error handling
     public func parseData(data: NSData) -> Result<AnyObject, NSError> {
         switch self {
         case .JSON(let readingOptions):
             if data.length == 0 {
                 return .success([:])
             }
-            return try { error in
-                return NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: error)
+
+            let result: Result<AnyObject, NSError>
+            do {
+                result = .success(try NSJSONSerialization.JSONObjectWithData(data, options: readingOptions))
+            } catch {
+                result = .failure(error as NSError)
             }
 
+            return result
+
         case .URL(let encoding):
-            return try { error in
+            return `try` { error in
                 return URLEncodedSerialization.objectFromData(data, encoding: encoding, error: error)
             }
 
-        case .Custom(let (accept, parseData)):
+        case .Custom(let (_, parseData)):
             return parseData(data)
         }
     }

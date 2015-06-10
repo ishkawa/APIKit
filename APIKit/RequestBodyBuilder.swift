@@ -1,8 +1,5 @@
 import Foundation
-
-#if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
 import Result
-#endif
 
 public let APIKitRequestBodyBuidlerErrorDomain = "APIKitRequestBodyBuidlerErrorDomain"
 
@@ -24,6 +21,7 @@ public enum RequestBodyBuilder {
         }
     }
 
+    // TODO: migrate to Swift 2 style error handling
     public func buildBodyFromObject(object: AnyObject) -> Result<NSData, NSError> {
         switch self {
         case .JSON(let writingOptions):
@@ -33,12 +31,17 @@ public enum RequestBodyBuilder {
                 return .failure(error)
             }
 
-            return try { error in
-                return NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: error)
+            let result: Result<NSData, NSError>
+            do {
+                result = .success(try NSJSONSerialization.dataWithJSONObject(object, options: writingOptions))
+            } catch {
+                result = .failure(error as NSError)
             }
 
+            return result
+
         case .URL(let encoding):
-            return try { error in
+            return `try` { error in
                 return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
             }
 

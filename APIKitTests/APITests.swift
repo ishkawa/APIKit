@@ -39,7 +39,7 @@ class APITests: XCTestCase {
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
-        let data = NSJSONSerialization.dataWithJSONObject(dictionary, options: nil, error: nil)!
+        let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions(rawValue: 0))
         
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
@@ -52,8 +52,8 @@ class APITests: XCTestCase {
         
         MockAPI.sendRequest(request) { response in
             switch response {
-            case .Success(let box):
-                XCTAssert(box.value["key"] as? String == "value")
+            case .Success(let dictionary):
+                XCTAssert(dictionary["key"] as? String == "value")
 
             case .Failure:
                 XCTFail()
@@ -82,8 +82,7 @@ class APITests: XCTestCase {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
+            case .Failure(let error):
                 XCTAssert(error.domain == NSURLErrorDomain)
             }
             
@@ -97,7 +96,8 @@ class APITests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
         }, withStubResponse: { request in
-            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            let dictionary: [String: String] = [:]
+            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions(rawValue: 0))
             return OHHTTPStubsResponse(data: data, statusCode: 400, headers: nil)
         })
         
@@ -109,8 +109,7 @@ class APITests: XCTestCase {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
+            case .Failure(let error):
                 XCTAssert(error.domain == "MockAPIErrorDomain")
                 XCTAssert(error.code == 10000)
             }
@@ -138,8 +137,7 @@ class APITests: XCTestCase {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
+            case .Failure(let error):
                 XCTAssert(error.domain == NSCocoaErrorDomain)
                 XCTAssert(error.code == 3840)
             }
@@ -169,8 +167,7 @@ class APITests: XCTestCase {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
+            case .Failure(let error):
                 XCTAssert(error.domain == NSURLErrorDomain)
                 XCTAssert(error.code == NSURLErrorCancelled)
             }
@@ -187,7 +184,8 @@ class APITests: XCTestCase {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
         }, withStubResponse: { request in
-            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            let dictionary: [String: String] = [:]
+            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions(rawValue: 0))
             let response = OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
             response.requestTime = 0.1
             response.responseTime = 0.1
@@ -202,7 +200,7 @@ class APITests: XCTestCase {
             case .Success:
                 break
                 
-            case .Failure(let box):
+            case .Failure:
                 XCTFail()
             }
             
