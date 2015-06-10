@@ -11,11 +11,11 @@ public class API {
     
     // How can I pass "no options" to
     public class var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
+        return .JSON(writingOptions: [])
     }
 
     public class var responseBodyParser: ResponseBodyParser {
-        return .JSON(readingOptions: NSJSONReadingOptions(rawValue: 0))
+        return .JSON(readingOptions: [])
     }
 
     public class var defaultURLSession: NSURLSession {

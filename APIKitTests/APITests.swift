@@ -39,7 +39,7 @@ class APITests: XCTestCase {
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
-        let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions(rawValue: 0))
+        let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
         
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
@@ -97,7 +97,7 @@ class APITests: XCTestCase {
             return true
         }, withStubResponse: { request in
             let dictionary: [String: String] = [:]
-            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions(rawValue: 0))
+            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
             return OHHTTPStubsResponse(data: data, statusCode: 400, headers: nil)
         })
         
@@ -185,7 +185,7 @@ class APITests: XCTestCase {
             return true
         }, withStubResponse: { request in
             let dictionary: [String: String] = [:]
-            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions(rawValue: 0))
+            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
             let response = OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
             response.requestTime = 0.1
             response.responseTime = 0.1

@@ -5,14 +5,14 @@ import XCTest
 
 class ResponseBodyParserTests: XCTestCase {
     func testJSONAcceptHeader() {
-        let parser = ResponseBodyParser.JSON(readingOptions: NSJSONReadingOptions(rawValue: 0))
+        let parser = ResponseBodyParser.JSON(readingOptions: [])
         XCTAssert(parser.acceptHeader == "application/json")
     }
     
     func testJSONSuccess() {
         let string = "{\"foo\": 1, \"bar\": 2, \"baz\": 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = ResponseBodyParser.JSON(readingOptions: NSJSONReadingOptions(rawValue: 0))
+        let parser = ResponseBodyParser.JSON(readingOptions: [])
 
         switch parser.parseData(data) {
         case .Success(let object):
@@ -29,7 +29,7 @@ class ResponseBodyParserTests: XCTestCase {
     func testJSONFailure() {
         let string = "{\"foo\": 1, \"bar\": 2, \" 3}"
         let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = ResponseBodyParser.JSON(readingOptions: NSJSONReadingOptions(rawValue: 0))
+        let parser = ResponseBodyParser.JSON(readingOptions: [])
 
         switch parser.parseData(data) {
         case .Success:

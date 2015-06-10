@@ -5,17 +5,17 @@ import XCTest
 
 class RequestBodyBuilderTests: XCTestCase {
     func testJSONHeader() {
-        let builder = RequestBodyBuilder.JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
+        let builder = RequestBodyBuilder.JSON(writingOptions: [])
         XCTAssert(builder.contentTypeHeader == "application/json")
     }
     
     func testJSONSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
-        let builder = RequestBodyBuilder.JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
+        let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let data):
-            let dictionary = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0)) as? [String: Int]
+            let dictionary = try! NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String: Int]
             XCTAssert(dictionary?["foo"] == 1)
             XCTAssert(dictionary?["bar"] == 2)
             XCTAssert(dictionary?["baz"] == 3)
@@ -27,7 +27,7 @@ class RequestBodyBuilderTests: XCTestCase {
     
     func testJSONFailure() {
         let object = NSObject()
-        let builder = RequestBodyBuilder.JSON(writingOptions: NSJSONWritingOptions(rawValue: 0))
+        let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
         switch builder.buildBodyFromObject(object) {
         case .Success:
