@@ -1,5 +1,6 @@
 import Foundation
 import APIKit
+import Himotoki
 
 class GitHub: API {
     override class var baseURL: NSURL {
@@ -41,17 +42,7 @@ class GitHub: API {
             }
 
             class func responseFromObject(object: AnyObject) -> Response? {
-                var repositories = [Repository]()
-
-                if let dictionaries = object["items"] as? [NSDictionary] {
-                    for dictionary in dictionaries {
-                        if let repository = Repository(dictionary: dictionary) {
-                            repositories.append(repository)
-                        }
-                    }
-                }
-
-                return repositories
+                return object["items"].flatMap(decode) ?? []
             }
         }
 
@@ -89,17 +80,7 @@ class GitHub: API {
             }
 
             class func responseFromObject(object: AnyObject) -> Response? {
-                var users = [User]()
-
-                if let dictionaries = object["items"] as? [NSDictionary] {
-                    for dictionary in dictionaries {
-                        if let user = User(dictionary: dictionary) {
-                            users.append(user)
-                        }
-                    }
-                }
-                
-                return users
+                return object["items"].flatMap(decode) ?? []
             }
         }
     }

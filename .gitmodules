@@ -10,3 +10,6 @@
 [submodule "Carthage/Checkouts/Result"]
 	path = Carthage/Checkouts/Result
 	url = https://github.com/antitypical/Result.git
+[submodule "Carthage/Checkouts/Himotoki"]
+	path = Carthage/Checkouts/Himotoki
+	url = https://github.com/ikesyo/Himotoki.git

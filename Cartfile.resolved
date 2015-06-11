@@ -1,4 +1,5 @@
-github "antitypical/Assertions" "1.1"
+github "antitypical/Assertions" "1.1.1"
 github "robrix/Box" "1.2.2"
+github "ikesyo/Himotoki" "0.4.1"
 github "AliSoftware/OHHTTPStubs" "4.0.2"
 github "antitypical/Result" "0.4.3"
