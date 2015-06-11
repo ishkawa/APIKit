@@ -3,31 +3,40 @@ import APIKit
 import XCTest
 import OHHTTPStubs
 
-class APITests: XCTestCase {
-    class MockAPI: API {
-        override class var baseURL: NSURL {
-            return NSURL(string: "https://api.github.com")!
-        }
-        
-        override class func responseErrorFromObject(object: AnyObject) -> NSError {
-            return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
-        }
-        
-        class Endpoint {
-            class Get: Request {
-                typealias Response = [String: AnyObject]
-                
-                var URLRequest: NSURLRequest? {
-                    return MockAPI.URLRequest(method: .GET, path: "/")
+protocol MockAPIRequest: Request {
+}
+
+extension MockAPIRequest {
+    var baseURL: NSURL {
+        return NSURL(string: "https://api.github.com")!
+    }
+
+    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> NSError {
+        return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
+    }
+}
+
+class MockAPI: API {
+    class Endpoint {
+        class Get: MockAPIRequest {
+            typealias Response = [String: AnyObject]
+
+            var method = Method.GET
+            var path = "/"
+
+            func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+                guard let response = object as? [String: AnyObject] else {
+                    throw APIKitError.Unknown
                 }
-                
-                class func responseFromObject(object: AnyObject) -> Response? {
-                    return object as? [String: AnyObject]
-                }
+
+                return response
             }
         }
     }
-    
+}
+
+class APITests: XCTestCase {
+
     class AnotherMockAPI: API {
     }
     
