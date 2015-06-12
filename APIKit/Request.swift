@@ -15,7 +15,7 @@ public protocol Request {
     var responseBodyParser: ResponseBodyParser { get }
 
     func buildURLRequest() throws -> NSURLRequest
-    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> NSError
+    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType
 }
 
 public extension Request {
@@ -41,7 +41,7 @@ public extension Request {
 
     public func buildURLRequest() throws -> NSURLRequest {
         guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
-            throw APIKitError.IllegalFormatURL
+            throw APIKitError.InvalidBaseURL
         }
 
         let request = NSMutableURLRequest()
@@ -56,7 +56,7 @@ public extension Request {
                 request.HTTPBody = result
 
             case .Failure:
-                throw APIKitError.IllegalParameter
+                throw APIKitError.InvalidParameters
             }
         }
 
@@ -69,9 +69,7 @@ public extension Request {
         return request
     }
 
-    public func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> NSError {
-        let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
-        let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-        return error
+    public func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType {
+        return APIKitError.UnacceptableStatusCode
     }
 }

@@ -15,57 +15,63 @@ public class API {
     )
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        let mainQueue = dispatch_get_main_queue()
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIKitError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+        func notifyError(error: APIKitError) {
+            let queue = dispatch_get_main_queue()
+            dispatch_async(queue) {
+                handler(.failure(error))
+            }
+        }
+
         let URLRequest: NSURLRequest
         do {
             URLRequest = try request.buildURLRequest()
         } catch {
-            let userInfo = [NSLocalizedDescriptionKey: "failed to build request."]
-            let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-            dispatch_async(mainQueue) { handler(.failure(error)) }
+            notifyError(.CannotBuildURLRequest)
             return nil
         }
 
         guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
-            // TODO: throw error
-            abort()
+            notifyError(.CannotBuildURLSessionTask)
+            return nil
         }
 
         task.request = Box(request)
         task.completionHandler = { data, URLResponse, connectionError in
             if let error = connectionError {
-                dispatch_async(mainQueue) { handler(.failure(error)) }
+                notifyError(.ConnectionError(underlyingError: error))
                 return
             }
 
             guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
-                let userInfo = [NSLocalizedDescriptionKey: "failed to get NSHTTPURLResponse."]
-                let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                dispatch_async(mainQueue) { handler(.failure(error)) }
+                notifyError(.NoURLResponse)
+                return
+            }
+
+            let parseResult = request.responseBodyParser.parseData(data)
+            guard let object = parseResult.value else {
+                // TODO: rewrite without `!`
+                notifyError(.ResponseBodyParserError(underlyingError: parseResult.error!))
                 return
             }
 
             if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-                let error = request.responseBodyParser.parseData(data).analysis(
-                    ifSuccess: { request.buildErrorFromObject($0, URLResponse: HTTPURLResponse) },
-                    ifFailure: { $0 }
-                )
-                dispatch_async(mainQueue) { handler(.failure(error)) }
+                let error = request.buildErrorFromObject(object, URLResponse: HTTPURLResponse)
+                notifyError(.ResponseError(underlyingError: error))
                 return
             }
 
-            let mappedResponse: Result<T.Response, NSError> = request.responseBodyParser.parseData(data).flatMap { rawResponse in
-                do {
-                    return .success(try request.buildResponseFromObject(rawResponse, URLResponse: HTTPURLResponse))
-                } catch {
-                    let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
-                    let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-                    return .failure(error)
-                }
+            let response: T.Response
+            do {
+                response = try request.buildResponseFromObject(object, URLResponse: HTTPURLResponse)
+            } catch {
+                notifyError(.CannotBuildResponseObject(underlyingError: error))
+                return
             }
 
-            dispatch_async(mainQueue) { handler(mappedResponse) }
+            dispatch_async(dispatch_get_main_queue()) {
+                handler(.success(response))
+            }
         }
 
         task.resume()
