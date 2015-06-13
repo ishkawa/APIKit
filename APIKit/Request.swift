@@ -51,13 +51,7 @@ public extension Request {
             components.query = try URLEncodedSerialization.stringFromObject(parameters, encoding: NSUTF8StringEncoding)
 
         default:
-            switch requestBodyBuilder.buildBodyFromObject(parameters) {
-            case .Success(let result):
-                request.HTTPBody = result
-
-            case .Failure:
-                throw APIKitError.InvalidParameters
-            }
+            request.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
         }
 
         components.path = (components.path ?? "").stringByAppendingPathComponent(path)

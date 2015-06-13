@@ -16,12 +16,12 @@ public class URLEncodedSerialization {
         case InvalidFormatString
     }
 
-    public class func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> AnyObject {
+    public class func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> [String: String] {
         guard let string = NSString(data: data, encoding: encoding) as? String else {
             throw Errors.CannotGetStringFromData
         }
 
-        var dictionary = [String: AnyObject]()
+        var dictionary = [String: String]()
         for pair in string.componentsSeparatedByString("&") {
             let contents = pair.componentsSeparatedByString("=")
 

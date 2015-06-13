@@ -13,14 +13,13 @@ class RequestBodyBuilderTests: XCTestCase {
         let object = ["foo": 1, "bar": 2, "baz": 3]
         let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
-        switch builder.buildBodyFromObject(object) {
-        case .Success(let data):
-            let dictionary = try! NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String: Int]
-            XCTAssert(dictionary?["foo"] == 1)
-            XCTAssert(dictionary?["bar"] == 2)
-            XCTAssert(dictionary?["baz"] == 3)
-
-        case .Failure:
+        do {
+            let data = try builder.buildBodyFromObject(object)
+            let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+            XCTAssert(dictionary["foo"] == 1)
+            XCTAssert(dictionary["bar"] == 2)
+            XCTAssert(dictionary["baz"] == 3)
+        } catch {
             XCTFail()
         }
     }
@@ -29,13 +28,13 @@ class RequestBodyBuilderTests: XCTestCase {
         let object = NSObject()
         let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
-        switch builder.buildBodyFromObject(object) {
-        case .Success:
+        do {
+            try builder.buildBodyFromObject(object)
             XCTFail()
-            
-        case .Failure(let error):
-            XCTAssert(error.domain == APIKitRequestBodyBuidlerErrorDomain)
-            XCTAssert(error.code == 0)
+        } catch {
+            let nserror = error as NSError
+            XCTAssert(nserror.domain == NSCocoaErrorDomain)
+            XCTAssert(nserror.code == 3840)
         }
     }
     
@@ -48,35 +47,35 @@ class RequestBodyBuilderTests: XCTestCase {
         let object = ["foo": 1, "bar": 2, "baz": 3]
         let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
 
-        switch builder.buildBodyFromObject(object) {
-        case .Success(let data):
-            let dictionary = try! URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding) as? [String: String]
-            XCTAssert(dictionary?["foo"] == "1")
-            XCTAssert(dictionary?["bar"] == "2")
-            XCTAssert(dictionary?["baz"] == "3")
-
-        case .Failure:
+        do {
+            let data = try builder.buildBodyFromObject(object)
+            let dictionary = try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
+            XCTAssert(dictionary["foo"] == "1")
+            XCTAssert(dictionary["bar"] == "2")
+            XCTAssert(dictionary["baz"] == "3")
+        } catch {
             XCTFail()
         }
     }
     
     func testCustomHeader() {
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo", buildBodyFromObject: { o in .success(o as! NSData) })
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo") { object in
+            NSData()
+        }
         XCTAssert(builder.contentTypeHeader == "foo")
     }
     
     func testCustomSuccess() {
         let string = "foo"
         let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
-            return .success(expectedData)
-        })
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "") { object in
+            expectedData
+        }
 
-        switch builder.buildBodyFromObject(string) {
-        case .Success(let data):
+        do {
+            let data = try builder.buildBodyFromObject(string)
             XCTAssert(data == expectedData)
-
-        case .Failure:
+        } catch {
             XCTFail()
         }
     }
@@ -84,16 +83,15 @@ class RequestBodyBuilderTests: XCTestCase {
     func testCustomFailure() {
         let string = "foo"
         let expectedError = NSError(domain: "Foo", code: 1234, userInfo: nil)
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "", buildBodyFromObject: { object in
-            return .failure(expectedError)
-        })
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "") { object in
+            throw expectedError
+        }
 
-        switch builder.buildBodyFromObject(string) {
-        case .Success:
+        do {
+            try builder.buildBodyFromObject(string)
             XCTFail()
-
-        case .Failure(let error):
-            XCTAssert(error == expectedError)
+        } catch {
+            XCTAssert((error as NSError) == expectedError)
         }
     }
 }

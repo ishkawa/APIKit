@@ -1,12 +1,10 @@
 import Foundation
 import Result
 
-public let APIKitRequestBodyBuidlerErrorDomain = "APIKitRequestBodyBuidlerErrorDomain"
-
 public enum RequestBodyBuilder {
     case JSON(writingOptions: NSJSONWritingOptions)
     case URL(encoding: NSStringEncoding)
-    case Custom(contentTypeHeader: String, buildBodyFromObject: AnyObject -> Result<NSData, NSError>)
+    case Custom(contentTypeHeader: String, buildBodyFromObject: AnyObject throws -> NSData)
     
     public var contentTypeHeader: String {
         switch self {
@@ -21,37 +19,19 @@ public enum RequestBodyBuilder {
         }
     }
 
-    // TODO: migrate to Swift 2 style error handling
-    public func buildBodyFromObject(object: AnyObject) -> Result<NSData, NSError> {
+    public func buildBodyFromObject(object: AnyObject) throws -> NSData {
         switch self {
         case .JSON(let writingOptions):
-            if !NSJSONSerialization.isValidJSONObject(object) {
-                let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
-                let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                return .failure(error)
+            guard NSJSONSerialization.isValidJSONObject(object) else {
+                throw NSError(domain: NSCocoaErrorDomain, code: 3840, userInfo: nil)
             }
-
-            let result: Result<NSData, NSError>
-            do {
-                result = .success(try NSJSONSerialization.dataWithJSONObject(object, options: writingOptions))
-            } catch {
-                result = .failure(error as NSError)
-            }
-
-            return result
+            return try NSJSONSerialization.dataWithJSONObject(object, options: writingOptions)
 
         case .URL(let encoding):
-            let result: Result<NSData, NSError>
-            do {
-                result = .success(try URLEncodedSerialization.dataFromObject(object, encoding: encoding))
-            } catch {
-                result = .failure(error as NSError)
-            }
-
-            return result
+            return try URLEncodedSerialization.dataFromObject(object, encoding: encoding)
 
         case .Custom(let (_, buildBodyFromObject)):
-            return buildBodyFromObject(object)
+            return try buildBodyFromObject(object)
         }
     }
 }
