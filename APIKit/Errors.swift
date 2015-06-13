@@ -10,5 +10,4 @@ public enum APIKitError: ErrorType {
     case NoURLResponse
     case UnacceptableStatusCode(ErrorType?)
     case ConnectionError(underlyingError: NSError)
-    case ResponseBodyParserError(underlyingError: ErrorType)
 }

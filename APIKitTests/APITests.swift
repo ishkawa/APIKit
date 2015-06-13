@@ -163,7 +163,7 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .ResponseBodyParserError(let error as NSError):
+                case .CannotBuildResponseObject(let error as NSError):
                     XCTAssert(error.domain == NSCocoaErrorDomain)
                     XCTAssert(error.code == 3840)
 

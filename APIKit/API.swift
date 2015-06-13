@@ -49,29 +49,23 @@ public class API {
                 return
             }
 
-            let parseResult = request.responseBodyParser.parseData(data)
-            guard let object = parseResult.value else {
-                // TODO: rewrite without `!`
-                notifyError(.ResponseBodyParserError(underlyingError: parseResult.error!))
-                return
-            }
-
-            if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-                let error = request.buildErrorFromObject(object, URLResponse: HTTPURLResponse)
-                notifyError(.UnacceptableStatusCode(error))
-                return
-            }
-
-            let response: T.Response
             do {
-                response = try request.buildResponseFromObject(object, URLResponse: HTTPURLResponse)
-            } catch {
-                notifyError(.CannotBuildResponseObject(underlyingError: error))
-                return
-            }
+                let object = try request.responseBodyParser.parseData(data)
+                if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
+                    let error = request.buildErrorFromObject(object, URLResponse: HTTPURLResponse)
+                    throw APIKitError.UnacceptableStatusCode(error)
+                }
 
-            dispatch_async(dispatch_get_main_queue()) {
-                handler(.success(response))
+                let response = try request.buildResponseFromObject(object, URLResponse: HTTPURLResponse)
+                dispatch_async(dispatch_get_main_queue()) {
+                    handler(.success(response))
+                }
+            } catch {
+                if let e = error as? APIKitError {
+                    notifyError(e)
+                } else {
+                    notifyError(.CannotBuildResponseObject(underlyingError: error))
+                }
             }
         }
 
