@@ -6,13 +6,17 @@ import OHHTTPStubs
 protocol MockAPIRequest: Request {
 }
 
+enum MockAPIErrors: ErrorType {
+    case Mock
+}
+
 extension MockAPIRequest {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 
-    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> NSError {
-        return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
+    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
+        return MockAPIErrors.Mock
     }
 }
 
@@ -26,7 +30,7 @@ class MockAPI: API {
 
             func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
                 guard let response = object as? [String: AnyObject] else {
-                    throw APIKitError.Unknown
+                    throw MockAPIErrors.Mock
                 }
 
                 return response
@@ -92,7 +96,13 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let error):
-                XCTAssert(error.domain == NSURLErrorDomain)
+                switch error {
+                case .ConnectionError(let error):
+                    XCTAssert(error.domain == NSURLErrorDomain)
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()
@@ -119,8 +129,13 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let error):
-                XCTAssert(error.domain == "MockAPIErrorDomain")
-                XCTAssert(error.code == 10000)
+                switch error {
+                case .UnacceptableStatusCode(let error):
+                    XCTAssert(error is MockAPIErrors)
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()
@@ -147,8 +162,14 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let error):
-                XCTAssert(error.domain == NSCocoaErrorDomain)
-                XCTAssert(error.code == 3840)
+                switch error {
+                case .ResponseBodyParserError(let error as NSError):
+                    XCTAssert(error.domain == NSCocoaErrorDomain)
+                    XCTAssert(error.code == 3840)
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()
@@ -177,8 +198,14 @@ class APITests: XCTestCase {
                 XCTFail()
                 
             case .Failure(let error):
-                XCTAssert(error.domain == NSURLErrorDomain)
-                XCTAssert(error.code == NSURLErrorCancelled)
+                switch error {
+                case .ConnectionError(let error):
+                    XCTAssert(error.domain == NSURLErrorDomain)
+                    XCTAssert(error.code == NSURLErrorCancelled)
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()

@@ -15,7 +15,7 @@ public protocol Request {
     var responseBodyParser: ResponseBodyParser { get }
 
     func buildURLRequest() throws -> NSURLRequest
-    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType
+    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
 }
 
 public extension Request {
@@ -69,7 +69,7 @@ public extension Request {
         return request
     }
 
-    public func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType {
-        return APIKitError.UnacceptableStatusCode
+    public func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
+        return nil
     }
 }

@@ -19,6 +19,7 @@ public class API {
         func notifyError(error: APIKitError) {
             let queue = dispatch_get_main_queue()
             dispatch_async(queue) {
+                print(error)
                 handler(.failure(error))
             }
         }
@@ -57,7 +58,7 @@ public class API {
 
             if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
                 let error = request.buildErrorFromObject(object, URLResponse: HTTPURLResponse)
-                notifyError(.ResponseError(underlyingError: error))
+                notifyError(.UnacceptableStatusCode(error))
                 return
             }
 

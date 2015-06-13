@@ -8,8 +8,7 @@ public enum APIKitError: ErrorType {
     case CannotBuildURLSessionTask
     case CannotBuildResponseObject(underlyingError: ErrorType)
     case NoURLResponse
-    case UnacceptableStatusCode
-    case ConnectionError(underlyingError: ErrorType)
+    case UnacceptableStatusCode(ErrorType?)
+    case ConnectionError(underlyingError: NSError)
     case ResponseBodyParserError(underlyingError: ErrorType)
-    case ResponseError(underlyingError: ErrorType)
 }
