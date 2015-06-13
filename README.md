@@ -4,37 +4,24 @@ APIKit
 [![Circle CI](https://img.shields.io/circleci/project/ishkawa/APIKit/master.svg?style=flat)](https://circleci.com/gh/ishkawa/APIKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-APIKit is a networking library for building type safe web API client in Swift.
-By taking advantage of Swift, APIKit provides following features:
+APIKit is a library for building type safe web API client in Swift.
 
-- Enumerate all endpoints in nested class.
-- Validate request parameters by type.
-- Associate type of response with type of request using generics.
-- Return model object or `NSError` as a non-optional value in handler (thanks to [Result](https://github.com/antitypical/Result)).
-
-so you can:
-
-- Call API without looking API documentation.
-- Receive response as a non-optional model object.
-- Write exhaustive completion handler easily.
-
-See the demo code below to understand good points of APIKit.
+- Parameters of a request are validated by type system.
+- Type of a response is inferred from type of its request.
+- A result of request is represented by [Result<Value, Error>](https://github.com/antitypical/Result), which is also known as Either.
+- All the endpoints can be enumerated in nested class.
 
 ```swift
-// parameters of request are validated by type system of Swift
 let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
 
-GitHub.sendRequest(request) { response in
-    // no optional bindings are required to get response and error (thanks to Result)
-    switch response {
-    case .Success(let box):
-        // type of response is inferred from type of request
-        self.repositories = box.value
-        self.tableView?.reloadData()
+GitHub.sendRequest(request) { result in
+    switch result {
+    case .Success(let response):
+        self.repositories = response // inferred as [Repository]
+        self.tableView.reloadData()
 
-    case .Failure(let box):
-        // if request fails, value in box is a NSError
-        println(box.value)
+    case .Failure(let error):
+        println(error)
     }
 }
 ```
@@ -42,125 +29,81 @@ GitHub.sendRequest(request) { response in
 
 ## Requirements
 
-- Swift 1.2
+- Swift 2
 - iOS 8.0 or later
 - Mac OS 10.9 or later
 
-If you want to use APIKit with Swift 1.1, try [0.6.0](https://github.com/ishkawa/APIKit/releases/tag/0.6.0).
+If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa/APIKit/releases/tag/0.8.2).
 
 ## Installation
 
-You have 3 choices.
-
-#### 1. Using Carthage (Recommended)
+#### [Carthage](https://github.com/Carthage/Carthage)
 
 - Insert `github "ishkawa/APIKit"` to your Cartfile.
 - Run `carthage update`.
-- Drag `Carthage/Build` to your project.
-- Select "General" tab in xcodeproj.
-- Add frameworks below to "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
-  - APIKit.framework
-  - Result.framework
-  - Box.framework
+- Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
 
-#### 2. Using CocoaPods
+#### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `use_frameworks!` to your Podfile.
 - Insert `pod "APIKit"` to your Podfile.
 - Run `pod install`.
 
-#### 3. Embedding project
-
-- Clone this repository: `git clone --recursive https://github.com/ishkawa/APIKit.git`
-- Drag xcodeproj below to your project. The destination must be under your xcodeproj.
-  - `APIKit.xcodeproj`
-  - `Carthage/Checkouts/Result/Result.xcodeproj`
-  - `Carthage/Checkouts/Box/Box.xcodeproj`
-- Select "Build Phase" in xcodeproj.
-- Add build targets below to "Target Dependencies". If you develop Mac App, replace "iOS" in target name with "Mac".
-  - APIKit-iOS
-  - Result-iOS
-  - Box-iOS
-- Select "General" tab in xcodeproj.
-- Add frameworks below to "Embedded Binaries", and confirm they are also in "Linked Frameworks and Libraries".
-  - APIKit.framework
-  - Result.framework
-  - Box.framework
-
 ## Usage
 
-1. Create subclass of `API` that represents target web API.
-2. Set base URL by overriding `baseURL`.
-3. Set encoding of request body by overriding `requestBodyBuilder`.
-4. Set encoding of response body by overriding `responseBodyParser`.
-5. Define request classes that conforms to `Request` for each endpoints.
-
-### Example
+1. Create a request protocol that inherits `Request` protocol.
+2. Add `baseURL` variable in extension of request protocol.
+3. Create a API class that inherits `API` class.
+4. Define request types that conforms to request protocol in `Endpoint` class in API class.
+    1. Create a type that represents a endpoint of the web API.
+    2. Assign type that represents response object to `Response` typealiase.
+    3. Add `method` and `path` variables.
+    4. Implement `buildResponseFromObject(_:URLResponse:)` to build `Response` from raw object, which may be an array or a dictionary.
 
 ```swift
-class GitHub: API {
-    override class var baseURL: NSURL {
+protocol GitHubRequest: Request {
+}
+
+extension GitHubRequest {
+    var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
+}
 
-    override class var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: nil)
-    }
+class GitHubAPI: API {
+}
 
-    override class var responseBodyParser: ResponseBodyParser {
-        return .JSON(readingOptions: nil)
-    }
+extension GitHubAPI.Endpoint {
+    struct GetRateLimit: GitHubRequest {
+        typealiase Response = RateLimit
 
-    class Endpoint {
-        // https://developer.github.com/v3/search/#search-repositories
-        class SearchRepositories: Request {
-            enum Sort: String {
-                case Stars = "stars"
-                case Forks = "forks"
-                case Updated = "updated"
-            }
-
-            enum Order: String {
-                case Ascending = "asc"
-                case Descending = "desc"
-            }
-
-            typealias Response = [Repository]
-
-            let query: String
-            let sort: Sort
-            let order: Order
-
-            var URLRequest: NSURLRequest? {
-                return GitHub.URLRequest(
-                    method: .GET,
-                    path: "/search/repositories",
-                    parameters: ["q": query, "sort": sort.rawValue, "order": order.rawValue]
-                )
-            }
-
-            init(query: String, sort: Sort = .Stars, order: Order = .Ascending) {
-                self.query = query
-                self.sort = sort
-                self.order = order
-            }
-
-            class func responseFromObject(object: AnyObject) -> Response? {
-                var repositories = [Repository]()
-
-                if let dictionaries = object["items"] as? [NSDictionary] {
-                    for dictionary in dictionaries {
-                        if let repository = Repository(dictionary: dictionary) {
-                            repositories.append(repository)
-                        }
-                    }
-                }
-
-                return repositories
-            }
+        var method: Method {
+            return .GET
         }
 
-        // define other requests here
+        var path: String {
+            return "/rate_limit"
+        }
+
+        func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            guard let dictionary = object as? [String: AnyObject] else {
+                throw SomeError
+            }
+
+            guard let rateLimit = RateLimit(dictionary) else {
+                throw SomeError
+            }
+
+            return rateLimit
+        }
+    }
+}
+
+struct RateLimit {
+    let count: Int
+    let resetDate: NSDate
+
+    init?(dictionary: [String: AnyObject]) {
+        ...
     }
 }
 ```
@@ -168,15 +111,16 @@ class GitHub: API {
 ### Sending request
 
 ```swift
-let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
+let request = GitHubAPI.Endpoint.GetRateLimit()
 
-GitHub.sendRequest(request) { response in
-    switch response {
-    case .Success(let box):
-        // type of `box.value` is `[Repository]` (model object)
+GitHubAPI.sendRequest(request) { result in
+    switch result {
+    case .Success(let rateLimit):
+        print("count: \(rateLimit.count)")
+        print("resetDate: \(rateLimit.resetDate)")
 
-    case .Failure(let box):
-        // type of `box.value` is `NSError`
+    case .Failure(let error):
+        print("error: \(error)")
     }
 }
 ```
@@ -184,7 +128,7 @@ GitHub.sendRequest(request) { response in
 ### Canceling request
 
 ```swift
-GitHub.cancelRequest(GitHub.Endpoint.SearchRepositories.self)
+GitHub.cancelRequest(GitHub.Endpoint.RateLimit)
 ```
 
 If you want to filter requests to be cancelled, add closure that identifies the request shoule be cancelled or not.
@@ -195,9 +139,25 @@ GitHub.cancelRequest(GitHub.Endpoint.SearchRepositories.self) { request in
 }
 ```
 
-## Advanced usage
+### Configuring request
 
-### Creating NSError from response object
+#### Setting parameters
+#### Setting serializer of a request
+#### Setting serializer of a response
+#### Adding fields to HTTP header of a request
+#### Building NSURLRequest manually
+
+### Configuring response
+
+#### Setting acceptable status code
+
+```swift
+var acceptableStatusCodes: Set<Int> {
+  return Set(200)
+}
+```
+
+#### Building custom error from a response
 
 You can create detailed error using response object from Web API.
 For example, [GitHub API](https://developer.github.com/v3/#client-errors) returns error like this:
@@ -211,16 +171,83 @@ For example, [GitHub API](https://developer.github.com/v3/#client-errors) return
 To create error that contains `message` in response, override `API.responseErrorFromObject(object:)` and return `NSError` using response object.
 
 ```swift
-public override class func responseErrorFromObject(object: AnyObject) -> NSError {
-    if let message = (object as? NSDictionary)?["message"] as? String {
-        let userInfo = [NSLocalizedDescriptionKey: message]
-        return NSError(domain: "YourAppAPIErrorDomain", code: 40000, userInfo: userInfo)
-    } else {
-        let userInfo = [NSLocalizedDescriptionKey: "unresolved error occurred."]
-        return NSError(domain: "YourAppAPIErrorDomain", code: 40001, userInfo: userInfo)
+func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
+    guard let dictionary = object as? [String: AnyObject] else {
+        throw SomeError
+    }
+
+    guard let message = dictionary["message"] as? String else {
+        throw SomeError
+    }
+
+    return GitHubError(message: message)
+}
+```
+
+## Practical Example
+
+### Pagination
+
+```swift
+let request = SomeAPI.Endpoint.SomePaginatedRequest(page: 1)
+
+SomeAPI.sendRequest(request) { result in
+    switch result {
+    case .Success(let response):
+        print("results: \(response.results)")
+        print("nextPage: \(response.nextPage)")
+        print("hasNext: \(response.hasNext)")
+
+    case .Failure(let error):
+        print("error: \(error)")
     }
 }
 ```
+
+```swift
+struct PaginatedResponse<T> {
+    var results: Array<T>
+    var nextPage: Int { get }
+    var hasNext: Bool { get }
+
+    init(results: Array<T>, URLResponse: NSHTTPURLResponse) {
+        self.results = results
+        self.nextPage = /* get nextPage from `Link` field of URLResponse */
+        self.hasNext = /* get hasNext from `Link` field of URLResponse */
+    }
+}
+
+struct SomePaginatedRequest: Request {
+    typealias Response = PaginatedResponse<Some>
+
+    var method: Method {
+        return .GET
+    }
+
+    var path: String {
+        return "/paginated"
+    }
+
+    let page: Int
+
+    static func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+        guard let dictionaries = object as? [[String: AnyObject]] else {
+            throw SomeError
+        }
+
+        var somes = [Some]()
+        for dictionary in dictionaries {
+            if let some = Some(dictionary: dictionary) {
+                somes.append()
+            }
+        }
+
+        return PaginatedResponse(results: somes, URLResponse: URLResponse)
+    }
+}
+```
+
+## Advanced usage
 
 ### NSURLSessionDelegate
 
