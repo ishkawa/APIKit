@@ -50,7 +50,7 @@ class RequestBodyBuilderTests: XCTestCase {
 
         switch builder.buildBodyFromObject(object) {
         case .Success(let data):
-            let dictionary =  URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding, error: nil) as? [String: String]
+            let dictionary = try! URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding) as? [String: String]
             XCTAssert(dictionary?["foo"] == "1")
             XCTAssert(dictionary?["bar"] == "2")
             XCTAssert(dictionary?["baz"] == "3")

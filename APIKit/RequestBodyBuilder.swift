@@ -41,9 +41,14 @@ public enum RequestBodyBuilder {
             return result
 
         case .URL(let encoding):
-            return `try` { error in
-                return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
+            let result: Result<NSData, NSError>
+            do {
+                result = .success(try URLEncodedSerialization.dataFromObject(object, encoding: encoding))
+            } catch {
+                result = .failure(error as NSError)
             }
+
+            return result
 
         case .Custom(let (_, buildBodyFromObject)):
             return buildBodyFromObject(object)

@@ -37,9 +37,14 @@ public enum ResponseBodyParser {
             return result
 
         case .URL(let encoding):
-            return `try` { error in
-                return URLEncodedSerialization.objectFromData(data, encoding: encoding, error: error)
+            let result: Result<AnyObject, NSError>
+            do {
+                result = .success(try URLEncodedSerialization.objectFromData(data, encoding: encoding))
+            } catch {
+                result = .failure(error as NSError)
             }
+
+            return result
 
         case .Custom(let (_, parseData)):
             return parseData(data)
