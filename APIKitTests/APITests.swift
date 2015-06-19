@@ -12,12 +12,12 @@ extension MockAPIRequest {
     }
 
     func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return MockAPI.Errrors.Mock
+        return MockAPI.Errors.Mock
     }
 }
 
 class MockAPI: API {
-    enum Errrors: ErrorType {
+    enum Errors: ErrorType {
         case Mock
     }
 
@@ -34,7 +34,7 @@ class MockAPI: API {
 
         func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let response = object as? [String: AnyObject] else {
-                throw Errrors.Mock
+                throw Errors.Mock
             }
 
             return response
@@ -134,7 +134,7 @@ class APITests: XCTestCase {
             case .Failure(let error):
                 switch error {
                 case .UnacceptableStatusCode(let error):
-                    XCTAssert(error is MockAPI.Errrors)
+                    XCTAssert(error is MockAPI.Errors)
 
                 default:
                     XCTFail()
