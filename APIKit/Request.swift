@@ -41,13 +41,10 @@ public protocol Request {
     func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
 }
 
+/// Default implementation of Request protocol
 public extension Request {
     public var parameters: [String: AnyObject] {
         return [:]
-    }
-
-    public var baseURL: NSURL {
-        fatalError("Request.baseURL must be overrided.")
     }
 
     public var acceptableStatusCodes: Set<Int> {
