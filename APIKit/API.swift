@@ -1,8 +1,6 @@
 import Foundation
 import Result
 
-public let APIKitErrorDomain = "APIKitErrorDomain"
-
 public class API {
     public class var defaultURLSession: NSURLSession {
         return internalDefaultURLSession
