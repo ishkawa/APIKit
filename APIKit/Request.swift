@@ -14,7 +14,7 @@ public protocol Request {
 
     /// Configurations of request
     var baseURL: NSURL { get }
-    var method: Method { get }
+    var method: HTTPMethod { get }
     var path: String { get }
     var parameters: [String: AnyObject] { get }
 

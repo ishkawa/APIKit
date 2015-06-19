@@ -24,7 +24,7 @@ class MockAPI: API {
     struct GetRoot: MockAPIRequest {
         typealias Response = [String: AnyObject]
 
-        var method: APIKit.Method {
+        var method: HTTPMethod {
             return .GET
         }
 
