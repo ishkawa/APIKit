@@ -1,21 +1,29 @@
 import Foundation
 import Result
 
+/// Request protocol represents a request for Web API.
+/// Following 4 items must be implemented.
+/// - typealias Response
+/// - var method: Method
+/// - var path: String
+/// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
 public protocol Request {
-    // required
+    /// Type represents a model object
     typealias Response
+
+    /// Configurations of request
     var method: Method { get }
     var path: String { get }
-    func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
-
     var parameters: [String: AnyObject] { get }
+
     var baseURL: NSURL { get }
     var acceptableStatusCodes: Set<Int> { get }
     var requestBodyBuilder: RequestBodyBuilder { get }
     var responseBodyParser: ResponseBodyParser { get }
 
-    func buildURLRequest() throws -> NSURLRequest
-    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
+    func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
+    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
 }
 
 public extension Request {
@@ -39,7 +47,15 @@ public extension Request {
         return .JSON(readingOptions: [])
     }
 
-    public func buildURLRequest() throws -> NSURLRequest {
+    public func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
+        return URLRequest
+    }
+
+    public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
+        return nil
+    }
+
+    internal func buildURLRequest() throws -> NSURLRequest {
         guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
             throw APIKitError.InvalidBaseURL
         }
@@ -60,10 +76,8 @@ public extension Request {
         request.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
         request.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
 
-        return request
-    }
+        try configureURLRequest(request)
 
-    public func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return nil
+        return request
     }
 }

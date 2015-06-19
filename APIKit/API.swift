@@ -52,11 +52,11 @@ public class API {
             do {
                 let object = try request.responseBodyParser.parseData(data)
                 if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-                    let error = request.buildErrorFromObject(object, URLResponse: HTTPURLResponse)
+                    let error = request.errorFromObject(object, URLResponse: HTTPURLResponse)
                     throw APIKitError.UnacceptableStatusCode(error)
                 }
 
-                let response = try request.buildResponseFromObject(object, URLResponse: HTTPURLResponse)
+                let response = try request.responseFromObject(object, URLResponse: HTTPURLResponse)
                 dispatch_async(dispatch_get_main_queue()) {
                     handler(.success(response))
                 }

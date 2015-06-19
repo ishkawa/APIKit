@@ -11,7 +11,7 @@ extension MockAPIRequest {
         return NSURL(string: "https://api.github.com")!
     }
 
-    func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
+    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
         return MockAPI.Errors.Mock
     }
 }
@@ -32,7 +32,7 @@ class MockAPI: API {
             return "/"
         }
 
-        func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let response = object as? [String: AnyObject] else {
                 throw Errors.Mock
             }
