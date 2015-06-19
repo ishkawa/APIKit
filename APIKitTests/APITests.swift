@@ -6,35 +6,38 @@ import OHHTTPStubs
 protocol MockAPIRequest: Request {
 }
 
-enum MockAPIErrors: ErrorType {
-    case Mock
-}
-
 extension MockAPIRequest {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 
     func buildErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return MockAPIErrors.Mock
+        return MockAPI.Errrors.Mock
     }
 }
 
 class MockAPI: API {
-    class Endpoint {
-        class Get: MockAPIRequest {
-            typealias Response = [String: AnyObject]
+    enum Errrors: ErrorType {
+        case Mock
+    }
 
-            var method = Method.GET
-            var path = "/"
+    struct GetRoot: MockAPIRequest {
+        typealias Response = [String: AnyObject]
 
-            func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
-                guard let response = object as? [String: AnyObject] else {
-                    throw MockAPIErrors.Mock
-                }
+        var method: APIKit.Method {
+            return .GET
+        }
 
-                return response
+        var path: String {
+            return "/"
+        }
+
+        func buildResponseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            guard let response = object as? [String: AnyObject] else {
+                throw Errrors.Mock
             }
+
+            return response
         }
     }
 }
@@ -61,7 +64,7 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
@@ -88,8 +91,8 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
-        
+        let request = MockAPI.GetRoot()
+
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success:
@@ -121,7 +124,7 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
@@ -131,7 +134,7 @@ class APITests: XCTestCase {
             case .Failure(let error):
                 switch error {
                 case .UnacceptableStatusCode(let error):
-                    XCTAssert(error is MockAPIErrors)
+                    XCTAssert(error is MockAPI.Errrors)
 
                 default:
                     XCTFail()
@@ -154,7 +157,7 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
@@ -190,7 +193,7 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
@@ -211,7 +214,7 @@ class APITests: XCTestCase {
             expectation.fulfill()
         }
         
-        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self)
+        MockAPI.cancelRequest(MockAPI.GetRoot.self)
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
@@ -229,7 +232,7 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
@@ -243,7 +246,7 @@ class APITests: XCTestCase {
             expectation.fulfill()
         }
         
-        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self) { request in
+        MockAPI.cancelRequest(MockAPI.GetRoot.self) { request in
             return false
         }
         
