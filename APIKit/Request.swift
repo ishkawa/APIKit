@@ -2,8 +2,9 @@ import Foundation
 import Result
 
 /// Request protocol represents a request for Web API.
-/// Following 4 items must be implemented.
+/// Following 5 items must be implemented.
 /// - typealias Response
+/// - var baseURL: NSURL
 /// - var method: Method
 /// - var path: String
 /// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
@@ -12,17 +13,31 @@ public protocol Request {
     typealias Response
 
     /// Configurations of request
+    var baseURL: NSURL { get }
     var method: Method { get }
     var path: String { get }
     var parameters: [String: AnyObject] { get }
 
-    var baseURL: NSURL { get }
+    /// You can add any configurations here
+    func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
+
+    /// Set of status code that indicates success.
+    /// `responseFromObject(_:URLResponse:)` will be called if this contains NSHTTPURLResponse.statusCode.
+    /// Otherwise, `errorFromObject(_:URLResponse:)` will be called.
     var acceptableStatusCodes: Set<Int> { get }
+
+    /// An object that builds body of HTTP request.
     var requestBodyBuilder: RequestBodyBuilder { get }
+
+    /// An object that parses body of HTTP response.
     var responseBodyParser: ResponseBodyParser { get }
 
-    func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
+    /// Build `Response` instance from raw response object.
+    /// This method will be called if `acceptableStatusCode` contains status code of NSHTTPURLResponse.
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
+
+    /// Build `ErrorType` instance from raw response object.
+    /// This method will be called if `acceptableStatusCode` does not contain status code of NSHTTPURLResponse.
     func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
 }
 
