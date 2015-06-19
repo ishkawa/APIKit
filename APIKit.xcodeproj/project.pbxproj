@@ -22,8 +22,8 @@
 		7F45FD6D1A94DA28006863BB /* APIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F68ABDA1AC4412E00688D68 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68ABD91AC4412E00688D68 /* Request.swift */; };
 		7F68ABDB1AC4412E00688D68 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68ABD91AC4412E00688D68 /* Request.swift */; };
-		7F68ABDD1AC4414500688D68 /* Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68ABDC1AC4414500688D68 /* Method.swift */; };
-		7F68ABDE1AC4414500688D68 /* Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68ABDC1AC4414500688D68 /* Method.swift */; };
+		7F68ABDD1AC4414500688D68 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */; };
+		7F68ABDE1AC4414500688D68 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */; };
 		7FCBE9DD1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */; };
 		7FCBE9DE1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */; };
 		7FCBE9E01A9734950075AFD9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */; };
@@ -115,7 +115,7 @@
 		7F45FD171A94D085006863BB /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		7F45FD481A94D9A8006863BB /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F68ABD91AC4412E00688D68 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
-		7F68ABDC1AC4414500688D68 /* Method.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Method.swift; sourceTree = "<group>"; };
+		7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilder.swift; sourceTree = "<group>"; };
 		7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseBodyParser.swift; sourceTree = "<group>"; };
 		7FEC5A141A96FE2600B1D3C0 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -203,7 +203,7 @@
 				7F45FCE21A94D02C006863BB /* APIKit.h */,
 				7F45FD171A94D085006863BB /* API.swift */,
 				7F68ABD91AC4412E00688D68 /* Request.swift */,
-				7F68ABDC1AC4414500688D68 /* Method.swift */,
+				7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */,
 				7F1426CD1B298AA300592D42 /* Errors.swift */,
 				7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */,
 				7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */,
@@ -459,7 +459,7 @@
 			files = (
 				7FCBE9DD1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */,
 				7F45FD181A94D085006863BB /* API.swift in Sources */,
-				7F68ABDD1AC4414500688D68 /* Method.swift in Sources */,
+				7F68ABDD1AC4414500688D68 /* HTTPMethod.swift in Sources */,
 				7F68ABDA1AC4412E00688D68 /* Request.swift in Sources */,
 				7FCBE9E01A9734950075AFD9 /* ResponseBodyParser.swift in Sources */,
 				7F1426CE1B298AA300592D42 /* Errors.swift in Sources */,
@@ -473,7 +473,7 @@
 			files = (
 				7FCBE9DE1A9734880075AFD9 /* RequestBodyBuilder.swift in Sources */,
 				7F0869A81A979088001AD3E1 /* API.swift in Sources */,
-				7F68ABDE1AC4414500688D68 /* Method.swift in Sources */,
+				7F68ABDE1AC4414500688D68 /* HTTPMethod.swift in Sources */,
 				7F68ABDB1AC4412E00688D68 /* Request.swift in Sources */,
 				7FCBE9E11A9734950075AFD9 /* ResponseBodyParser.swift in Sources */,
 				7F0869A71A978BCA001AD3E1 /* URLEncodedSerialization.swift in Sources */,
