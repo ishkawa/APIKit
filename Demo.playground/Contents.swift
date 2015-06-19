@@ -4,21 +4,7 @@ import APIKit
 
 XCPSetExecutionShouldContinueIndefinitely()
 
-/// Sending request
-let request = GitHubAPI.GetRateLimit()
-
-GitHubAPI.sendRequest(request) { result in
-    switch result {
-    case .Success(let rateLimit):
-        print("remaining count: \(rateLimit.count)")
-        print("reset date: \(rateLimit.resetDate)")
-
-    case .Failure(let error):
-        print("error: \(error)")
-    }
-}
-
-/// Defining request protocol
+//: Step 1: Define request protocol
 protocol GitHubRequest: Request {
 
 }
@@ -29,10 +15,33 @@ extension GitHubRequest {
     }
 }
 
-/// Defining API class
+//: Step 2: Create API class
 class GitHubAPI: API {
+}
+
+//: Step 3: Create model object
+struct RateLimit {
+    let count: Int
+    let resetDate: NSDate
+
+    init?(dictionary: [String: AnyObject]) {
+        guard let count = dictionary["rate"]?["limit"] as? Int else {
+            return nil
+        }
+
+        guard let resetDateString = dictionary["rate"]?["reset"] as? NSTimeInterval else {
+            return nil
+        }
+
+        self.count = count
+        self.resetDate = NSDate(timeIntervalSince1970: resetDateString)
+    }
+}
+
+//: Step 4: Define requet type in API class
+extension GitHubAPI {
     enum Errors: ErrorType {
-        case Some
+        case UnexpectedJSONStructure
     }
 
     // https://developer.github.com/v3/rate_limit/
@@ -49,11 +58,11 @@ class GitHubAPI: API {
 
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let dictionary = object as? [String: AnyObject] else {
-                throw Errors.Some
+                throw Errors.UnexpectedJSONStructure
             }
 
             guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                throw Errors.Some
+                throw Errors.UnexpectedJSONStructure
             }
 
             return rateLimit
@@ -61,22 +70,17 @@ class GitHubAPI: API {
     }
 }
 
-/// Model object
-struct RateLimit {
-    let count: Int
-    let resetDate: NSDate
+//: Step 5: Send request
+let request = GitHubAPI.GetRateLimit()
 
-    init?(dictionary: [String: AnyObject]) {
-        guard let count = dictionary["rate"]?["limit"] as? Int else {
-            return nil
-        }
+GitHubAPI.sendRequest(request) { result in
+    switch result {
+    case .Success(let rateLimit):
+        "count: \(rateLimit.count)"
+        "reset: \(rateLimit.resetDate)"
 
-        guard let resetDateString = dictionary["rate"]?["reset"] as? NSTimeInterval else {
-            return nil
-        }
-
-        self.count = count
-        self.resetDate = NSDate(timeIntervalSince1970: resetDateString)
+    case .Failure(let error):
+        "error: \(error)"
     }
 }
 
