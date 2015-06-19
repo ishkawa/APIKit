@@ -69,7 +69,7 @@ public extension Request {
 
     internal func buildURLRequest() throws -> NSURLRequest {
         guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
-            throw APIKitError.InvalidBaseURL
+            throw APIKitError.CannotBuildURLRequest
         }
 
         let request = NSMutableURLRequest()

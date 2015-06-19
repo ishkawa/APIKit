@@ -31,7 +31,7 @@ public class API {
         }
 
         guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
-            notifyError(.CannotBuildURLSessionTask)
+            notifyError(.CannotBuildURLRequest)
             return nil
         }
 
@@ -43,7 +43,7 @@ public class API {
             }
 
             guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
-                notifyError(.NoURLResponse)
+                notifyError(.UnexpectedResponse)
                 return
             }
 
@@ -62,7 +62,7 @@ public class API {
                 if let e = error as? APIKitError {
                     notifyError(e)
                 } else {
-                    notifyError(.CannotBuildResponseObject(underlyingError: error))
+                    notifyError(.UnexpectedResponse)
                 }
             }
         }

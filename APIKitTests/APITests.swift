@@ -166,9 +166,8 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .CannotBuildResponseObject(let error as NSError):
-                    XCTAssert(error.domain == NSCocoaErrorDomain)
-                    XCTAssert(error.code == 3840)
+                case .UnexpectedResponse:
+                    break
 
                 default:
                     XCTFail()
