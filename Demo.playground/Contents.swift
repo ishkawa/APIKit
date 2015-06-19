@@ -17,6 +17,7 @@ extension GitHubRequest {
 
 //: Step 2: Create API class
 class GitHubAPI: API {
+    
 }
 
 //: Step 3: Create model object
