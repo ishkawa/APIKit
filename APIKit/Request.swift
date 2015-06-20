@@ -38,7 +38,7 @@ public protocol Request {
 
     /// Build `ErrorType` instance from raw response object.
     /// This method will be called if `acceptableStatusCode` does not contain status code of NSHTTPURLResponse.
-    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
+    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType
 }
 
 /// Default implementation of Request protocol
@@ -63,13 +63,13 @@ public extension Request {
         return URLRequest
     }
 
-    public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return nil
+    public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
+        return APIKitError.UnexpectedResponse
     }
 
     internal func buildURLRequest() throws -> NSURLRequest {
         guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
-            throw APIKitError.CannotBuildURLRequest
+            throw APIKitError.InvalidRequest
         }
 
         let request = NSMutableURLRequest()

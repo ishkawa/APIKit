@@ -41,10 +41,6 @@ struct RateLimit {
 
 //: Step 4: Define requet type in API class
 extension GitHubAPI {
-    enum Errors: ErrorType {
-        case UnexpectedJSONStructure
-    }
-
     // https://developer.github.com/v3/rate_limit/
     struct GetRateLimit: GitHubRequest {
         typealias Response = RateLimit
@@ -59,11 +55,11 @@ extension GitHubAPI {
 
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let dictionary = object as? [String: AnyObject] else {
-                throw Errors.UnexpectedJSONStructure
+                throw APIKitError.UnexpectedResponse
             }
 
             guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                throw Errors.UnexpectedJSONStructure
+                throw APIKitError.UnexpectedResponse
             }
 
             return rateLimit

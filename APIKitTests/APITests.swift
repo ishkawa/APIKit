@@ -11,7 +11,7 @@ extension MockAPIRequest {
         return NSURL(string: "https://api.github.com")!
     }
 
-    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
+    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
         return MockAPI.Errors.Mock
     }
 }
@@ -133,7 +133,7 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .UnacceptableStatusCode(let error):
+                case .ResponseError(let error):
                     XCTAssert(error is MockAPI.Errors)
 
                 default:

@@ -84,11 +84,11 @@ class GitHubAPI: API {
 
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let dictionary = object as? [String: AnyObject] else {
-                throw Errors.UnexpectedJSONStructure
+                throw APIKitError.UnexpectedResponse
             }
 
             guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                throw Errors.UnexpectedJSONStructure
+                throw APIKitError.UnexpectedResponse
             }
 
             return rateLimit
@@ -201,11 +201,11 @@ var acceptableStatusCodes: Set<Int> {
 ```swift
 func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
     guard let dictionary = object as? [String: AnyObject] else {
-        throw Errors.UnexpectedJSONStructure
+        throw APIKitError.UnexpectedResponse
     }
 
     guard let rateLimit = RateLimit(dictionary: dictionary) else {
-        throw Errors.UnexpectedJSONStructure
+        throw APIKitError.UnexpectedResponse
     }
 
     return rateLimit
@@ -227,11 +227,11 @@ To create error that contains `message` in response, implement `errorFromObject(
 ```swift
 func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
     guard let dictionary = object as? [String: AnyObject] else {
-        throw Errors.UnexpectedJSONStructure
+        throw APIKitError.UnexpectedResponse
     }
 
     guard let message = dictionary["message"] as? String else {
-        throw Errors.UnexpectedJSONStructure
+        throw APIKitError.UnexpectedResponse
     }
 
     return GitHubError(message: message)
@@ -320,7 +320,7 @@ struct SomePaginatedRequest: Request {
 
     static func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
         guard let dictionaries = object as? [[String: AnyObject]] else {
-            throw Errors.UnexpectedJSONStructure
+            throw APIKitError.UnexpectedResponse
         }
 
         var somes = [Some]()

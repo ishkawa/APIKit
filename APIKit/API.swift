@@ -17,7 +17,6 @@ public class API {
         func notifyError(error: APIKitError) {
             let queue = dispatch_get_main_queue()
             dispatch_async(queue) {
-                print(error)
                 handler(.failure(error))
             }
         }
@@ -26,19 +25,19 @@ public class API {
         do {
             URLRequest = try request.buildURLRequest()
         } catch {
-            notifyError(.CannotBuildURLRequest)
+            notifyError(.InvalidRequest)
             return nil
         }
 
         guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
-            notifyError(.CannotBuildURLRequest)
+            notifyError(.InvalidRequest)
             return nil
         }
 
         task.request = Box(request)
         task.completionHandler = { data, URLResponse, connectionError in
             if let error = connectionError {
-                notifyError(.ConnectionError(underlyingError: error))
+                notifyError(.ConnectionError(error: error))
                 return
             }
 
@@ -50,8 +49,13 @@ public class API {
             do {
                 let object = try request.responseBodyParser.parseData(data)
                 if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-                    let error = request.errorFromObject(object, URLResponse: HTTPURLResponse)
-                    throw APIKitError.UnacceptableStatusCode(error)
+                    do {
+                        let error = try request.errorFromObject(object, URLResponse: HTTPURLResponse)
+                        notifyError(.ResponseError(error: error))
+                    } catch {
+                        notifyError(.UnexpectedResponse)
+                    }
+                    return
                 }
 
                 let response = try request.responseFromObject(object, URLResponse: HTTPURLResponse)
