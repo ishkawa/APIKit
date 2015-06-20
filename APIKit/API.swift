@@ -82,17 +82,9 @@ public class API {
     
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            // TODO: replace with cool code
-            var allTasks = [NSURLSessionTask]()
-            for task in dataTasks {
-                allTasks.append(task)
-            }
-            for task in uploadTasks {
-                allTasks.append(task)
-            }
-            for task in downloadTasks {
-                allTasks.append(task)
-            }
+            let allTasks = dataTasks as [NSURLSessionTask]
+                + uploadTasks as [NSURLSessionTask]
+                + downloadTasks as [NSURLSessionTask]
 
             let tasks = allTasks.filter { task in
                 var request: T?
