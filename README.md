@@ -4,11 +4,11 @@ APIKit
 [![Circle CI](https://img.shields.io/circleci/project/ishkawa/APIKit/master.svg?style=flat)](https://circleci.com/gh/ishkawa/APIKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-APIKit is a library for building type safe web API client in Swift.
+APIKit is a library for building type-safe web API client in Swift.
 
-- Parameters of a request are validated by type system.
-- Type of a response is inferred from type of its request.
-- A result of request is represented by [Result<Value, Error>](https://github.com/antitypical/Result), which is also known as Either.
+- Parameters of a request are validated by type-system.
+- Type of a response is inferred from the type of its request.
+- A result of a request is represented by [Result<Value, Error>](https://github.com/antitypical/Result), which is also known as Either.
 - All the endpoints can be enumerated in nested class.
 
 ```swift
@@ -51,13 +51,13 @@ If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa
 ## Usage
 
 1. Create a request protocol that inherits `Request` protocol.
-2. Add `baseURL` variable in extension of request protocol.
-3. Create a API class that inherits `API` class.
-4. Define request types that conforms to request protocol in API class.
+2. Add `baseURL` property in an extension of request protocol.
+3. Create an API class that inherits `API` class.
+4. Define request types that conform to request protocol in API class.
     1. Create a type that represents a request of the web API.
     2. Assign type that represents a response object to `Response` typealiase.
     3. Add `method` and `path` variables.
-    4. Implement `buildResponseFromObject(_:URLResponse:)` to build `Response` from raw object, which may be an array or a dictionary.
+    4. Implement `buildResponseFromObject(_:URLResponse:)` to build `Response` from a raw object, which may be an array or a dictionary.
 
 ```swift
 protocol GitHubRequest: Request {
@@ -138,7 +138,7 @@ GitHubAPI.sendRequest(request) { result in
 GitHub.cancelRequest(GitHub.Endpoint.RateLimit)
 ```
 
-If you want to filter requests to be cancelled, add closure that identifies the request shoule be cancelled or not.
+If you want to filter requests to be cancelled, add closure that identifies the request should be cancelled or not.
 
 ```swift
 GitHub.cancelRequest(GitHub.Endpoint.SearchRepositories.self) { request in
@@ -161,14 +161,14 @@ var parameters: [String: AnyObject]
 
 #### Configuring format of HTTP body
 
-APIKit uses `requestBodyBuilder` when it serialize parameter into HTTP body of request, and it use `responseBodyParser` when it deserialize object from HTTP body of response. Default format of body of request and response is JSON.
+APIKit uses `requestBodyBuilder` when it serialize parameter into HTTP body of a request, and it uses `responseBodyParser` when it deserialize an object from HTTP body of a response. Default format of the body of request and response is JSON.
 
 ```swift
 var requestBodyBuilder: RequestBodyBuilder
 var responseBodyParser: ResponseBodyParser
 ```
 
-You can specify format of HTTP body implement this property.
+You can specify the format of HTTP body implement this property.
 
 ```swift
 var requestBodyBuilder: RequestBodyBuilder {
@@ -188,7 +188,7 @@ func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURL
 
 #### Setting acceptable status code
 
-APIKit decides if a request is succeeded or failed using `acceptableStatusCodes:`. If it contains the status code of a response, the request is judged as succeeded and `API` calls `responseFromObject(_:URLResponse:)` to get model from raw response. Otherwise, the request is judged as failed and `API` calls `errorFromObject(_:URLResponse:)` to get error from raw response.
+APIKit decides if a request is succeeded or failed by using `acceptableStatusCodes:`. If it contains the status code of a response, the request is judged as succeeded and `API` calls `responseFromObject(_:URLResponse:)` to get a model from a raw response. Otherwise, the request is judged as failed and `API` calls `errorFromObject(_:URLResponse:)` to get an error from a raw response.
 
 ```swift
 var acceptableStatusCodes: Set<Int> {
