@@ -12,7 +12,7 @@ APIKit is a library for building type-safe web API client in Swift.
 - All the endpoints can be enumerated in nested class.
 
 ```swift
-let request = GitHub.Endpoint.SearchRepositories(query: "APIKit", sort: .Stars)
+let request = GitHub.SearchRepositories(query: "APIKit", sort: .Stars)
 
 GitHub.sendRequest(request) { result in
     switch result {
@@ -118,7 +118,7 @@ struct RateLimit {
 ### Sending request
 
 ```swift
-let request = GitHubAPI.Endpoint.GetRateLimit()
+let request = GitHubAPI.GetRateLimit()
 
 GitHubAPI.sendRequest(request) { result in
     switch result {
@@ -135,13 +135,13 @@ GitHubAPI.sendRequest(request) { result in
 ### Canceling request
 
 ```swift
-GitHub.cancelRequest(GitHub.Endpoint.RateLimit)
+GitHub.cancelRequest(GitHubAPI.GetRateLimit.self)
 ```
 
 If you want to filter requests to be cancelled, add closure that identifies the request should be cancelled or not.
 
 ```swift
-GitHub.cancelRequest(GitHub.Endpoint.SearchRepositories.self) { request in
+GitHub.cancelRequest(GitHubAPI.SearchRepositories.self) { request in
     return request.query == "APIKit"
 }
 ```
@@ -277,7 +277,7 @@ extension GitHubRequest {
 ### Pagination
 
 ```swift
-let request = SomeAPI.Endpoint.SomePaginatedRequest(page: 1)
+let request = SomeAPI.SomePaginatedRequest(page: 1)
 
 SomeAPI.sendRequest(request) { result in
     switch result {
