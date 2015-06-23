@@ -37,7 +37,7 @@ public class API {
         task.request = Box(request)
         task.completionHandler = { data, URLResponse, connectionError in
             if let error = connectionError {
-                notifyError(.ConnectionError(error: error))
+                notifyError(.ConnectionError(error))
                 return
             }
 
@@ -50,7 +50,7 @@ public class API {
                 let object = try request.responseBodyParser.parseData(data)
                 if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
                     let responseError = try request.errorFromObject(object, URLResponse: HTTPURLResponse)
-                    throw APIKitError.ResponseError(error: responseError)
+                    throw APIKitError.ResponseError(responseError)
                 }
 
                 let response = try request.responseFromObject(object, URLResponse: HTTPURLResponse)
