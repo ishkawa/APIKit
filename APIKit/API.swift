@@ -49,25 +49,18 @@ public class API {
             do {
                 let object = try request.responseBodyParser.parseData(data)
                 if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-                    do {
-                        let error = try request.errorFromObject(object, URLResponse: HTTPURLResponse)
-                        notifyError(.ResponseError(error: error))
-                    } catch {
-                        notifyError(.UnexpectedResponse)
-                    }
-                    return
+                    let responseError = try request.errorFromObject(object, URLResponse: HTTPURLResponse)
+                    throw APIKitError.ResponseError(error: responseError)
                 }
 
                 let response = try request.responseFromObject(object, URLResponse: HTTPURLResponse)
                 dispatch_async(dispatch_get_main_queue()) {
                     handler(.success(response))
                 }
+            } catch let error as APIKitError {
+                notifyError(error)
             } catch {
-                if let e = error as? APIKitError {
-                    notifyError(e)
-                } else {
-                    notifyError(.UnexpectedResponse)
-                }
+                notifyError(.UnexpectedResponse)
             }
         }
 
