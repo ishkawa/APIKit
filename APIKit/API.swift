@@ -46,7 +46,7 @@ public class API {
             
             switch method {
             case .GET, .HEAD, .DELETE:
-                components.query = URLEncodedSerialization.stringFromObject(parameters, encoding: NSUTF8StringEncoding)
+                components.query = URLEncodedSerialization.stringFromObject(parameters)
                 
             default:
                 switch requestBodyBuilder.buildBodyFromObject(parameters) {

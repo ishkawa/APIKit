@@ -33,7 +33,7 @@ public class URLEncodedSerialization {
     }
     
     public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding, error: NSErrorPointer) -> NSData? {
-        let string = stringFromObject(object, encoding: encoding)
+        let string = stringFromObject(object)
         let data = string.dataUsingEncoding(encoding, allowLossyConversion: false)
         
         if data == nil {
@@ -44,7 +44,7 @@ public class URLEncodedSerialization {
         return data
     }
     
-    public class func stringFromObject(object: AnyObject, encoding: NSStringEncoding) -> String {
+    public class func stringFromObject(object: AnyObject) -> String {
         var pairs = [String]()
         
         if let dictionary = object as? [String: AnyObject] {
