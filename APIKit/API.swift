@@ -148,9 +148,9 @@ private extension NSURLSessionDataTask {
         
         set {
             if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &taskRequestKey, value, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &taskRequestKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
@@ -160,7 +160,7 @@ private extension NSURLSessionDataTask {
             return responseBuffer
         } else {
             let responseBuffer = NSMutableData()
-            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return responseBuffer
         }
     }
@@ -172,9 +172,9 @@ private extension NSURLSessionDataTask {
         
         set {
             if let value = newValue  {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             } else {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
@@ -188,9 +188,9 @@ extension NSURLSessionDownloadTask {
         
         set {
             if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &taskRequestKey, value, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &taskRequestKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             }
         }
     }
