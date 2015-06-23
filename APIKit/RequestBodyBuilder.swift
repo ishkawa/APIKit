@@ -22,6 +22,7 @@ public enum RequestBodyBuilder {
     public func buildBodyFromObject(object: AnyObject) throws -> NSData {
         switch self {
         case .JSON(let writingOptions):
+            // If isValidJSONObject(_:) is false, dataWithJSONObject(_:options:) throws NSException.
             guard NSJSONSerialization.isValidJSONObject(object) else {
                 throw NSError(domain: NSCocoaErrorDomain, code: 3840, userInfo: nil)
             }
