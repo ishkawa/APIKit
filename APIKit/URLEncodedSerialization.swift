@@ -49,11 +49,9 @@ public class URLEncodedSerialization {
             throw Error.CannotCastObjectToDictionary
         }
 
-        var pairs = [String]()
-        for (key, value) in dictionary {
+        let pairs = dictionary.map { key, value -> String in
             let valueAsString = (value as? String) ?? "\(value)"
-            let pair = "\(key)=\(escape(valueAsString))"
-            pairs.append(pair)
+            return "\(key)=\(escape(valueAsString))"
         }
 
         return "&".join(pairs)
