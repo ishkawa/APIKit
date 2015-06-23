@@ -36,7 +36,11 @@ public class URLEncodedSerialization {
     }
     
     public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding) throws -> NSData {
-        let string = try stringFromObject(object, encoding: encoding)
+        guard let dictionary = object as? [String: AnyObject] else {
+            throw Error.CannotCastObjectToDictionary
+        }
+
+        let string = stringFromDictionary(dictionary)
         guard let data = string.dataUsingEncoding(encoding, allowLossyConversion: false) else {
             throw Error.CannotGetDataFromString
         }
@@ -44,11 +48,7 @@ public class URLEncodedSerialization {
         return data
     }
     
-    public class func stringFromObject(object: AnyObject, encoding: NSStringEncoding) throws -> String {
-        guard let dictionary = object as? [String: AnyObject] else {
-            throw Error.CannotCastObjectToDictionary
-        }
-
+    public class func stringFromDictionary(dictionary: [String: AnyObject]) -> String {
         let pairs = dictionary.map { key, value -> String in
             let valueAsString = (value as? String) ?? "\(value)"
             return "\(key)=\(escape(valueAsString))"

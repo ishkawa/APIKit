@@ -76,7 +76,7 @@ public extension Request {
 
         switch method {
         case .GET, .HEAD, .DELETE:
-            components.query = try URLEncodedSerialization.stringFromObject(parameters, encoding: NSUTF8StringEncoding)
+            components.query = URLEncodedSerialization.stringFromDictionary(parameters)
 
         default:
             request.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
