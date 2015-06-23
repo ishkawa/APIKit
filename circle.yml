@@ -23,7 +23,6 @@ test:
     # - pod lib lint
     # - set -o pipefail && xcodebuild -workspace APIKit.xcworkspace test -scheme APIKit-iOS | xcpretty -c -r junit -o $CIRCLE_TEST_REPORTS/test-report-ios.xml
     # - set -o pipefail && xcodebuild -workspace APIKit.xcworkspace test -scheme APIKit-Mac | xcpretty -c -r junit -o $CIRCLE_TEST_REPORTS/test-report-mac.xml
-    # - set -o pipefail && xcodebuild -workspace APIKit.xcworkspace build -scheme DemoApp -sdk iphonesimulator | xcpretty -c
     - echo "disable CI until CircleCI supports Swift 2."
 
 deployment:
