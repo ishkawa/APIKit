@@ -10,15 +10,15 @@ private func unescape(string: String) -> String {
 
 public class URLEncodedSerialization {
     public enum Error: ErrorType {
-        case CannotGetStringFromData
-        case CannotGetDataFromString
-        case CannotCastObjectToDictionary
-        case InvalidFormatString
+        case CannotGetStringFromData(NSData, NSStringEncoding)
+        case CannotGetDataFromString(String, NSStringEncoding)
+        case CannotCastObjectToDictionary(AnyObject)
+        case InvalidFormatString(String)
     }
 
     public class func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> [String: String] {
         guard let string = NSString(data: data, encoding: encoding) as? String else {
-            throw Error.CannotGetStringFromData
+            throw Error.CannotGetStringFromData(data, encoding)
         }
 
         var dictionary = [String: String]()
@@ -26,7 +26,7 @@ public class URLEncodedSerialization {
             let contents = pair.componentsSeparatedByString("=")
 
             guard contents.count == 2 else {
-                throw Error.InvalidFormatString
+                throw Error.InvalidFormatString(string)
             }
 
             dictionary[contents[0]] = unescape(contents[1])
@@ -37,12 +37,12 @@ public class URLEncodedSerialization {
     
     public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding) throws -> NSData {
         guard let dictionary = object as? [String: AnyObject] else {
-            throw Error.CannotCastObjectToDictionary
+            throw Error.CannotCastObjectToDictionary(object)
         }
 
         let string = stringFromDictionary(dictionary)
         guard let data = string.dataUsingEncoding(encoding, allowLossyConversion: false) else {
-            throw Error.CannotGetDataFromString
+            throw Error.CannotGetDataFromString(string, encoding)
         }
 
         return data
