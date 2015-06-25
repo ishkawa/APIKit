@@ -13,66 +13,44 @@ public class API {
     )
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIKitError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        func notifyError(error: APIKitError) {
-            let queue = dispatch_get_main_queue()
-            dispatch_async(queue) {
-                handler(.failure(error))
-            }
-        }
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) {
+        switch request.createTaskInURLSession(URLSession) {
+        case .Failure(let error):
+            handler(.Failure(error))
 
-        let URLRequest: NSURLRequest
-        do {
-            URLRequest = try request.buildURLRequest()
-        } catch {
-            notifyError(.InvalidRequest)
-            return nil
-        }
+        case .Success(let task):
+            task.request = Box(request)
+            task.completionHandler = { data, URLResponse, connectionError in
+                let mainQueue = dispatch_get_main_queue()
 
-        guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
-            notifyError(.InvalidRequest)
-            return nil
-        }
-
-        task.request = Box(request)
-        task.completionHandler = { data, URLResponse, connectionError in
-            if let error = connectionError {
-                notifyError(.ConnectionError(error))
-                return
-            }
-
-            guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
-                notifyError(.UnexpectedResponse)
-                return
-            }
-
-            do {
-                let object = try request.responseBodyParser.parseData(data)
-                if !request.acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-                    let responseError = try request.errorFromObject(object, URLResponse: HTTPURLResponse)
-                    throw APIKitError.ResponseError(responseError)
+                if let error = connectionError {
+                    dispatch_async(mainQueue) {
+                        handler(.Failure(.ConnectionError(error)))
+                    }
+                    return
                 }
 
-                let response = try request.responseFromObject(object, URLResponse: HTTPURLResponse)
-                dispatch_async(dispatch_get_main_queue()) {
-                    handler(.success(response))
+                switch request.parseData(data, URLResponse: URLResponse) {
+                case .Failure(let error):
+                    dispatch_async(mainQueue) {
+                        handler(.Failure(error))
+                    }
+
+                case .Success(let response):
+                    dispatch_async(mainQueue) {
+                        handler(.Success(response))
+                    }
                 }
-            } catch let error as APIKitError {
-                notifyError(error)
-            } catch {
-                notifyError(.UnexpectedResponse)
             }
+            
+            task.resume()
         }
-
-        task.resume()
-
-        return task
     }
 
     public class func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
     }
-    
+
     public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [NSURLSessionTask]
@@ -84,7 +62,7 @@ public class API {
                 switch task {
                 case let x as NSURLSessionDataTask:
                     request = x.request?.value as? T
-                    
+
                 case let x as NSURLSessionDownloadTask:
                     request = x.request?.value as? T
                     
@@ -180,7 +158,7 @@ private extension NSURLSessionDataTask {
     }
 }
 
-extension NSURLSessionDownloadTask {
+private extension NSURLSessionDownloadTask {
     private var request: Box<Any>? {
         get {
             return objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>

@@ -10,17 +10,9 @@ extension MockAPIRequest {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
-
-    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
-        return MockAPI.Error.Mock
-    }
 }
 
 class MockAPI: API {
-    enum Error: ErrorType {
-        case Mock
-    }
-
     struct GetRoot: MockAPIRequest {
         typealias Response = [String: AnyObject]
 
@@ -32,26 +24,22 @@ class MockAPI: API {
             return "/"
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
-            guard let response = object as? [String: AnyObject] else {
-                throw Error.Mock
-            }
-
-            return response
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+            return object as? [String: AnyObject]
         }
     }
 }
 
-class APITests: XCTestCase {
+class AnotherMockAPI: API {
 
-    class AnotherMockAPI: API {
-    }
-    
+}
+
+class APITests: XCTestCase {
     override func tearDown() {
         OHHTTPStubs.removeAllStubs()
         super.tearDown()
     }
-    
+
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
@@ -107,13 +95,13 @@ class APITests: XCTestCase {
                     XCTFail()
                 }
             }
-            
+
             expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
-    
+
     func testFailureOfResponseStatusCode() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
@@ -133,8 +121,9 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .ResponseError(let error):
-                    XCTAssert(error is MockAPI.Error)
+                case .UnacceptableStatusCode(let statusCode, let error as NSError):
+                    XCTAssert(statusCode == 400)
+                    XCTAssert(error.domain == "APIKitErrorDomain")
 
                 default:
                     XCTFail()
@@ -166,8 +155,9 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .UnexpectedResponse:
-                    break
+                case .ResponseBodyDeserializationError(let error as NSError):
+                    XCTAssert(error.domain == NSCocoaErrorDomain)
+                    XCTAssert(error.code == 3840)
 
                 default:
                     XCTFail()
@@ -217,7 +207,7 @@ class APITests: XCTestCase {
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
-    
+
     func testSuccessIfCancelingTestReturnsFalse() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true

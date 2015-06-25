@@ -34,11 +34,11 @@ public protocol Request {
 
     /// Build `Response` instance from raw response object.
     /// This method will be called if `acceptableStatusCode` contains status code of NSHTTPURLResponse.
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
 
     /// Build `ErrorType` instance from raw response object.
     /// This method will be called if `acceptableStatusCode` does not contain status code of NSHTTPURLResponse.
-    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType
+    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
 }
 
 /// Default implementation of Request protocol
@@ -63,33 +63,73 @@ public extension Request {
         return URLRequest
     }
 
-    public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
-        return APIKitError.UnexpectedResponse
+    public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
+        return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: nil)
     }
 
-    internal func buildURLRequest() throws -> NSURLRequest {
+    // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
+    internal func createTaskInURLSession(URLSession: NSURLSession) -> Result<NSURLSessionDataTask, APIError> {
         guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
-            throw APIKitError.InvalidRequest
+            return .Failure(.InvalidBaseURL(baseURL))
         }
 
-        let request = NSMutableURLRequest()
+        let URLRequest = NSMutableURLRequest()
 
         switch method {
         case .GET, .HEAD, .DELETE:
             components.query = URLEncodedSerialization.stringFromDictionary(parameters)
 
         default:
-            request.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
+            do {
+                URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
+            } catch {
+                return .Failure(.RequestBodySerializationError(error))
+            }
         }
 
         components.path = (components.path ?? "").stringByAppendingPathComponent(path)
-        request.URL = components.URL
-        request.HTTPMethod = method.rawValue
-        request.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
-        request.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
+        URLRequest.URL = components.URL
+        URLRequest.HTTPMethod = method.rawValue
+        URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
+        URLRequest.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
 
-        try configureURLRequest(request)
+        do {
+            try configureURLRequest(URLRequest)
+        } catch {
+            return .Failure(.ConfigurationError(error))
+        }
 
-        return request
+        guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
+            return .Failure(.FailedToCreateURLSessionTask)
+        }
+
+        return .Success(task)
+    }
+
+    // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
+    internal func parseData(data: NSData, URLResponse: NSURLResponse?) -> Result<Self.Response, APIError> {
+        guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
+            return .Failure(.NotHTTPURLResponse(URLResponse))
+        }
+
+        let object: AnyObject
+        do {
+            object = try responseBodyParser.parseData(data)
+        } catch {
+            return .Failure(.ResponseBodyDeserializationError(error))
+        }
+
+        if !acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
+            guard let error = errorFromObject(object, URLResponse: HTTPURLResponse) else {
+                return .Failure(.InvalidResponseStructure(object))
+            }
+            return .Failure(.UnacceptableStatusCode(HTTPURLResponse.statusCode, error))
+        }
+
+        guard let response = responseFromObject(object, URLResponse: HTTPURLResponse) else {
+            return .Failure(.InvalidResponseStructure(object))
+        }
+
+        return .Success(response)
     }
 }
