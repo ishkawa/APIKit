@@ -21,25 +21,19 @@ public class API {
         case .Success(let task):
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
-                let mainQueue = dispatch_get_main_queue()
-
+                let sessionResult: Result<(NSData, NSURLResponse?), APIError>
                 if let error = connectionError {
-                    dispatch_async(mainQueue) {
-                        handler(.Failure(.ConnectionError(error)))
-                    }
-                    return
+                    sessionResult = .Failure(.ConnectionError(error))
+                } else {
+                    sessionResult = .Success((data, URLResponse))
                 }
 
-                switch request.parseData(data, URLResponse: URLResponse) {
-                case .Failure(let error):
-                    dispatch_async(mainQueue) {
-                        handler(.Failure(error))
-                    }
+                let result: Result<T.Response, APIError> = sessionResult.flatMap { data, URLResponse in
+                    request.parseData(data, URLResponse: URLResponse)
+                }
 
-                case .Success(let response):
-                    dispatch_async(mainQueue) {
-                        handler(.Success(response))
-                    }
+                dispatch_async(dispatch_get_main_queue()) {
+                    handler(result)
                 }
             }
             
