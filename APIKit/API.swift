@@ -13,12 +13,15 @@ public class API {
     )
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) {
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+        var dataTask: NSURLSessionDataTask?
+
         switch request.createTaskInURLSession(URLSession) {
         case .Failure(let error):
             handler(.Failure(error))
 
         case .Success(let task):
+            dataTask = task
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
                 let sessionResult: Result<(NSData, NSURLResponse?), APIError>
@@ -39,6 +42,8 @@ public class API {
             
             task.resume()
         }
+
+        return dataTask
     }
 
     public class func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
