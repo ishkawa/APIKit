@@ -53,13 +53,13 @@ extension GitHubAPI {
             return "/rate_limit"
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
             guard let dictionary = object as? [String: AnyObject] else {
-                throw APIKitError.UnexpectedResponse
+                return nil
             }
 
             guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                throw APIKitError.UnexpectedResponse
+                return nil
             }
 
             return rateLimit

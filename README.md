@@ -82,13 +82,13 @@ class GitHubAPI: API {
             return "/rate_limit"
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
             guard let dictionary = object as? [String: AnyObject] else {
-                throw APIKitError.UnexpectedResponse
+                return nil
             }
 
             guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                throw APIKitError.UnexpectedResponse
+                return nil
             }
 
             return rateLimit
@@ -199,13 +199,13 @@ var acceptableStatusCodes: Set<Int> {
 #### Building a model from a response
 
 ```swift
-func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
     guard let dictionary = object as? [String: AnyObject] else {
-        throw APIKitError.UnexpectedResponse
+        return nil
     }
 
     guard let rateLimit = RateLimit(dictionary: dictionary) else {
-        throw APIKitError.UnexpectedResponse
+        return nil
     }
 
     return rateLimit
@@ -225,13 +225,13 @@ For example, [GitHub API](https://developer.github.com/v3/#client-errors) return
 To create error that contains `message` in response, implement `errorFromObject(_:URLResponse:)` and return `ErrorType` using object.
 
 ```swift
-func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> ErrorType {
+func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
     guard let dictionary = object as? [String: AnyObject] else {
-        throw APIKitError.UnexpectedResponse
+        return nil
     }
 
     guard let message = dictionary["message"] as? String else {
-        throw APIKitError.UnexpectedResponse
+        return nil
     }
 
     return GitHubError(message: message)
@@ -318,9 +318,9 @@ struct SomePaginatedRequest: Request {
 
     let page: Int
 
-    static func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+    static func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
         guard let dictionaries = object as? [[String: AnyObject]] else {
-            throw APIKitError.UnexpectedResponse
+            return nil
         }
 
         var somes = [Some]()

@@ -7,7 +7,7 @@ import Result
 /// - var baseURL: NSURL
 /// - var method: Method
 /// - var path: String
-/// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
+/// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
 public protocol Request {
     /// Type represents a model object
     typealias Response
