@@ -12,8 +12,8 @@ class ViewController: UITableViewController {
         
         let request = GitHub.Endpoint.SearchRepositories(query: "APIKit")
         
-        GitHub.sendRequest(request) { response in
-            switch response {
+        GitHub.sendRequest(request) { result, response in
+            switch result {
             case .Success(let box):
                 self.repositories = box.value
                 

@@ -1,0 +1,51 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "F607A624BDF2624F7609EF66C123E17132AFE18F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "892A392662EFD968ECAC00BEDD3BE4AF0F19F413" : 0,
+    "956D2B21DD155C49504BB67697A67F7C5351A353" : 0,
+    "840BFB2A2F183FC5B01E0B21BB0D3D8EF3F6803F" : 0,
+    "F607A624BDF2624F7609EF66C123E17132AFE18F" : 0,
+    "57C931977B7D2307CC013C2BD93F90CF7C676790" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "FDD703B3-D9DB-4B7E-A06B-60611BE2FEC0",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "892A392662EFD968ECAC00BEDD3BE4AF0F19F413" : "APIKit\/Carthage\/Checkouts\/Himotoki\/",
+    "956D2B21DD155C49504BB67697A67F7C5351A353" : "APIKit\/Carthage\/Checkouts\/Result\/",
+    "840BFB2A2F183FC5B01E0B21BB0D3D8EF3F6803F" : "APIKit\/Carthage\/Checkouts\/Assertions\/",
+    "F607A624BDF2624F7609EF66C123E17132AFE18F" : "APIKit\/",
+    "57C931977B7D2307CC013C2BD93F90CF7C676790" : "APIKit\/Carthage\/Checkouts\/Result\/Carthage\/Checkouts\/Box\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "APIKit",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "APIKit.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/robrix\/Box.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "57C931977B7D2307CC013C2BD93F90CF7C676790"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/antitypical\/Assertions.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "840BFB2A2F183FC5B01E0B21BB0D3D8EF3F6803F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ikesyo\/Himotoki.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "892A392662EFD968ECAC00BEDD3BE4AF0F19F413"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/antitypical\/Result.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "956D2B21DD155C49504BB67697A67F7C5351A353"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/pocket7878\/APIKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F607A624BDF2624F7609EF66C123E17132AFE18F"
+    }
+  ]
+}

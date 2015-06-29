@@ -76,7 +76,7 @@ public class API {
     }
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, NSError>) -> Void = {res in}) -> NSURLSessionDataTask? {
         let mainQueue = dispatch_get_main_queue()
         
         if let URLRequest = request.URLRequest {
@@ -84,24 +84,26 @@ public class API {
             
             task.request = Box(request)
             task.completionHandler = { data, URLResponse, connectionError in
+                let httpUrlResponse = URLResponse as? NSHTTPURLResponse
+                
                 if let error = connectionError {
                     dispatch_async(mainQueue) { handler(.failure(error)) }
                     return
                 }
                 
-                let statusCode = (URLResponse as? NSHTTPURLResponse)?.statusCode ?? 0
+                let statusCode = httpUrlResponse?.statusCode ?? 0
                 if !contains(self.acceptableStatusCodes, statusCode) {
                     let error = self.responseBodyParser.parseData(data).analysis(
-                        ifSuccess: { self.responseErrorFromObject($0) },
+                        ifSuccess: { self.responseErrorFromObject($0, URLResponse: httpUrlResponse!) },
                         ifFailure: { $0 }
                     )
-
+                    
                     dispatch_async(mainQueue) { handler(.failure(error)) }
                     return
                 }
                 
                 let mappedResponse: Result<T.Response, NSError> = self.responseBodyParser.parseData(data).flatMap { rawResponse in
-                    if let response = T.responseFromObject(rawResponse) {
+                    if let response = T.responseFromObject(rawResponse, URLResponse: httpUrlResponse!) {
                         return .success(response)
                     } else {
                         let userInfo = [NSLocalizedDescriptionKey: "failed to create model object from raw object."]
@@ -157,7 +159,7 @@ public class API {
         }
     }
     
-    public class func responseErrorFromObject(object: AnyObject) -> NSError {
+    public class func responseErrorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> NSError {
         let userInfo = [NSLocalizedDescriptionKey: "received status code that represents error"]
         let error = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
         return error

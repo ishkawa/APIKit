@@ -7,6 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		692A67D81B41239200B023B2 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67D71B41239200B023B2 /* Box.framework */; };
+		692A67DA1B4123A000B023B2 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67D91B4123A000B023B2 /* Result.framework */; };
+		692A67DE1B41240200B023B2 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DB1B41240200B023B2 /* Assertions.framework */; };
+		692A67DF1B41240200B023B2 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DC1B41240200B023B2 /* Himotoki.framework */; };
+		692A67E01B41240200B023B2 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DD1B41240200B023B2 /* OHHTTPStubs.framework */; };
+		692A67E21B4125BF00B023B2 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DB1B41240200B023B2 /* Assertions.framework */; };
+		692A67E31B4125BF00B023B2 /* Assertions.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DB1B41240200B023B2 /* Assertions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67E41B4125BF00B023B2 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DC1B41240200B023B2 /* Himotoki.framework */; };
+		692A67E51B4125BF00B023B2 /* Himotoki.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DC1B41240200B023B2 /* Himotoki.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67E61B4125BF00B023B2 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DD1B41240200B023B2 /* OHHTTPStubs.framework */; };
+		692A67E71B4125BF00B023B2 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67DD1B41240200B023B2 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67E81B4125BF00B023B2 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67D91B4123A000B023B2 /* Result.framework */; };
+		692A67E91B4125BF00B023B2 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67D91B4123A000B023B2 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67EA1B4125BF00B023B2 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67D71B41239200B023B2 /* Box.framework */; };
+		692A67EB1B4125BF00B023B2 /* Box.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67D71B41239200B023B2 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67F91B41262C00B023B2 /* Assertions.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67EE1B4125E000B023B2 /* Assertions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67FA1B41262C00B023B2 /* Box.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67EF1B4125E000B023B2 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67FB1B41262C00B023B2 /* Himotoki.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67F01B4125E000B023B2 /* Himotoki.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67FC1B41262C00B023B2 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67F11B4125E000B023B2 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67FD1B41262C00B023B2 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67F21B4125E000B023B2 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		692A67FE1B41266100B023B2 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67EE1B4125E000B023B2 /* Assertions.framework */; };
+		692A67FF1B41266100B023B2 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67EF1B4125E000B023B2 /* Box.framework */; };
+		692A68001B41266100B023B2 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67F01B4125E000B023B2 /* Himotoki.framework */; };
+		692A68011B41266100B023B2 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67F11B4125E000B023B2 /* OHHTTPStubs.framework */; };
+		692A68021B41266100B023B2 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 692A67F21B4125E000B023B2 /* Result.framework */; };
 		7F08699A1A978790001AD3E1 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCFE1A94D04D006863BB /* APIKit.framework */; };
 		7F0869A01A9787AF001AD3E1 /* RequestBodyBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */; };
 		7F0869A11A9787AF001AD3E1 /* ResponseBodyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */; };
@@ -37,26 +62,12 @@
 		7FEC5A191A96FE2600B1D3C0 /* ResponseBodyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */; };
 		7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; };
 		CD51151F1B1FFAC000514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115201B1FFB4F00514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
 		CD5115211B1FFB7000514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115221B1FFB7200514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115231B1FFB8E00514240 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; };
-		CD5115251B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
 		CD5115261B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD5115271B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
 		CD5115281B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD5115291B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD51152B1B1FFCB200514240 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152A1B1FFCB200514240 /* Assertions.framework */; };
 		CD51152C1B1FFCB200514240 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152A1B1FFCB200514240 /* Assertions.framework */; };
-		CD51152E1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
 		CD51152F1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
-		CD5115301B1FFD7C00514240 /* Box.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51151E1B1FFAC000514240 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD5115311B1FFD8F00514240 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD5115321B1FFD9200514240 /* Assertions.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152A1B1FFCB200514240 /* Assertions.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CD9B38231B2556FD00B1A224 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9B38221B2556FD00B1A224 /* Himotoki.framework */; };
-		CD9B38241B25578200B1A224 /* Himotoki.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD9B38221B2556FD00B1A224 /* Himotoki.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,8 +110,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CD9B38241B25578200B1A224 /* Himotoki.framework in Copy Frameworks */,
 				7F45FD6D1A94DA28006863BB /* APIKit.framework in Copy Frameworks */,
+				692A67E71B4125BF00B023B2 /* OHHTTPStubs.framework in Copy Frameworks */,
+				692A67E91B4125BF00B023B2 /* Result.framework in Copy Frameworks */,
+				692A67EB1B4125BF00B023B2 /* Box.framework in Copy Frameworks */,
+				692A67E51B4125BF00B023B2 /* Himotoki.framework in Copy Frameworks */,
+				692A67E31B4125BF00B023B2 /* Assertions.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,10 +126,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CD5115301B1FFD7C00514240 /* Box.framework in Copy Frameworks */,
-				CD5115311B1FFD8F00514240 /* Result.framework in Copy Frameworks */,
-				CD5115321B1FFD9200514240 /* Assertions.framework in Copy Frameworks */,
-				CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */,
+				692A67F91B41262C00B023B2 /* Assertions.framework in Copy Frameworks */,
+				692A67FA1B41262C00B023B2 /* Box.framework in Copy Frameworks */,
+				692A67FB1B41262C00B023B2 /* Himotoki.framework in Copy Frameworks */,
+				692A67FC1B41262C00B023B2 /* OHHTTPStubs.framework in Copy Frameworks */,
+				692A67FD1B41262C00B023B2 /* Result.framework in Copy Frameworks */,
 				CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -123,6 +139,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		692A67D71B41239200B023B2 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/iOS/Box.framework; sourceTree = "<group>"; };
+		692A67D91B4123A000B023B2 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
+		692A67DB1B41240200B023B2 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Assertions.framework; path = Carthage/Build/iOS/Assertions.framework; sourceTree = "<group>"; };
+		692A67DC1B41240200B023B2 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Himotoki.framework; path = Carthage/Build/iOS/Himotoki.framework; sourceTree = "<group>"; };
+		692A67DD1B41240200B023B2 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
+		692A67EE1B4125E000B023B2 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = "<group>"; };
+		692A67EF1B4125E000B023B2 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Box.framework; sourceTree = "<group>"; };
+		692A67F01B4125E000B023B2 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Himotoki.framework; sourceTree = "<group>"; };
+		692A67F11B4125E000B023B2 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = "<group>"; };
+		692A67F21B4125E000B023B2 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
+		692A67F41B4125E000B023B2 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = "<group>"; };
+		692A67F51B4125E000B023B2 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Box.framework; sourceTree = "<group>"; };
+		692A67F61B4125E000B023B2 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Himotoki.framework; sourceTree = "<group>"; };
+		692A67F71B4125E000B023B2 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = "<group>"; };
+		692A67F81B4125E000B023B2 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
 		7F0869941A978790001AD3E1 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F1B190A1AA2CA1300C7AFCF /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
@@ -172,8 +203,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115201B1FFB4F00514240 /* Box.framework in Frameworks */,
-				CD5115251B1FFBA900514240 /* Result.framework in Frameworks */,
+				692A67DE1B41240200B023B2 /* Assertions.framework in Frameworks */,
+				692A67DF1B41240200B023B2 /* Himotoki.framework in Frameworks */,
+				692A67E01B41240200B023B2 /* OHHTTPStubs.framework in Frameworks */,
+				692A67D81B41239200B023B2 /* Box.framework in Frameworks */,
+				692A67DA1B4123A000B023B2 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,10 +224,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115231B1FFB8E00514240 /* Box.framework in Frameworks */,
-				CD5115291B1FFBA900514240 /* Result.framework in Frameworks */,
+				692A67E81B4125BF00B023B2 /* Result.framework in Frameworks */,
+				692A67EA1B4125BF00B023B2 /* Box.framework in Frameworks */,
+				692A67E21B4125BF00B023B2 /* Assertions.framework in Frameworks */,
+				692A67E41B4125BF00B023B2 /* Himotoki.framework in Frameworks */,
+				692A67E61B4125BF00B023B2 /* OHHTTPStubs.framework in Frameworks */,
 				7F45FD6C1A94DA28006863BB /* APIKit.framework in Frameworks */,
-				CD9B38231B2556FD00B1A224 /* Himotoki.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,10 +237,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115221B1FFB7200514240 /* Box.framework in Frameworks */,
-				CD5115271B1FFBA900514240 /* Result.framework in Frameworks */,
-				CD51152B1B1FFCB200514240 /* Assertions.framework in Frameworks */,
-				CD51152E1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */,
+				692A67FE1B41266100B023B2 /* Assertions.framework in Frameworks */,
+				692A67FF1B41266100B023B2 /* Box.framework in Frameworks */,
+				692A68001B41266100B023B2 /* Himotoki.framework in Frameworks */,
+				692A68011B41266100B023B2 /* OHHTTPStubs.framework in Frameworks */,
+				692A68021B41266100B023B2 /* Result.framework in Frameworks */,
 				7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,9 +249,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		692A67EC1B4125E000B023B2 /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				692A67ED1B4125E000B023B2 /* iOS */,
+				692A67F31B4125E000B023B2 /* Mac */,
+			);
+			name = Build;
+			path = Carthage/Build;
+			sourceTree = "<group>";
+		};
+		692A67ED1B4125E000B023B2 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				692A67EE1B4125E000B023B2 /* Assertions.framework */,
+				692A67EF1B4125E000B023B2 /* Box.framework */,
+				692A67F01B4125E000B023B2 /* Himotoki.framework */,
+				692A67F11B4125E000B023B2 /* OHHTTPStubs.framework */,
+				692A67F21B4125E000B023B2 /* Result.framework */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		692A67F31B4125E000B023B2 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				692A67F41B4125E000B023B2 /* Assertions.framework */,
+				692A67F51B4125E000B023B2 /* Box.framework */,
+				692A67F61B4125E000B023B2 /* Himotoki.framework */,
+				692A67F71B4125E000B023B2 /* OHHTTPStubs.framework */,
+				692A67F81B4125E000B023B2 /* Result.framework */,
+			);
+			path = Mac;
+			sourceTree = "<group>";
+		};
 		7F45FCD31A94D02C006863BB = {
 			isa = PBXGroup;
 			children = (
+				692A67EC1B4125E000B023B2 /* Build */,
+				692A67DB1B41240200B023B2 /* Assertions.framework */,
+				692A67DC1B41240200B023B2 /* Himotoki.framework */,
+				692A67DD1B41240200B023B2 /* OHHTTPStubs.framework */,
+				692A67D91B4123A000B023B2 /* Result.framework */,
+				692A67D71B41239200B023B2 /* Box.framework */,
 				7F45FCDF1A94D02C006863BB /* APIKit */,
 				7FEC5A151A96FE2600B1D3C0 /* APIKitTests */,
 				7F45FD491A94D9A8006863BB /* DemoApp */,
@@ -351,6 +428,7 @@
 				7F45FCD91A94D02C006863BB /* Frameworks */,
 				7F45FCDA1A94D02C006863BB /* Headers */,
 				7F45FCDB1A94D02C006863BB /* Resources */,
+				692A67E11B41241F00B023B2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -423,6 +501,7 @@
 		7F45FCD41A94D02C006863BB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Yosuke Ishikawa";
 				TargetAttributes = {
@@ -505,6 +584,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		692A67E11B41241F00B023B2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Assertions.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Box.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Himotoki.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/OHHTTPStubs.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7F0869901A978790001AD3E1 /* Sources */ = {
@@ -726,6 +826,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -745,6 +849,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -807,7 +915,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -823,7 +934,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -834,6 +948,10 @@
 		7FEC5A1D1A96FE2600B1D3C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -848,6 +966,10 @@
 		7FEC5A1E1A96FE2600B1D3C0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(PROJECT_NAME)Tests";
