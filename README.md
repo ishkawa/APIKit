@@ -1,3 +1,5 @@
+Latest release is redesigned for Swift 2. See [the release note](https://github.com/ishkawa/APIKit/releases/tag/1.0.0-beta1) for migration guide.
+
 APIKit
 ======
 
@@ -25,7 +27,6 @@ GitHub.sendRequest(request) { result in
     }
 }
 ```
-
 
 ## Requirements
 
