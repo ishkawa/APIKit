@@ -1,46 +1,49 @@
 import Foundation
 import APIKit
 import XCTest
-import Assertions
 import OHHTTPStubs
 
+protocol MockAPIRequest: Request {
+}
+
+extension MockAPIRequest {
+    var baseURL: NSURL {
+        return NSURL(string: "https://api.github.com")!
+    }
+}
+
+class MockAPI: API {
+    struct GetRoot: MockAPIRequest {
+        typealias Response = [String: AnyObject]
+
+        var method: HTTPMethod {
+            return .GET
+        }
+
+        var path: String {
+            return "/"
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+            return object as? [String: AnyObject]
+        }
+    }
+}
+
+class AnotherMockAPI: API {
+
+}
+
 class APITests: XCTestCase {
-    class MockAPI: API {
-        override class var baseURL: NSURL {
-            return NSURL(string: "https://api.github.com")!
-        }
-        
-        override class func responseErrorFromObject(object: AnyObject) -> NSError {
-            return NSError(domain: "MockAPIErrorDomain", code: 10000, userInfo: nil)
-        }
-        
-        class Endpoint {
-            class Get: Request {
-                typealias Response = [String: AnyObject]
-                
-                var URLRequest: NSURLRequest? {
-                    return MockAPI.URLRequest(method: .GET, path: "/")
-                }
-                
-                class func responseFromObject(object: AnyObject) -> Response? {
-                    return object as? [String: AnyObject]
-                }
-            }
-        }
-    }
-    
-    class AnotherMockAPI: API {
-    }
-    
     override func tearDown() {
         OHHTTPStubs.removeAllStubs()
         super.tearDown()
     }
-    
+
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
-        let data = NSJSONSerialization.dataWithJSONObject(dictionary, options: nil, error: nil)!
+        let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
         
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
@@ -49,13 +52,13 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
-            case .Success(let box):
-                assert(box.value, ==, dictionary)
-                
+            case .Success(let dictionary):
+                XCTAssert(dictionary["key"] as? String == "value")
+
             case .Failure:
                 XCTFail()
             }
@@ -76,45 +79,55 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
-        
+        let request = MockAPI.GetRoot()
+
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
-                assertEqual(error.domain, error.domain)
-                assertEqual(error.code, error.code)
+            case .Failure(let error):
+                switch error {
+                case .ConnectionError(let error):
+                    XCTAssert(error.domain == NSURLErrorDomain)
+
+                default:
+                    XCTFail()
+                }
             }
-            
+
             expectation.fulfill()
         }
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
-    
+
     func testFailureOfResponseStatusCode() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
         }, withStubResponse: { request in
-            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            let dictionary: [String: String] = [:]
+            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
             return OHHTTPStubsResponse(data: data, statusCode: 400, headers: nil)
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
-                assertEqual(error.domain, "MockAPIErrorDomain")
-                assertEqual(error.code, 10000)
+            case .Failure(let error):
+                switch error {
+                case .UnacceptableStatusCode(let statusCode, let error as NSError):
+                    XCTAssert(statusCode == 400)
+                    XCTAssert(error.domain == "APIKitErrorDomain")
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()
@@ -133,17 +146,22 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
-                assert(error.domain, ==, NSCocoaErrorDomain)
-                assertEqual(error.code, 3840)
+            case .Failure(let error):
+                switch error {
+                case .ResponseBodyDeserializationError(let error as NSError):
+                    XCTAssert(error.domain == NSCocoaErrorDomain)
+                    XCTAssert(error.code == 3840)
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()
@@ -164,32 +182,38 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
                 
-            case .Failure(let box):
-                let error = box.value
-                assert(error.domain, ==, NSURLErrorDomain)
-                assertEqual(error.code, NSURLErrorCancelled)
+            case .Failure(let error):
+                switch error {
+                case .ConnectionError(let error):
+                    XCTAssert(error.domain == NSURLErrorDomain)
+                    XCTAssert(error.code == NSURLErrorCancelled)
+
+                default:
+                    XCTFail()
+                }
             }
             
             expectation.fulfill()
         }
         
-        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self)
+        MockAPI.cancelRequest(MockAPI.GetRoot.self)
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
-    
+
     func testSuccessIfCancelingTestReturnsFalse() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
         }, withStubResponse: { request in
-            let data = NSJSONSerialization.dataWithJSONObject([:], options: nil, error: nil)!
+            let dictionary: [String: String] = [:]
+            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
             let response = OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
             response.requestTime = 0.1
             response.responseTime = 0.1
@@ -197,21 +221,21 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.Endpoint.Get()
+        let request = MockAPI.GetRoot()
         
         MockAPI.sendRequest(request) { response in
             switch response {
             case .Success:
                 break
                 
-            case .Failure(let box):
+            case .Failure:
                 XCTFail()
             }
             
             expectation.fulfill()
         }
         
-        MockAPI.cancelRequest(MockAPI.Endpoint.Get.self) { request in
+        MockAPI.cancelRequest(MockAPI.GetRoot.self) { request in
             return false
         }
         

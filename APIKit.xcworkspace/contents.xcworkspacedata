@@ -5,18 +5,9 @@
       location = "container:APIKit.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Carthage/Checkouts/Box/Box.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Carthage/Checkouts/Result/Result.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Carthage/Checkouts/Assertions/Assertions.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Carthage/Checkouts/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/Himotoki/Himotoki.xcodeproj">
    </FileRef>
 </Workspace>

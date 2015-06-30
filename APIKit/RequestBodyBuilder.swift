@@ -1,15 +1,10 @@
 import Foundation
-
-#if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
 import Result
-#endif
-
-public let APIKitRequestBodyBuidlerErrorDomain = "APIKitRequestBodyBuidlerErrorDomain"
 
 public enum RequestBodyBuilder {
     case JSON(writingOptions: NSJSONWritingOptions)
     case URL(encoding: NSStringEncoding)
-    case Custom(contentTypeHeader: String, buildBodyFromObject: AnyObject -> Result<NSData, NSError>)
+    case Custom(contentTypeHeader: String, buildBodyFromObject: AnyObject throws -> NSData)
     
     public var contentTypeHeader: String {
         switch self {
@@ -24,26 +19,20 @@ public enum RequestBodyBuilder {
         }
     }
 
-    public func buildBodyFromObject(object: AnyObject) -> Result<NSData, NSError> {
+    public func buildBodyFromObject(object: AnyObject) throws -> NSData {
         switch self {
         case .JSON(let writingOptions):
-            if !NSJSONSerialization.isValidJSONObject(object) {
-                let userInfo = [NSLocalizedDescriptionKey: "invalid object for JSON passed."]
-                let error = NSError(domain: APIKitRequestBodyBuidlerErrorDomain, code: 0, userInfo: userInfo)
-                return .failure(error)
+            // If isValidJSONObject(_:) is false, dataWithJSONObject(_:options:) throws NSException.
+            guard NSJSONSerialization.isValidJSONObject(object) else {
+                throw NSError(domain: NSCocoaErrorDomain, code: 3840, userInfo: nil)
             }
-
-            return try { error in
-                return NSJSONSerialization.dataWithJSONObject(object, options: writingOptions, error: error)
-            }
+            return try NSJSONSerialization.dataWithJSONObject(object, options: writingOptions)
 
         case .URL(let encoding):
-            return try { error in
-                return URLEncodedSerialization.dataFromObject(object, encoding: encoding, error: error)
-            }
+            return try URLEncodedSerialization.dataFromObject(object, encoding: encoding)
 
         case .Custom(let (_, buildBodyFromObject)):
-            return buildBodyFromObject(object)
+            return try buildBodyFromObject(object)
         }
     }
 }

@@ -9,52 +9,51 @@ private func unescape(string: String) -> String {
 }
 
 public class URLEncodedSerialization {
-    public class func objectFromData(data: NSData, encoding: NSStringEncoding, error: NSErrorPointer) -> AnyObject? {
-        var dictionary: [String: AnyObject]?
-        
-        if let string = NSString(data: data, encoding: encoding) as? String {
-            dictionary = [String: AnyObject]()
-            
-            for pair in string.componentsSeparatedByString("&") {
-                let contents = pair.componentsSeparatedByString("=")
-                
-                if contents.count == 2 {
-                    dictionary?[contents[0]] = unescape(contents[1])
-                }
+    public enum Error: ErrorType {
+        case CannotGetStringFromData(NSData, NSStringEncoding)
+        case CannotGetDataFromString(String, NSStringEncoding)
+        case CannotCastObjectToDictionary(AnyObject)
+        case InvalidFormatString(String)
+    }
+
+    public class func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> [String: String] {
+        guard let string = NSString(data: data, encoding: encoding) as? String else {
+            throw Error.CannotGetStringFromData(data, encoding)
+        }
+
+        var dictionary = [String: String]()
+        for pair in string.componentsSeparatedByString("&") {
+            let contents = pair.componentsSeparatedByString("=")
+
+            guard contents.count == 2 else {
+                throw Error.InvalidFormatString(string)
             }
+
+            dictionary[contents[0]] = unescape(contents[1])
         }
-        
-        if dictionary == nil {
-            let userInfo = [NSLocalizedDescriptionKey: "failed to decode urlencoded string."]
-            error.memory = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
-        }
-        
+
         return dictionary
     }
     
-    public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding, error: NSErrorPointer) -> NSData? {
-        let string = stringFromObject(object)
-        let data = string.dataUsingEncoding(encoding, allowLossyConversion: false)
-        
-        if data == nil {
-            let userInfo = [NSLocalizedDescriptionKey: "failed to decode urlencoded string."]
-            error.memory = NSError(domain: APIKitErrorDomain, code: 0, userInfo: userInfo)
+    public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding) throws -> NSData {
+        guard let dictionary = object as? [String: AnyObject] else {
+            throw Error.CannotCastObjectToDictionary(object)
         }
-        
+
+        let string = stringFromDictionary(dictionary)
+        guard let data = string.dataUsingEncoding(encoding, allowLossyConversion: false) else {
+            throw Error.CannotGetDataFromString(string, encoding)
+        }
+
         return data
     }
     
-    public class func stringFromObject(object: AnyObject) -> String {
-        var pairs = [String]()
-        
-        if let dictionary = object as? [String: AnyObject] {
-            for (key, value) in dictionary {
-                let string = (value as? String) ?? "\(value)"
-                let pair = "\(key)=\(escape(string))"
-                pairs.append(pair)
-            }
+    public class func stringFromDictionary(dictionary: [String: AnyObject]) -> String {
+        let pairs = dictionary.map { key, value -> String in
+            let valueAsString = (value as? String) ?? "\(value)"
+            return "\(key)=\(escape(valueAsString))"
         }
-        
-        return join("&", pairs)
+
+        return "&".join(pairs)
     }
 }

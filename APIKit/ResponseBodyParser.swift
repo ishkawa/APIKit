@@ -1,13 +1,10 @@
 import Foundation
-
-#if APIKIT_DYNAMIC_FRAMEWORK || COCOAPODS
 import Result
-#endif
 
 public enum ResponseBodyParser {
     case JSON(readingOptions: NSJSONReadingOptions)
     case URL(encoding: NSStringEncoding)
-    case Custom(acceptHeader: String, parseData: NSData -> Result<AnyObject, NSError>)
+    case Custom(acceptHeader: String, parseData: NSData throws -> AnyObject)
     
     public var acceptHeader: String {
         switch self {
@@ -22,23 +19,19 @@ public enum ResponseBodyParser {
         }
     }
 
-    public func parseData(data: NSData) -> Result<AnyObject, NSError> {
+    public func parseData(data: NSData) throws -> AnyObject {
         switch self {
         case .JSON(let readingOptions):
             if data.length == 0 {
-                return .success([:])
+                return [:]
             }
-            return try { error in
-                return NSJSONSerialization.JSONObjectWithData(data, options: readingOptions, error: error)
-            }
+            return try NSJSONSerialization.JSONObjectWithData(data, options: readingOptions)
 
         case .URL(let encoding):
-            return try { error in
-                return URLEncodedSerialization.objectFromData(data, encoding: encoding, error: error)
-            }
+            return try URLEncodedSerialization.objectFromData(data, encoding: encoding)
 
-        case .Custom(let (accept, parseData)):
-            return parseData(data)
+        case .Custom(let (_, parseData)):
+            return try parseData(data)
         }
     }
 }
