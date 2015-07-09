@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "0.8.0"
+  s.version  = "1.0.0-beta1"
   s.summary  = "A networking library for building type safe web API client in Swift."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   }
 
   s.ios.deployment_target = "8.0"
-  s.osx.deployment_target = "10.10"
+  s.osx.deployment_target = "10.9"
 
   s.source_files = "APIKit/*.swift"
   s.source = {
@@ -27,5 +27,5 @@ Pod::Spec.new do |s|
     LICENSE
   }
 
-  s.dependency "Result", "~> 0.4"
+  s.dependency "Result", "~> 0.6-beta.1"
 end
