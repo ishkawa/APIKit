@@ -99,9 +99,7 @@ public extension Request {
             return .Failure(.ConfigurationError(error))
         }
 
-        guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
-            return .Failure(.FailedToCreateURLSessionTask)
-        }
+        let task = URLSession.dataTaskWithRequest(URLRequest)
 
         return .Success(task)
     }
