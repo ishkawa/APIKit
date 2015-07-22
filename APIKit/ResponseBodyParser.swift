@@ -19,6 +19,7 @@ public enum ResponseBodyParser {
         }
     }
 
+    /// - Throws: NSError, URLEncodedSerialization.Error, ErrorType
     public func parseData(data: NSData) throws -> AnyObject {
         switch self {
         case .JSON(let readingOptions):

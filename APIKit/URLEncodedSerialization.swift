@@ -16,6 +16,7 @@ public class URLEncodedSerialization {
         case InvalidFormatString(String)
     }
 
+    /// - Throws: URLEncodedSerialization.Error
     public class func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> [String: String] {
         guard let string = NSString(data: data, encoding: encoding) as? String else {
             throw Error.CannotGetStringFromData(data, encoding)
@@ -34,7 +35,8 @@ public class URLEncodedSerialization {
 
         return dictionary
     }
-    
+
+    /// - Throws: URLEncodedSerialization.Error
     public class func dataFromObject(object: AnyObject, encoding: NSStringEncoding) throws -> NSData {
         guard let dictionary = object as? [String: AnyObject] else {
             throw Error.CannotCastObjectToDictionary(object)

@@ -19,6 +19,7 @@ public enum RequestBodyBuilder {
         }
     }
 
+    /// - Throws: NSError, URLEncodedSerialization.Error, ErrorType
     public func buildBodyFromObject(object: AnyObject) throws -> NSData {
         switch self {
         case .JSON(let writingOptions):

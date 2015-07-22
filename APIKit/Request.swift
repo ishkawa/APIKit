@@ -19,6 +19,8 @@ public protocol Request {
     var parameters: [String: AnyObject] { get }
 
     /// You can add any configurations here
+    ///
+    /// - Throws: ErrorType
     func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
     /// Set of status code that indicates success.
