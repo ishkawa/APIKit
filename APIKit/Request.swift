@@ -19,6 +19,8 @@ public protocol Request {
     var parameters: [String: AnyObject] { get }
 
     /// You can add any configurations here
+    ///
+    /// - Throws: ErrorType
     func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
     /// Set of status code that indicates success.
@@ -99,9 +101,7 @@ public extension Request {
             return .Failure(.ConfigurationError(error))
         }
 
-        guard let task = URLSession.dataTaskWithRequest(URLRequest) else {
-            return .Failure(.FailedToCreateURLSessionTask)
-        }
+        let task = URLSession.dataTaskWithRequest(URLRequest)
 
         return .Success(task)
     }

@@ -13,9 +13,6 @@ public enum APIError: ErrorType {
     /// Error in `RequestBodyBuilder.buildBodyFromObject()`.
     case RequestBodySerializationError(ErrorType)
 
-    /// Failed to create `NSURLSessionDataTask` from `NSURLSession.dataTaskWithRequest()`.
-    case FailedToCreateURLSessionTask
-
     /// Indicates `NSHTTPURLResponse.statusCode` is not contained in `Request.statusCode`.
     /// Second associated value is return value of `errorFromObject()`.
     case UnacceptableStatusCode(Int, ErrorType)
