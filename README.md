@@ -330,6 +330,70 @@ struct SomePaginatedRequest: Request {
 }
 ```
 
+### Combining with [Himotoki](https://github.com/ikesyo/Himotoki)
+
+Himotki is a type-safe JSON decoding library that can be combined with APIKit. It makes implementing `responseFromObject(_:URLResponse:)` very easy. If your model type conforms to `Decodable` protocol in Himotoki, a request can be defined like below:
+
+```swift
+// model type
+struct RateLimit: Decodable {
+    let count: Int
+    let resetUNIXTime: NSTimeInterval
+
+    static func decode(e: Extractor) -> RateLimit? {
+        return build(
+            e.value(["rate", "limit"]),
+            e.value(["rate", "reset"])
+        ).map(self.init)
+    }
+}
+
+// request type
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
+
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        return decode(object) // get Response from AnyObject using Himotoki
+    }
+}
+```
+
+Additionally, you can provide default implementation of `responseFromObject(_:URLResponse:)` if `Response` typealias of a request type conforms to `Decodable`.
+
+```swift
+extension GitHubRequest where Self.Response: Decodable, Self.Response == Self.Response.DecodedType {
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Self.Response? {
+        return decode(object)
+    }
+}
+```
+
+As a result, you can omit implementing `responseFromObject(_:URLResponse:)` in the definition of a request type.
+
+```swift
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
+
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+}
+```
+
+See [this gist post](https://gist.github.com/ishkawa/59dd67042289ee4b5cab) for more practical example.
+
 ## Advanced usage
 
 ### NSURLSessionDelegate
