@@ -15,12 +15,7 @@ extension GitHubRequest {
     }
 }
 
-//: Step 2: Create API class
-class GitHubAPI: API {
-    
-}
-
-//: Step 3: Create model object
+//: Step 2: Create model object
 struct RateLimit {
     let count: Int
     let resetDate: NSDate
@@ -39,38 +34,36 @@ struct RateLimit {
     }
 }
 
-//: Step 4: Define requet type in API class
-extension GitHubAPI {
-    // https://developer.github.com/v3/rate_limit/
-    struct GetRateLimit: GitHubRequest {
-        typealias Response = RateLimit
+//: Step 3: Define requet type conforming to created request protocol
+// https://developer.github.com/v3/rate_limit/
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
 
-        var method: HTTPMethod {
-            return .GET
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        guard let dictionary = object as? [String: AnyObject] else {
+            return nil
         }
 
-        var path: String {
-            return "/rate_limit"
+        guard let rateLimit = RateLimit(dictionary: dictionary) else {
+            return nil
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            guard let dictionary = object as? [String: AnyObject] else {
-                return nil
-            }
-
-            guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                return nil
-            }
-
-            return rateLimit
-        }
+        return rateLimit
     }
 }
 
-//: Step 5: Send request
-let request = GitHubAPI.GetRateLimit()
+//: Step 4: Send request
+let request = GetRateLimitRequest()
 
-GitHubAPI.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let rateLimit):
         "count: \(rateLimit.count)"
@@ -80,4 +73,3 @@ GitHubAPI.sendRequest(request) { result in
         "error: \(error)"
     }
 }
-
