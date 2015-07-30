@@ -11,7 +11,6 @@ APIKit is a library for building type-safe web API client in Swift.
 - Parameters of a request are validated by type-system.
 - Type of a response is inferred from the type of its request.
 - A result of a request is represented by [Result<Value, Error>](https://github.com/antitypical/Result), which is also known as Either.
-- All the endpoints can be enumerated in nested class.
 
 ```swift
 let request = GitHub.SearchRepositories(query: "APIKit", sort: .Stars)
@@ -53,8 +52,7 @@ If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa
 
 1. Create a request protocol that inherits `Request` protocol.
 2. Add `baseURL` property in an extension of request protocol.
-3. Create an API class that inherits `API` class.
-4. Define request types that conform to request protocol in API class.
+3. Define request types that conform to request protocol.
     1. Create a type that represents a request of the web API.
     2. Assign type that represents a response object to `Response` typealiase.
     3. Add `method` and `path` variables.
@@ -71,29 +69,27 @@ extension GitHubRequest {
     }
 }
 
-class GitHubAPI: API {
-    struct GetRateLimit: GitHubRequest {
-        typealias Response = RateLimit
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
 
-        var method: HTTPMethod {
-            return .GET
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        guard let dictionary = object as? [String: AnyObject] else {
+            return nil
         }
 
-        var path: String {
-            return "/rate_limit"
+        guard let rateLimit = RateLimit(dictionary: dictionary) else {
+            return nil
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            guard let dictionary = object as? [String: AnyObject] else {
-                return nil
-            }
-
-            guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                return nil
-            }
-
-            return rateLimit
-        }
+        return rateLimit
     }
 }
 
@@ -119,9 +115,9 @@ struct RateLimit {
 ### Sending request
 
 ```swift
-let request = GitHubAPI.GetRateLimit()
+let request = GetRateLimitRequest()
 
-GitHubAPI.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let rateLimit):
         print("count: \(rateLimit.count)")
@@ -136,13 +132,13 @@ GitHubAPI.sendRequest(request) { result in
 ### Canceling request
 
 ```swift
-GitHub.cancelRequest(GitHubAPI.GetRateLimit.self)
+GitHub.cancelRequest(GetRateLimitRequest.self)
 ```
 
 If you want to filter requests to be cancelled, add closure that identifies the request should be cancelled or not.
 
 ```swift
-GitHub.cancelRequest(GitHubAPI.SearchRepositories.self) { request in
+GitHub.cancelRequest(GetSearchRepositoriesRequest.self) { request in
     return request.query == "APIKit"
 }
 ```
@@ -244,9 +240,7 @@ func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Error
 ### Authorization
 
 ```swift
-class GitHubAPI: API {
-    static var accessToken: String?
-}
+var GithubAccessToken: String?
 
 protocol GitHubRequest: Request {
     var authenticate: Bool { get }
@@ -263,7 +257,7 @@ extension GitHubRequest {
 
     func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
         if authenticate {
-            guard let accessToken = GitHubAPI.accessToken else {
+            guard let accessToken = GitHubAccessToken else {
                 throw APIKitError.CannotBuildURLRequest
             }
 
@@ -278,9 +272,9 @@ extension GitHubRequest {
 ### Pagination
 
 ```swift
-let request = SomeAPI.SomePaginatedRequest(page: 1)
+let request = GetSomePaginatedRequest(page: 1)
 
-SomeAPI.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let response):
         print("results: \(response.results)")
