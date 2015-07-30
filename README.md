@@ -13,9 +13,9 @@ APIKit is a library for building type-safe web API client in Swift.
 - A result of a request is represented by [Result<Value, Error>](https://github.com/antitypical/Result), which is also known as Either.
 
 ```swift
-let request = GitHub.SearchRepositories(query: "APIKit", sort: .Stars)
+let request = GetSearchRepositoriesRequest(query: "APIKit", sort: .Stars)
 
-GitHub.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let response):
         self.repositories = response // inferred as [Repository]
