@@ -289,11 +289,11 @@ API.sendRequest(request) { result in
 
 ```swift
 struct PaginatedResponse<T> {
-    var results: Array<T>
+    var results: [T]
     var nextPage: Int { get }
     var hasNext: Bool { get }
 
-    init(results: Array<T>, URLResponse: NSHTTPURLResponse) {
+    init(results: [T], URLResponse: NSHTTPURLResponse) {
         self.results = results
         self.nextPage = /* get nextPage from `Link` field of URLResponse */
         self.hasNext = /* get hasNext from `Link` field of URLResponse */
