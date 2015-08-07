@@ -89,7 +89,7 @@ public extension Request {
             }
         }
 
-        components.path = (components.path ?? "").stringByAppendingPathComponent(path)
+        components.path = ((components.path ?? "") as NSString).stringByAppendingPathComponent(path)
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
