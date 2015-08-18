@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19C16B541B83327A001D77CC /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C16B531B83327A001D77CC /* RequestTests.swift */; };
+		19C16B551B83327A001D77CC /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C16B531B83327A001D77CC /* RequestTests.swift */; };
 		7F08699A1A978790001AD3E1 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCFE1A94D04D006863BB /* APIKit.framework */; };
 		7F0869A01A9787AF001AD3E1 /* RequestBodyBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */; };
 		7F0869A11A9787AF001AD3E1 /* ResponseBodyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */; };
@@ -83,6 +85,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19C16B531B83327A001D77CC /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		7F0869941A978790001AD3E1 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F1B190A1AA2CA1300C7AFCF /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
@@ -195,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				7F1B190A1AA2CA1300C7AFCF /* APITests.swift */,
+				19C16B531B83327A001D77CC /* RequestTests.swift */,
 				7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */,
 				7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */,
 				7FEC5A161A96FE2600B1D3C0 /* Supporting Files */,
@@ -387,6 +391,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F1B190C1AA2CA1300C7AFCF /* APITests.swift in Sources */,
+				19C16B551B83327A001D77CC /* RequestTests.swift in Sources */,
 				7F0869A01A9787AF001AD3E1 /* RequestBodyBuilderTests.swift in Sources */,
 				7F0869A11A9787AF001AD3E1 /* ResponseBodyParserTests.swift in Sources */,
 			);
@@ -425,6 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F1B190B1AA2CA1300C7AFCF /* APITests.swift in Sources */,
+				19C16B541B83327A001D77CC /* RequestTests.swift in Sources */,
 				7FEC5A191A96FE2600B1D3C0 /* ResponseBodyParserTests.swift in Sources */,
 				7F30A8561A975BD600A8C136 /* RequestBodyBuilderTests.swift in Sources */,
 			);

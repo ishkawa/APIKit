@@ -79,7 +79,13 @@ public extension Request {
 
         switch method {
         case .GET, .HEAD, .DELETE:
-            components.query = URLEncodedSerialization.stringFromDictionary(parameters)
+            components.queryItems = parameters.map { key, value in
+                if let string = value as? String {
+                    return NSURLQueryItem(name: key, value: string)
+                } else {
+                    return NSURLQueryItem(name: key, value: "\(value)")
+                }
+            }
 
         default:
             do {
