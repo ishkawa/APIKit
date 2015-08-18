@@ -332,7 +332,7 @@ struct SomePaginatedRequest: Request {
 
 ### Combination with Himotoki
 
-[Himotki](https://github.com/ikesyo/Himotoki) is a type-safe JSON decoding library that can be combined with APIKit. It makes implementing `responseFromObject(_:URLResponse:)` very easy. If your model type conforms to `Decodable` protocol in Himotoki, a request can be defined like below:
+[Himotoki](https://github.com/ikesyo/Himotoki) is a type-safe JSON decoding library that can be combined with APIKit. It makes implementing `responseFromObject(_:URLResponse:)` very easy. If your model type conforms to `Decodable` protocol in Himotoki, a request can be defined like below:
 
 ```swift
 // model type
