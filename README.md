@@ -11,12 +11,11 @@ APIKit is a library for building type-safe web API client in Swift.
 - Parameters of a request are validated by type-system.
 - Type of a response is inferred from the type of its request.
 - A result of a request is represented by [Result<Value, Error>](https://github.com/antitypical/Result), which is also known as Either.
-- All the endpoints can be enumerated in nested class.
 
 ```swift
-let request = GitHub.SearchRepositories(query: "APIKit", sort: .Stars)
+let request = GetSearchRepositoriesRequest(query: "APIKit", sort: .Stars)
 
-GitHub.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let response):
         self.repositories = response // inferred as [Repository]
@@ -30,7 +29,7 @@ GitHub.sendRequest(request) { result in
 
 ## Requirements
 
-- Swift 2
+- Swift 2 beta 4
 - iOS 8.0 or later
 - Mac OS 10.9 or later
 
@@ -40,21 +39,20 @@ If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit"` to your Cartfile.
+- Insert `github "ishkawa/APIKit" "1.0.0-beta2"` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `pod "APIKit"` to your Podfile.
+- Insert `pod "APIKit", "1.0.0-beta2"` to your Podfile.
 - Run `pod install`.
 
 ## Usage
 
 1. Create a request protocol that inherits `Request` protocol.
 2. Add `baseURL` property in an extension of request protocol.
-3. Create an API class that inherits `API` class.
-4. Define request types that conform to request protocol in API class.
+3. Define request types that conform to request protocol.
     1. Create a type that represents a request of the web API.
     2. Assign type that represents a response object to `Response` typealiase.
     3. Add `method` and `path` variables.
@@ -71,29 +69,27 @@ extension GitHubRequest {
     }
 }
 
-class GitHubAPI: API {
-    struct GetRateLimit: GitHubRequest {
-        typealias Response = RateLimit
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
 
-        var method: HTTPMethod {
-            return .GET
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        guard let dictionary = object as? [String: AnyObject] else {
+            return nil
         }
 
-        var path: String {
-            return "/rate_limit"
+        guard let rateLimit = RateLimit(dictionary: dictionary) else {
+            return nil
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            guard let dictionary = object as? [String: AnyObject] else {
-                return nil
-            }
-
-            guard let rateLimit = RateLimit(dictionary: dictionary) else {
-                return nil
-            }
-
-            return rateLimit
-        }
+        return rateLimit
     }
 }
 
@@ -119,9 +115,9 @@ struct RateLimit {
 ### Sending request
 
 ```swift
-let request = GitHubAPI.GetRateLimit()
+let request = GetRateLimitRequest()
 
-GitHubAPI.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let rateLimit):
         print("count: \(rateLimit.count)")
@@ -136,13 +132,13 @@ GitHubAPI.sendRequest(request) { result in
 ### Canceling request
 
 ```swift
-GitHub.cancelRequest(GitHubAPI.GetRateLimit.self)
+GitHub.cancelRequest(GetRateLimitRequest.self)
 ```
 
 If you want to filter requests to be cancelled, add closure that identifies the request should be cancelled or not.
 
 ```swift
-GitHub.cancelRequest(GitHubAPI.SearchRepositories.self) { request in
+GitHub.cancelRequest(GetSearchRepositoriesRequest.self) { request in
     return request.query == "APIKit"
 }
 ```
@@ -244,9 +240,7 @@ func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Error
 ### Authorization
 
 ```swift
-class GitHubAPI: API {
-    static var accessToken: String?
-}
+var GithubAccessToken: String?
 
 protocol GitHubRequest: Request {
     var authenticate: Bool { get }
@@ -263,7 +257,7 @@ extension GitHubRequest {
 
     func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
         if authenticate {
-            guard let accessToken = GitHubAPI.accessToken else {
+            guard let accessToken = GitHubAccessToken else {
                 throw APIKitError.CannotBuildURLRequest
             }
 
@@ -278,9 +272,9 @@ extension GitHubRequest {
 ### Pagination
 
 ```swift
-let request = SomeAPI.SomePaginatedRequest(page: 1)
+let request = GetSomePaginatedRequest(page: 1)
 
-SomeAPI.sendRequest(request) { result in
+API.sendRequest(request) { result in
     switch result {
     case .Success(let response):
         print("results: \(response.results)")
@@ -295,11 +289,11 @@ SomeAPI.sendRequest(request) { result in
 
 ```swift
 struct PaginatedResponse<T> {
-    var results: Array<T>
+    var results: [T]
     var nextPage: Int { get }
     var hasNext: Bool { get }
 
-    init(results: Array<T>, URLResponse: NSHTTPURLResponse) {
+    init(results: [T], URLResponse: NSHTTPURLResponse) {
         self.results = results
         self.nextPage = /* get nextPage from `Link` field of URLResponse */
         self.hasNext = /* get hasNext from `Link` field of URLResponse */
@@ -335,6 +329,70 @@ struct SomePaginatedRequest: Request {
     }
 }
 ```
+
+### Combination with Himotoki
+
+[Himotoki](https://github.com/ikesyo/Himotoki) is a type-safe JSON decoding library that can be combined with APIKit. It makes implementing `responseFromObject(_:URLResponse:)` very easy. If your model type conforms to `Decodable` protocol in Himotoki, a request can be defined like below:
+
+```swift
+// model type
+struct RateLimit: Decodable {
+    let count: Int
+    let resetUNIXTime: NSTimeInterval
+
+    static func decode(e: Extractor) -> RateLimit? {
+        return build(
+            e.value(["rate", "limit"]),
+            e.value(["rate", "reset"])
+        ).map(self.init)
+    }
+}
+
+// request type
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
+
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        return decode(object) // get Response from AnyObject using Himotoki
+    }
+}
+```
+
+Additionally, you can provide default implementation of `responseFromObject(_:URLResponse:)` if `Response` typealias of a request type conforms to `Decodable`.
+
+```swift
+extension GitHubRequest where Self.Response: Decodable, Self.Response == Self.Response.DecodedType {
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Self.Response? {
+        return decode(object)
+    }
+}
+```
+
+As a result, you can omit implementing `responseFromObject(_:URLResponse:)` in the definition of a request type.
+
+```swift
+struct GetRateLimitRequest: GitHubRequest {
+    typealias Response = RateLimit
+
+    var method: HTTPMethod {
+        return .GET
+    }
+
+    var path: String {
+        return "/rate_limit"
+    }
+}
+```
+
+See [this gist post](https://gist.github.com/ishkawa/59dd67042289ee4b5cab) for more practical example.
 
 ## Advanced usage
 
