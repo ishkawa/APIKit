@@ -56,7 +56,7 @@ public class API {
                 + uploadTasks as [NSURLSessionTask]
                 + downloadTasks as [NSURLSessionTask]
 
-            let tasks = allTasks.filter { task in
+            allTasks.filter { task in
                 var request: T?
                 switch task {
                 case let x as NSURLSessionDataTask:
@@ -74,11 +74,7 @@ public class API {
                 } else {
                     return false
                 }
-            }
-            
-            for task in tasks {
-                task.cancel()
-            }
+            }.forEach { $0.cancel() }
         }
     }
 }
