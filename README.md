@@ -29,7 +29,7 @@ API.sendRequest(request) { result in
 
 ## Requirements
 
-- Swift 2 beta 4
+- Swift 2 beta 5
 - iOS 8.0 or later
 - Mac OS 10.9 or later
 
