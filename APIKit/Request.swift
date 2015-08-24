@@ -79,7 +79,7 @@ public extension Request {
 
         switch method {
         case .GET, .HEAD, .DELETE:
-            components.query = URLEncodedSerialization.stringFromDictionary(parameters)
+            components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
 
         default:
             do {
