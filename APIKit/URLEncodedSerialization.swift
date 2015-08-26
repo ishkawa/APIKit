@@ -56,6 +56,6 @@ public class URLEncodedSerialization {
             return "\(key)=\(escape(valueAsString))"
         }
 
-        return "&".join(pairs)
+        return pairs.joinWithSeparator("&")
     }
 }
