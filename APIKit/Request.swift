@@ -79,8 +79,9 @@ public extension Request {
 
         switch method {
         case .GET, .HEAD, .DELETE:
-            components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
-
+            if parameters.count > 0 {
+                components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
+            }
         default:
             do {
                 URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
@@ -89,7 +90,22 @@ public extension Request {
             }
         }
 
-        components.path = ((components.path ?? "") as NSString).stringByAppendingPathComponent(path)
+        // Path construction strategy
+        // To allow users to specify path as exactly as they want,
+        // - If the given `path` is empty, do absolutely nothing in case of URLs like "https://example.com", not "https://example.com/"
+        // - If the final constructed path doesn't have the leading '/', add it or components.URL will return nil!
+        // - If the given `path` has the trailing '/', retain it in case of URLs like "https://example.com/foo/", not "https://example.com/foo"
+        //
+        if (!path.isEmpty) {
+            var p = ((components.path ?? "") as NSString).stringByAppendingPathComponent(path)
+            if (!p.hasPrefix("/")) {
+                p.insert("/", atIndex: p.startIndex)
+            } else if (!p.hasSuffix("/") && path.hasSuffix("/")) {
+                p.insert("/", atIndex: p.endIndex)
+            }
+            components.path = p
+        }
+        
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
