@@ -66,7 +66,7 @@ public extension Request {
     }
 
     public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: nil)
+        return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: ["object":object, "URLResponse": URLResponse])
     }
 
     // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)

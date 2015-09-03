@@ -124,7 +124,7 @@ class APITests: XCTestCase {
                 case .UnacceptableStatusCode(let statusCode, let error as NSError):
                     XCTAssert(statusCode == 400)
                     XCTAssert(error.domain == "APIKitErrorDomain")
-
+                    XCTAssertNotNil(error.userInfo)
                 default:
                     XCTFail()
                 }
