@@ -1,0 +1,17 @@
+language: objective-c
+osx_image: xcode7
+
+env:
+  - LC_CTYPE=en_US.UTF-8
+
+before_install:
+  - gem install cocoapods xcpretty -N
+  - brew update 
+  - brew install carthage
+  - carthage bootstrap
+
+script:
+  - pod spec lint
+  - set -o pipefail && xcodebuild test -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
+  - set -o pipefail && xcodebuild test -scheme APIKit-Mac | xcpretty -c
+
