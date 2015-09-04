@@ -17,6 +17,7 @@ before_install:
 
 script:
   - pod spec lint
+  - carthage build --no-skip-current
   - set -o pipefail && xcodebuild test -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - set -o pipefail && xcodebuild test -scheme APIKit-Mac | xcpretty -c
 
