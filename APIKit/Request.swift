@@ -71,7 +71,8 @@ public extension Request {
 
     // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
     internal func createTaskInURLSession(URLSession: NSURLSession) -> Result<NSURLSessionDataTask, APIError> {
-        guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
+        let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
+        guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
             return .Failure(.InvalidBaseURL(baseURL))
         }
 
@@ -88,10 +89,6 @@ public extension Request {
             } catch {
                 return .Failure(.RequestBodySerializationError(error))
             }
-        }
-
-        if (!path.isEmpty) {
-            components.path = path.hasPrefix("/") ? path : "/" + path
         }
 
         URLRequest.URL = components.URL
