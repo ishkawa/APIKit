@@ -5,8 +5,7 @@ env:
   - LC_CTYPE=en_US.UTF-8
 
 before_install:
-  - xcode-select -p
-  - ls /Applications
+  - ./script/import-certificates
   - gem install cocoapods xcpretty -N
   - brew update 
   - brew install carthage
