@@ -66,12 +66,13 @@ public extension Request {
     }
 
     public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: nil)
+        return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: ["object":object, "URLResponse": URLResponse])
     }
 
     // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
     internal func createTaskInURLSession(URLSession: NSURLSession) -> Result<NSURLSessionDataTask, APIError> {
-        guard let components = NSURLComponents(URL: baseURL, resolvingAgainstBaseURL: true) else {
+        let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
+        guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
             return .Failure(.InvalidBaseURL(baseURL))
         }
 
@@ -79,8 +80,9 @@ public extension Request {
 
         switch method {
         case .GET, .HEAD, .DELETE:
-            components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
-
+            if parameters.count > 0 {
+                components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
+            }
         default:
             do {
                 URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
@@ -89,7 +91,6 @@ public extension Request {
             }
         }
 
-        components.path = ((components.path ?? "") as NSString).stringByAppendingPathComponent(path)
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
