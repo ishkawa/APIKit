@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		197D0E491B998B8200208EDB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CCA1B998B6500208EDB /* Result.framework */; };
+		197D0E4A1B998B8D00208EDB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CCD1B998B6500208EDB /* Result.framework */; };
+		197D0E4B1B998B9700208EDB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CC91B998B6500208EDB /* OHHTTPStubs.framework */; };
+		197D0E4C1B998B9700208EDB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CCA1B998B6500208EDB /* Result.framework */; };
+		197D0E4D1B998B9B00208EDB /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CC91B998B6500208EDB /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		197D0E4E1B998B9B00208EDB /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CCA1B998B6500208EDB /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		197D0E4F1B998BA100208EDB /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CCC1B998B6500208EDB /* OHHTTPStubs.framework */; };
+		197D0E501B998BA100208EDB /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197D0CCD1B998B6500208EDB /* Result.framework */; };
+		197D0E511B998BA500208EDB /* OHHTTPStubs.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197D0CCC1B998B6500208EDB /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		197D0E521B998BA500208EDB /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 197D0CCD1B998B6500208EDB /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19C16B541B83327A001D77CC /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C16B531B83327A001D77CC /* RequestTests.swift */; };
 		19C16B551B83327A001D77CC /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C16B531B83327A001D77CC /* RequestTests.swift */; };
 		7F08699A1A978790001AD3E1 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCFE1A94D04D006863BB /* APIKit.framework */; };
@@ -33,15 +43,6 @@
 		84B5C6BC1B42CD430032068D /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5FA6B41B3C58210090B0AF /* APIError.swift */; };
 		C52CE4F81B984C9B00B7AB59 /* RequestCreateTaskInURLSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52CE4F71B984C9B00B7AB59 /* RequestCreateTaskInURLSessionTests.swift */; settings = {ASSET_TAGS = (); }; };
 		C52CE4F91B984C9B00B7AB59 /* RequestCreateTaskInURLSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52CE4F71B984C9B00B7AB59 /* RequestCreateTaskInURLSessionTests.swift */; settings = {ASSET_TAGS = (); }; };
-		CD5115251B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD5115261B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD5115271B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD5115281B1FFBA900514240 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		CD51152E1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
-		CD51152F1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
-		CD5115311B1FFD8F00514240 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 7F45FCDD1A94D02C006863BB /* APIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				197D0E511B998BA500208EDB /* OHHTTPStubs.framework in CopyFiles */,
+				197D0E521B998BA500208EDB /* Result.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,9 +80,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CD5115311B1FFD8F00514240 /* Result.framework in Copy Frameworks */,
-				CD5115331B1FFD9500514240 /* OHHTTPStubs.framework in Copy Frameworks */,
-				CD5115341B1FFDA600514240 /* APIKit.framework in Copy Frameworks */,
+				197D0E4D1B998B9B00208EDB /* OHHTTPStubs.framework in Copy Frameworks */,
+				197D0E4E1B998B9B00208EDB /* Result.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +89,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		197D0CC91B998B6500208EDB /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = "<group>"; };
+		197D0CCA1B998B6500208EDB /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
+		197D0CCC1B998B6500208EDB /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = "<group>"; };
+		197D0CCD1B998B6500208EDB /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
+		197D0CCF1B998B6500208EDB /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
 		19C16B531B83327A001D77CC /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		7F0869941A978790001AD3E1 /* APIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
@@ -116,9 +123,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115281B1FFBA900514240 /* Result.framework in Frameworks */,
-				CD51152F1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */,
 				7F08699A1A978790001AD3E1 /* APIKit.framework in Frameworks */,
+				197D0E4F1B998BA100208EDB /* OHHTTPStubs.framework in Frameworks */,
+				197D0E501B998BA100208EDB /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,7 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115251B1FFBA900514240 /* Result.framework in Frameworks */,
+				197D0E491B998B8200208EDB /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,7 +141,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115261B1FFBA900514240 /* Result.framework in Frameworks */,
+				197D0E4A1B998B8D00208EDB /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,21 +149,66 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD5115271B1FFBA900514240 /* Result.framework in Frameworks */,
-				CD51152E1B1FFCC700514240 /* OHHTTPStubs.framework in Frameworks */,
 				7FEC5A1A1A96FE2600B1D3C0 /* APIKit.framework in Frameworks */,
+				197D0E4B1B998B9700208EDB /* OHHTTPStubs.framework in Frameworks */,
+				197D0E4C1B998B9700208EDB /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		197D0CC61B998B6500208EDB /* Carthage */ = {
+			isa = PBXGroup;
+			children = (
+				197D0CC71B998B6500208EDB /* Build */,
+			);
+			path = Carthage;
+			sourceTree = "<group>";
+		};
+		197D0CC71B998B6500208EDB /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				197D0CC81B998B6500208EDB /* iOS */,
+				197D0CCB1B998B6500208EDB /* Mac */,
+				197D0CCE1B998B6500208EDB /* watchOS */,
+			);
+			path = Build;
+			sourceTree = "<group>";
+		};
+		197D0CC81B998B6500208EDB /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				197D0CC91B998B6500208EDB /* OHHTTPStubs.framework */,
+				197D0CCA1B998B6500208EDB /* Result.framework */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		197D0CCB1B998B6500208EDB /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				197D0CCC1B998B6500208EDB /* OHHTTPStubs.framework */,
+				197D0CCD1B998B6500208EDB /* Result.framework */,
+			);
+			path = Mac;
+			sourceTree = "<group>";
+		};
+		197D0CCE1B998B6500208EDB /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				197D0CCF1B998B6500208EDB /* Result.framework */,
+			);
+			path = watchOS;
+			sourceTree = "<group>";
+		};
 		7F45FCD31A94D02C006863BB = {
 			isa = PBXGroup;
 			children = (
 				7F8ECDFD1B6A799E00234E04 /* Demo.playground */,
 				7F45FCDF1A94D02C006863BB /* APIKit */,
 				7FEC5A151A96FE2600B1D3C0 /* APIKitTests */,
+				197D0CC61B998B6500208EDB /* Carthage */,
 				7F45FCDE1A94D02C006863BB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -462,6 +514,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -480,6 +536,10 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -585,6 +645,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -604,6 +668,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -623,6 +691,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -650,6 +722,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = APIKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -665,6 +741,10 @@
 		7FEC5A1D1A96FE2600B1D3C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -680,6 +760,10 @@
 		7FEC5A1E1A96FE2600B1D3C0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = APIKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.ishkawa.$(PRODUCT_NAME:rfc1034identifier)";
