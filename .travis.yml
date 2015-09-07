@@ -16,6 +16,6 @@ before_install:
   - carthage bootstrap --use-submodules --no-use-binaries
 
 script:
-  - pod spec lint
+  - pod spec lint APIKit.podspec
   - set -o pipefail && xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - set -o pipefail && xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
