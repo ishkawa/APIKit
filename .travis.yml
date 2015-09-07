@@ -13,9 +13,9 @@ before_install:
   - gem install cocoapods xcpretty -N
   - brew update 
   - brew install carthage
-  - carthage bootstrap
+  - carthage bootstrap --use-submodules --no-use-binaries
 
 script:
   - pod spec lint
-  - set -o pipefail && xcodebuild test -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
-  - set -o pipefail && xcodebuild test -scheme APIKit-Mac | xcpretty -c
+  - set -o pipefail && xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
+  - set -o pipefail && xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
