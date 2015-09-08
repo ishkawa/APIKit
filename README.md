@@ -341,10 +341,10 @@ struct RateLimit: Decodable {
     let resetUNIXTime: NSTimeInterval
 
     static func decode(e: Extractor) -> RateLimit? {
-        return build(
+        return build(self.init)(
             e.value(["rate", "limit"]),
             e.value(["rate", "reset"])
-        ).map(self.init)
+        )
     }
 }
 
