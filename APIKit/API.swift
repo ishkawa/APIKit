@@ -13,7 +13,7 @@ public class API {
     )
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public static func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         var dataTask: NSURLSessionDataTask?
 
         switch request.createTaskInURLSession(URLSession) {
