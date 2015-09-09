@@ -11,7 +11,7 @@ before_install:
   - gem install cocoapods xcpretty -N
   - brew update 
   - brew install carthage
-  - carthage bootstrap --use-submodules --no-use-binaries
+  - carthage bootstrap --use-submodules --no-build
 
 script:
   - pod spec lint APIKit.podspec
