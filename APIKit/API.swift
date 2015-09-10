@@ -13,7 +13,7 @@ public class API {
     )
 
     // send request and build response object
-    public class func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public static func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         var dataTask: NSURLSessionDataTask?
 
         switch request.createTaskInURLSession(URLSession) {
@@ -46,11 +46,11 @@ public class API {
         return dataTask
     }
 
-    public class func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+    public static func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
     }
 
-    public class func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+    public static func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [NSURLSessionTask]
                 + uploadTasks as [NSURLSessionTask]
