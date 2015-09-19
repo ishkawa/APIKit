@@ -8,7 +8,6 @@ env:
 
 before_install:
   - ./script/import-certificates
-  - gem install cocoapods xcpretty -N
   - brew update 
   - brew install carthage
   - carthage bootstrap --use-submodules --no-build
