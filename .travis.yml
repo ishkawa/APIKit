@@ -17,3 +17,6 @@ script:
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
+
+notifications:
+  email: false
