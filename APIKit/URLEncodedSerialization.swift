@@ -53,7 +53,7 @@ public final class URLEncodedSerialization {
     public static func stringFromDictionary(dictionary: [String: AnyObject]) -> String {
         let pairs = dictionary.map { key, value -> String in
             let valueAsString = (value as? String) ?? "\(value)"
-            return "\(key)=\(escape(valueAsString))"
+            return "\(escape(key))=\(escape(valueAsString))"
         }
 
         return pairs.joinWithSeparator("&")
