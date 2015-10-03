@@ -1,7 +1,13 @@
 import Foundation
 
 private func escape(string: String) -> String {
-    return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue) as String
+    //Reserved characters defined by RFC 3986
+    let genDelims = ":/?#[]@"
+    let subDelims = "!$&'()*+,;="
+    let reservedCharacters = genDelims + subDelims
+    let allowedCharacterSet = NSCharacterSet.URLQueryAllowedCharacterSet().mutableCopy() as! NSMutableCharacterSet
+    allowedCharacterSet.removeCharactersInString(reservedCharacters)
+    return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
 }
 
 private func unescape(string: String) -> String {
