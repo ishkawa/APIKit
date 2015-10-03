@@ -19,8 +19,8 @@ public class API {
             handler(.Failure(error))
             return nil
 
-        case .Success(let URLReqeust):
-            let dataTask = URLSession.dataTaskWithRequest(URLReqeust)
+        case .Success(let URLRequest):
+            let dataTask = URLSession.dataTaskWithRequest(URLRequest)
             dataTask.request = Box(request)
             dataTask.completionHandler = { data, URLResponse, connectionError in
                 let sessionResult: Result<(NSData, NSURLResponse?), APIError>
