@@ -1,7 +1,17 @@
 import Foundation
 
 private func escape(string: String) -> String {
-    return CFURLCreateStringByAddingPercentEscapes(nil, string, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue) as String
+    // Reserved characters defined by RFC 3986
+    // Reference: https://www.ietf.org/rfc/rfc3986.txt
+    let generalDelimiters = ":/?#[]@"
+    let subDelimiters = "!$&'()*+,;="
+    let reservedCharacters = generalDelimiters + subDelimiters
+    
+    let allowedCharacterSet = NSMutableCharacterSet()
+    allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
+    allowedCharacterSet.removeCharactersInString(reservedCharacters)
+    
+    return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
 }
 
 private func unescape(string: String) -> String {
@@ -53,7 +63,7 @@ public final class URLEncodedSerialization {
     public static func stringFromDictionary(dictionary: [String: AnyObject]) -> String {
         let pairs = dictionary.map { key, value -> String in
             let valueAsString = (value as? String) ?? "\(value)"
-            return "\(key)=\(escape(valueAsString))"
+            return "\(escape(key))=\(escape(valueAsString))"
         }
 
         return pairs.joinWithSeparator("&")

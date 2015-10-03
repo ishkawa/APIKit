@@ -340,8 +340,8 @@ struct RateLimit: Decodable {
     let count: Int
     let resetUNIXTime: NSTimeInterval
 
-    static func decode(e: Extractor) -> RateLimit? {
-        return build(self.init)(
+    static func decode(e: Extractor) throws -> RateLimit {
+        return try build(self.init)(
             e.value(["rate", "limit"]),
             e.value(["rate", "reset"])
         )
@@ -361,7 +361,7 @@ struct GetRateLimitRequest: GitHubRequest {
     }
 
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-        return decode(object) // get Response from AnyObject using Himotoki
+        return try? decode(object) // get Response from AnyObject using Himotoki
     }
 }
 ```
@@ -371,7 +371,7 @@ Additionally, you can provide default implementation of `responseFromObject(_:UR
 ```swift
 extension GitHubRequest where Self.Response: Decodable, Self.Response == Self.Response.DecodedType {
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Self.Response? {
-        return decode(object)
+        return try? decode(object)
     }
 }
 ```

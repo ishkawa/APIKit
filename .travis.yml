@@ -7,8 +7,7 @@ env:
     - secure: kg5TFTNojZ9VOYHApONRUXSbwu+erLs3WSNNX/CKbkO8eQnBo+1koXHnEtOTQ641YRAVpFLX4QK7pbRfmWWWzR6ntNgXmvE4IUa1ggsUlcorApLq+cQin1Tp1es0/Ul0nYLJN8WXbcObKSLy8FOmHkrMWYuffMtH9e7qEL01ei0=
 
 before_install:
-  - ./script/import-certificates
-  - gem install cocoapods xcpretty -N
+  - ./script/import-certificates || true
   - brew update 
   - brew install carthage
   - carthage bootstrap --use-submodules --no-build
@@ -19,3 +18,6 @@ script:
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
+
+notifications:
+  email: false
