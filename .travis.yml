@@ -19,5 +19,15 @@ script:
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
 
+deploy:
+  provider: releases
+  api_key:
+    secure: I/cUbYW2BO/Yej52SHoHEmsjhP27jZuQl7tTvjliNzDAmEeYp6HR4fMnxUUUqcntaqrk6ZJauQ0GjbcDqkekPUAZAaUCsT5kh0qqGK8yMpSTd+FhBHNjqOvPimwGqKn9HOmGIJQnH8LqG+1esZhvhQEJJ0rpRSvapETUIcrZewI=
+  file: APIKit.framework.zip
+  on:
+    repo: ishkawa/APIKit
+    tags: true
+    all_branches: true
+
 notifications:
   email: false
