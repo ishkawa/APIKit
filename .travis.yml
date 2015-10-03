@@ -25,6 +25,7 @@ deploy:
   api_key:
     secure: I/cUbYW2BO/Yej52SHoHEmsjhP27jZuQl7tTvjliNzDAmEeYp6HR4fMnxUUUqcntaqrk6ZJauQ0GjbcDqkekPUAZAaUCsT5kh0qqGK8yMpSTd+FhBHNjqOvPimwGqKn9HOmGIJQnH8LqG+1esZhvhQEJJ0rpRSvapETUIcrZewI=
   file: APIKit.framework.zip
+  skip_cleanup: true
   on:
     repo: ishkawa/APIKit
     tags: true
