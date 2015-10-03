@@ -34,7 +34,7 @@ struct RateLimit {
     }
 }
 
-//: Step 3: Define requet type conforming to created request protocol
+//: Step 3: Define request type conforming to created request protocol
 // https://developer.github.com/v3/rate_limit/
 struct GetRateLimitRequest: GitHubRequest {
     typealias Response = RateLimit
@@ -66,10 +66,10 @@ let request = GetRateLimitRequest()
 API.sendRequest(request) { result in
     switch result {
     case .Success(let rateLimit):
-        "count: \(rateLimit.count)"
-        "reset: \(rateLimit.resetDate)"
+        debugPrint("count: \(rateLimit.count)")
+        debugPrint("reset: \(rateLimit.resetDate)")
 
     case .Failure(let error):
-        "error: \(error)"
+        debugPrint("error: \(error)")
     }
 }
