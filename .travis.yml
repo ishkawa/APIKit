@@ -13,7 +13,7 @@ before_install:
   - carthage bootstrap --use-submodules --no-build
 
 script:
-  - carthage build --no-skip-current --verbose
+  - carthage build --no-skip-current
   - pod spec lint APIKit.podspec
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
