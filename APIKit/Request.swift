@@ -68,9 +68,10 @@ public extension Request {
     public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
         return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: ["object":object, "URLResponse": URLResponse])
     }
-
-    // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
-    internal func createTaskInURLSession(URLSession: NSURLSession) -> Result<NSURLSessionDataTask, APIError> {
+    
+    // Use Result here because `throws` loses type info of an error.
+    // This method is not overridable. If you need to add customization, override configureURLRequest.
+    public func buildURLRequest() -> Result<NSURLRequest, APIError> {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
             return .Failure(.InvalidBaseURL(baseURL))
@@ -101,10 +102,8 @@ public extension Request {
         } catch {
             return .Failure(.ConfigurationError(error))
         }
-
-        let task = URLSession.dataTaskWithRequest(URLRequest)
-
-        return .Success(task)
+        
+        return .Success(URLRequest)
     }
 
     // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
