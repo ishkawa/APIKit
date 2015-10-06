@@ -1,6 +1,6 @@
 import XCTest
 import OHHTTPStubs
-@testable import APIKit
+import APIKit
 
 class RequestCreateTaskInURLSessionTest: XCTestCase {
     
@@ -37,14 +37,10 @@ class RequestCreateTaskInURLSessionTest: XCTestCase {
         
         func assertRequest(sampleRequest: SampleRequest, pattern: String) {
             
-            switch sampleRequest.createTaskInURLSession(session) {
-            case let .Success(task):
-                guard let urlRequest = task.originalRequest else {
-                    XCTFail("The created task doesn't have a valid NSURLRequest: \(task)")
-                    return
-                }
-                guard let url = urlRequest.URL else {
-                    XCTFail("The created task doesn't have a valid URL: \(urlRequest)")
+            switch sampleRequest.buildURLRequest() {
+            case let .Success(URLRequest):
+                guard let url = URLRequest.URL else {
+                    XCTFail("The created task doesn't have a valid URL: \(URLRequest)")
                     return
                 }
                 XCTAssertEqual(url.absoluteString, pattern)
