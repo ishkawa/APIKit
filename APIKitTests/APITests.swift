@@ -3,7 +3,7 @@ import APIKit
 import XCTest
 import OHHTTPStubs
 
-protocol MockAPIRequest: Request {
+protocol MockAPIRequest: RequestType {
 }
 
 extension MockAPIRequest {

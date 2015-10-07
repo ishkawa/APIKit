@@ -1,14 +1,14 @@
 import Foundation
 import Result
 
-/// Request protocol represents a request for Web API.
+/// RequestType protocol represents a request for Web API.
 /// Following 5 items must be implemented.
 /// - typealias Response
 /// - var baseURL: NSURL
 /// - var method: Method
 /// - var path: String
 /// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
-public protocol Request {
+public protocol RequestType {
     /// Type represents a model object
     typealias Response
 
@@ -43,8 +43,8 @@ public protocol Request {
     func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
 }
 
-/// Default implementation of Request protocol
-public extension Request {
+/// Default implementation of RequestType protocol
+public extension RequestType {
     public var parameters: [String: AnyObject] {
         return [:]
     }

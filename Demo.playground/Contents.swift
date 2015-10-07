@@ -5,7 +5,7 @@ import APIKit
 XCPSetExecutionShouldContinueIndefinitely()
 
 //: Step 1: Define request protocol
-protocol GitHubRequest: Request {
+protocol GitHubRequest: RequestType {
 
 }
 

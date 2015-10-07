@@ -8,7 +8,7 @@ class RequestCreateTaskInURLSessionTest: XCTestCase {
     
     // MARK: - Sample requests for tests
     
-    struct SampleRequest: Request {
+    struct SampleRequest: RequestType {
         typealias Response = [String: AnyObject]
         var b: String = ""
         var p: String = ""

@@ -13,7 +13,7 @@ public class API {
     )
 
     // send request and build response object
-    public static func sendRequest<T: Request>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public static func sendRequest<T: RequestType>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         switch request.buildURLRequest() {
         case .Failure(let error):
             handler(.Failure(error))
@@ -45,11 +45,11 @@ public class API {
         }
     }
 
-    public static func cancelRequest<T: Request>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+    public static func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
     }
 
-    public static func cancelRequest<T: Request>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+    public static func cancelRequest<T: RequestType>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [NSURLSessionTask]
                 + uploadTasks as [NSURLSessionTask]
@@ -111,7 +111,7 @@ private var dataTaskResponseBufferKey = 0
 private var dataTaskCompletionHandlerKey = 0
 
 private extension NSURLSessionDataTask {
-    // `var request: Request?` is not available in Swift 1.2
+    // `var request: RequestType?` is not available in Swift 2.0
     // ("protocol can only be used as a generic constraint")
     private var request: Box<Any>? {
         get {

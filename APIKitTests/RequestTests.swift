@@ -6,7 +6,7 @@ class RequestTests: XCTestCase {
     struct SearchRequest: MockAPIRequest {
         let query: String
         
-        // MARK: Request
+        // MARK: RequestType
         typealias Response = [String: AnyObject]
         
         var method: HTTPMethod {
