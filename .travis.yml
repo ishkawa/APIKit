@@ -31,7 +31,6 @@ deploy:
   on:
     repo: ishkawa/APIKit
     tags: true
-    all_branches: true
 
 notifications:
   email: false
