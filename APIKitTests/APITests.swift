@@ -3,17 +3,17 @@ import APIKit
 import XCTest
 import OHHTTPStubs
 
-protocol MockAPIRequest: Request {
+protocol MockAPIRequestType: RequestType {
 }
 
-extension MockAPIRequest {
+extension MockAPIRequestType {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 }
 
 class MockAPI: API {
-    struct GetRoot: MockAPIRequest {
+    struct GetRoot: MockAPIRequestType {
         typealias Response = [String: AnyObject]
 
         var method: HTTPMethod {

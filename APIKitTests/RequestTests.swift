@@ -3,10 +3,10 @@ import OHHTTPStubs
 import APIKit
 
 class RequestTests: XCTestCase {
-    struct SearchRequest: MockAPIRequest {
+    struct SearchRequest: MockAPIRequestType {
         let query: String
         
-        // MARK: Request
+        // MARK: RequestType
         typealias Response = [String: AnyObject]
         
         var method: HTTPMethod {
