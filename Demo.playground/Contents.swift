@@ -5,11 +5,11 @@ import APIKit
 XCPSetExecutionShouldContinueIndefinitely()
 
 //: Step 1: Define request protocol
-protocol GitHubRequest: RequestType {
+protocol GitHubRequestType: RequestType {
 
 }
 
-extension GitHubRequest {
+extension GitHubRequestType {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
@@ -36,7 +36,7 @@ struct RateLimit {
 
 //: Step 3: Define request type conforming to created request protocol
 // https://developer.github.com/v3/rate_limit/
-struct GetRateLimitRequest: GitHubRequest {
+struct GetRateLimitRequest: GitHubRequestType {
     typealias Response = RateLimit
 
     var method: HTTPMethod {
