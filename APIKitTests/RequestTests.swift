@@ -3,7 +3,7 @@ import OHHTTPStubs
 import APIKit
 
 class RequestTests: XCTestCase {
-    struct SearchRequest: MockAPIRequest {
+    struct SearchRequest: MockAPIRequestType {
         let query: String
         
         // MARK: RequestType
