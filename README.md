@@ -154,7 +154,9 @@ var path: String
 var parameters: [String: AnyObject]
 ```
 
-`parameters` will be converted into query parameter if `method` is one of `.GET`, `.HEAD` and `.DELETE`. Otherwise, it will be serialized by `requestBodyBuilder` and set to `HTTPBody` of `NSURLRequest`.
+`parameters` will be converted into query parameter if `method` is one of `.GET`, `.HEAD` and `.DELETE`.
+Otherwise, it will be serialized by `requestBodyBuilder` and set to `HTTPBody` of `NSURLRequest`.
+You can pass `NSNull()` as a value for nullable keys if you'd like to preserve the keys when its value is absent.
 
 #### Configuring format of HTTP body
 

@@ -17,10 +17,10 @@ class RequestTests: XCTestCase {
             return "/"
         }
         
-        var parameters: [String: AnyObject?] {
+        var parameters: [String: AnyObject] {
             return [
                 "q": query,
-                "dummy": nil
+                "dummy": NSNull()
             ]
         }
         
