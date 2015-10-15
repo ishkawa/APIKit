@@ -17,9 +17,10 @@ class RequestTests: XCTestCase {
             return "/"
         }
         
-        var parameters: [String: AnyObject] {
+        var parameters: [String: AnyObject?] {
             return [
                 "q": query,
+                "dummy": nil
             ]
         }
         
@@ -35,7 +36,7 @@ class RequestTests: XCTestCase {
 
     func testJapanesesURLQueryParameterEncoding() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
-            XCTAssert(request.URL?.query == "q=%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF")
+            XCTAssert(request.URL?.query == "q=%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF&dummy")
             return true
         }, withStubResponse: { request in
             return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
@@ -53,7 +54,7 @@ class RequestTests: XCTestCase {
     
     func testSymbolURLQueryParameterEncoding() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
-            XCTAssert(request.URL?.query == "q=%21%22%23%24%25%26%27%28%290%3D~%7C%60%7B%7D%2A%2B%3C%3E%3F_")
+            XCTAssert(request.URL?.query == "q=%21%22%23%24%25%26%27%28%290%3D~%7C%60%7B%7D%2A%2B%3C%3E%3F_&dummy")
             return true
         }, withStubResponse: { request in
             return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
