@@ -16,7 +16,11 @@ public protocol RequestType {
     var baseURL: NSURL { get }
     var method: HTTPMethod { get }
     var path: String { get }
-    var parameters: [String: AnyObject?] { get }
+
+    /// A parameter dictionary for the request. You can pass `NSNull()` as a
+    /// value for nullable keys, those should be existed in the encoded query or
+    /// the request body.
+    var parameters: [String: AnyObject] { get }
 
     /// You can add any configurations here
     ///
@@ -45,7 +49,7 @@ public protocol RequestType {
 
 /// Default implementation of RequestType protocol
 public extension RequestType {
-    public var parameters: [String: AnyObject?] {
+    public var parameters: [String: AnyObject] {
         return [:]
     }
 
@@ -78,16 +82,15 @@ public extension RequestType {
         }
 
         let URLRequest = NSMutableURLRequest()
-        let paramObject = parametersToAnyObject(parameters)
-        
+
         switch method {
         case .GET, .HEAD, .DELETE:
             if parameters.count > 0 {
-                components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(paramObject)
+                components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
             }
         default:
             do {
-                URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(paramObject)
+                URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
             } catch {
                 return .Failure(.RequestBodySerializationError(error))
             }
@@ -133,13 +136,4 @@ public extension RequestType {
 
         return .Success(response)
     }
-}
-
-/// Convert `var parameters: [String: AnyObject?]` (non-AnyObject) to AnyObject using NSNull
-private func parametersToAnyObject(parameters: [String: AnyObject?]) -> [String: AnyObject] {
-    var object = [String: AnyObject]()
-    for (key, value) in parameters {
-        object[key] = value ?? NSNull()
-    }
-    return object
 }
