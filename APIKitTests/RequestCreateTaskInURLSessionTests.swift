@@ -18,7 +18,7 @@ class RequestCreateTaskInURLSessionTest: XCTestCase {
         var baseURL: NSURL { return NSURL(string: b)! }
         var method: HTTPMethod { return m }
         var path: String { return p  }
-        var parameters: [String: AnyObject] { return params }
+        var parameters: [String: AnyObject?] { return params }
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? { return nil }
     }
     
