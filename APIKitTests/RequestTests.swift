@@ -3,7 +3,7 @@ import OHHTTPStubs
 import APIKit
 
 class RequestTests: XCTestCase {
-    struct SearchRequest: MockAPIRequestType {
+    struct SearchRequest: MockSessionRequestType {
         let query: String
         
         // MARK: RequestType
@@ -45,7 +45,7 @@ class RequestTests: XCTestCase {
         let request = SearchRequest(query: "こんにちは")
         let expectation = expectationWithDescription("waiting for the response.")
         
-        API.sendRequest(request) { result in
+        Session.sendRequest(request) { result in
             expectation.fulfill()
         }
         
@@ -63,7 +63,7 @@ class RequestTests: XCTestCase {
         let request = SearchRequest(query: "!\"#$%&'()0=~|`{}*+<>?_")
         let expectation = expectationWithDescription("waiting for the response.")
         
-        API.sendRequest(request) { result in
+        Session.sendRequest(request) { result in
             expectation.fulfill()
         }
         

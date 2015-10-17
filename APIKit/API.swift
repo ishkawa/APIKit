@@ -1,7 +1,7 @@
 import Foundation
 import Result
 
-public class API {
+public class Session {
     public class var defaultURLSession: NSURLSession {
         return internalDefaultURLSession
     }
@@ -77,6 +77,9 @@ public class API {
         }
     }
 }
+
+@available(*, deprecated, message="API is renamed as Session.")
+public typealias API = Session
 
 // MARK: - default implementation of URLSessionDelegate
 public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
