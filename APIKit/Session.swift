@@ -2,18 +2,14 @@ import Foundation
 import Result
 
 public class Session {
-    public class var defaultURLSession: NSURLSession {
-        return internalDefaultURLSession
+    public let URLSession: NSURLSession
+    
+    public init(URLSession: NSURLSession) {
+        self.URLSession = URLSession
     }
 
-    private static let internalDefaultURLSession = NSURLSession(
-        configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-        delegate: URLSessionDelegate(),
-        delegateQueue: nil
-    )
-
     // send request and build response object
-    public static func sendRequest<T: RequestType>(request: T, URLSession: NSURLSession = defaultURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+    public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         switch request.buildURLRequest() {
         case .Failure(let error):
             handler(.Failure(error))
@@ -44,12 +40,8 @@ public class Session {
             return dataTask
         }
     }
-
-    public static func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
-        cancelRequest(requestType, URLSession: defaultURLSession, passingTest: test)
-    }
-
-    public static func cancelRequest<T: RequestType>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+    
+    public func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [NSURLSessionTask]
                 + uploadTasks as [NSURLSessionTask]
@@ -76,10 +68,37 @@ public class Session {
             }.forEach { $0.cancel() }
         }
     }
+    
+    // Shared session for static methods
+    public static let sharedSession = Session(URLSession: NSURLSession(
+        configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+        delegate: URLSessionDelegate(),
+        delegateQueue: nil
+    ))
+    
+    public static func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+        return sharedSession.sendRequest(request, handler: handler)
+    }
+    
+    public static func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+        sharedSession.cancelRequest(requestType, passingTest: test)
+    }
 }
 
 @available(*, deprecated, message="API is renamed as Session.")
 public typealias API = Session
+
+extension Session {
+    @available(*, unavailable, message="Use separated Session instance instead.")
+    public static func sendRequest<T: RequestType>(request: T, URLSession: NSURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+        abort()
+    }
+    
+    @available(*, unavailable, message="Use separated Session instance instead.")
+    public static func cancelRequest<T: RequestType>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
+        abort()
+    }
+}
 
 // MARK: - default implementation of URLSessionDelegate
 public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
