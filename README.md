@@ -15,7 +15,7 @@ APIKit is a library for building type-safe web API client in Swift.
 ```swift
 let request = GetSearchRepositoriesRequest(query: "APIKit", sort: .Stars)
 
-API.sendRequest(request) { result in
+Session.sendRequest(request) { result in
     switch result {
     case .Success(let response):
         self.repositories = response // inferred as [Repository]
@@ -117,7 +117,7 @@ struct RateLimit {
 ```swift
 let request = GetRateLimitRequest()
 
-API.sendRequest(request) { result in
+Session.sendRequest(request) { result in
     switch result {
     case .Success(let rateLimit):
         print("count: \(rateLimit.count)")
@@ -276,7 +276,7 @@ extension GitHubRequest {
 ```swift
 let request = GetSomePaginatedRequest(page: 1)
 
-API.sendRequest(request) { result in
+Session.sendRequest(request) { result in
     switch result {
     case .Success(let response):
         print("results: \(response.results)")
