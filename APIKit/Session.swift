@@ -85,7 +85,7 @@ public class Session {
     }
 }
 
-@available(*, deprecated, message="API is renamed as Session.")
+@available(*, unavailable, message="API is renamed as Session.")
 public typealias API = Session
 
 extension Session {
