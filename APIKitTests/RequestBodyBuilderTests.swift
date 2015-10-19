@@ -6,7 +6,7 @@ import XCTest
 class RequestBodyBuilderTests: XCTestCase {
     func testJSONHeader() {
         let builder = RequestBodyBuilder.JSON(writingOptions: [])
-        XCTAssert(builder.contentTypeHeader == "application/json")
+        XCTAssertEqual(builder.contentTypeHeader, "application/json")
     }
     
     func testJSONSuccess() {
@@ -16,9 +16,9 @@ class RequestBodyBuilderTests: XCTestCase {
         do {
             let data = try builder.buildBodyFromObject(object)
             let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [])
-            XCTAssert(dictionary["foo"] == 1)
-            XCTAssert(dictionary["bar"] == 2)
-            XCTAssert(dictionary["baz"] == 3)
+            XCTAssertEqual(dictionary["foo"], 1)
+            XCTAssertEqual(dictionary["bar"], 2)
+            XCTAssertEqual(dictionary["baz"], 3)
         } catch {
             XCTFail()
         }
@@ -33,14 +33,14 @@ class RequestBodyBuilderTests: XCTestCase {
             XCTFail()
         } catch {
             let nserror = error as NSError
-            XCTAssert(nserror.domain == NSCocoaErrorDomain)
-            XCTAssert(nserror.code == 3840)
+            XCTAssertEqual(nserror.domain, NSCocoaErrorDomain)
+            XCTAssertEqual(nserror.code, 3840)
         }
     }
     
     func testURLHeader() {
         let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
-        XCTAssert(builder.contentTypeHeader == "application/x-www-form-urlencoded")
+        XCTAssertEqual(builder.contentTypeHeader, "application/x-www-form-urlencoded")
     }
     
     func testURLSuccess() {
@@ -50,9 +50,9 @@ class RequestBodyBuilderTests: XCTestCase {
         do {
             let data = try builder.buildBodyFromObject(object)
             let dictionary = try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
-            XCTAssert(dictionary["foo"] == "1")
-            XCTAssert(dictionary["bar"] == "2")
-            XCTAssert(dictionary["baz"] == "3")
+            XCTAssertEqual(dictionary["foo"], "1")
+            XCTAssertEqual(dictionary["bar"], "2")
+            XCTAssertEqual(dictionary["baz"], "3")
         } catch {
             XCTFail()
         }
@@ -62,7 +62,7 @@ class RequestBodyBuilderTests: XCTestCase {
         let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo") { object in
             NSData()
         }
-        XCTAssert(builder.contentTypeHeader == "foo")
+        XCTAssertEqual(builder.contentTypeHeader, "foo")
     }
     
     func testCustomSuccess() {
@@ -74,7 +74,7 @@ class RequestBodyBuilderTests: XCTestCase {
 
         do {
             let data = try builder.buildBodyFromObject(string)
-            XCTAssert(data == expectedData)
+            XCTAssertEqual(data, expectedData)
         } catch {
             XCTFail()
         }
@@ -91,7 +91,7 @@ class RequestBodyBuilderTests: XCTestCase {
             try builder.buildBodyFromObject(string)
             XCTFail()
         } catch {
-            XCTAssert((error as NSError) == expectedError)
+            XCTAssertEqual((error as NSError), expectedError)
         }
     }
 }

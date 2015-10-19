@@ -6,7 +6,7 @@ import XCTest
 class ResponseBodyParserTests: XCTestCase {
     func testJSONAcceptHeader() {
         let parser = ResponseBodyParser.JSON(readingOptions: [])
-        XCTAssert(parser.acceptHeader == "application/json")
+        XCTAssertEqual(parser.acceptHeader, "application/json")
     }
     
     func testJSONSuccess() {
@@ -17,9 +17,9 @@ class ResponseBodyParserTests: XCTestCase {
         do {
             let object = try parser.parseData(data)
             let dictionary = object as? [String: Int]
-            XCTAssert(dictionary?["foo"] == 1)
-            XCTAssert(dictionary?["bar"] == 2)
-            XCTAssert(dictionary?["baz"] == 3)
+            XCTAssertEqual(dictionary?["foo"], 1)
+            XCTAssertEqual(dictionary?["bar"], 2)
+            XCTAssertEqual(dictionary?["baz"], 3)
         } catch {
             XCTFail()
         }
@@ -35,14 +35,14 @@ class ResponseBodyParserTests: XCTestCase {
             XCTFail()
         } catch {
             let nserror = error as NSError
-            XCTAssert(nserror.domain == NSCocoaErrorDomain)
-            XCTAssert(nserror.code == 3840)
+            XCTAssertEqual(nserror.domain, NSCocoaErrorDomain)
+            XCTAssertEqual(nserror.code, 3840)
         }
     }
 
     func testURLAcceptHeader() {
         let parser = ResponseBodyParser.URL(encoding: NSUTF8StringEncoding)
-        XCTAssert(parser.acceptHeader == "application/x-www-form-urlencoded")
+        XCTAssertEqual(parser.acceptHeader, "application/x-www-form-urlencoded")
     }
     
     func testURLSuccess() {
@@ -53,9 +53,9 @@ class ResponseBodyParserTests: XCTestCase {
         do {
             let object = try parser.parseData(data)
             let dictionary = object as? [String: String]
-            XCTAssert(dictionary?["foo"] == "1")
-            XCTAssert(dictionary?["bar"] == "2")
-            XCTAssert(dictionary?["baz"] == "3")
+            XCTAssertEqual(dictionary?["foo"], "1")
+            XCTAssertEqual(dictionary?["bar"], "2")
+            XCTAssertEqual(dictionary?["baz"], "3")
         } catch {
             XCTFail()
         }
@@ -65,7 +65,7 @@ class ResponseBodyParserTests: XCTestCase {
         let parser = ResponseBodyParser.Custom(acceptHeader: "foo") { data in
             data
         }
-        XCTAssert(parser.acceptHeader == "foo")
+        XCTAssertEqual(parser.acceptHeader, "foo")
     }
 
     func testCustomSuccess() {
@@ -77,7 +77,7 @@ class ResponseBodyParserTests: XCTestCase {
         do {
             let object = try parser.parseData(data)
             let dictionary = object as? [String: Int]
-            XCTAssert(dictionary?["foo"] == 1)
+            XCTAssertEqual(dictionary?["foo"], 1)
         } catch {
             XCTFail()
         }
@@ -94,7 +94,7 @@ class ResponseBodyParserTests: XCTestCase {
             try parser.parseData(data)
             XCTFail()
         } catch {
-            XCTAssert((error as NSError) == expectedError)
+            XCTAssertEqual((error as NSError), expectedError)
         }
     }
 }
