@@ -3,9 +3,11 @@ import Result
 
 public class Session {
     public let URLSession: NSURLSession
+    public var requestInterceptors: [RequestInterceptorType]
     
-    public init(URLSession: NSURLSession) {
+    public init(URLSession: NSURLSession, requestInterceptors: [RequestInterceptorType] = []) {
         self.URLSession = URLSession
+        self.requestInterceptors = requestInterceptors
     }
 
     // send request and build response object
