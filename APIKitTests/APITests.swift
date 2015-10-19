@@ -3,17 +3,17 @@ import APIKit
 import XCTest
 import OHHTTPStubs
 
-protocol MockAPIRequestType: RequestType {
+protocol MockSessionRequestType: RequestType {
 }
 
-extension MockAPIRequestType {
+extension MockSessionRequestType {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 }
 
-class MockAPI: API {
-    struct GetRoot: MockAPIRequestType {
+class MockSession: Session {
+    struct GetRoot: MockSessionRequestType {
         typealias Response = [String: AnyObject]
 
         var method: HTTPMethod {
@@ -30,7 +30,7 @@ class MockAPI: API {
     }
 }
 
-class AnotherMockAPI: API {
+class AnotherMockSession: Session {
 
 }
 
@@ -52,12 +52,12 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.GetRoot()
+        let request = MockSession.GetRoot()
         
-        MockAPI.sendRequest(request) { response in
+        MockSession.sendRequest(request) { response in
             switch response {
             case .Success(let dictionary):
-                XCTAssert(dictionary["key"] as? String == "value")
+                XCTAssertEqual(dictionary["key"] as? String, "value")
 
             case .Failure:
                 XCTFail()
@@ -79,9 +79,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.GetRoot()
+        let request = MockSession.GetRoot()
 
-        MockAPI.sendRequest(request) { response in
+        MockSession.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -89,7 +89,7 @@ class APITests: XCTestCase {
             case .Failure(let error):
                 switch error {
                 case .ConnectionError(let error):
-                    XCTAssert(error.domain == NSURLErrorDomain)
+                    XCTAssertEqual(error.domain, NSURLErrorDomain)
 
                 default:
                     XCTFail()
@@ -112,9 +112,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.GetRoot()
+        let request = MockSession.GetRoot()
         
-        MockAPI.sendRequest(request) { response in
+        MockSession.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -122,8 +122,8 @@ class APITests: XCTestCase {
             case .Failure(let error):
                 switch error {
                 case .UnacceptableStatusCode(let statusCode, let error as NSError):
-                    XCTAssert(statusCode == 400)
-                    XCTAssert(error.domain == "APIKitErrorDomain")
+                    XCTAssertEqual(statusCode, 400)
+                    XCTAssertEqual(error.domain, "APIKitErrorDomain")
                     XCTAssertNotNil(error.userInfo)
                 default:
                     XCTFail()
@@ -146,9 +146,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.GetRoot()
+        let request = MockSession.GetRoot()
         
-        MockAPI.sendRequest(request) { response in
+        MockSession.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -156,8 +156,8 @@ class APITests: XCTestCase {
             case .Failure(let error):
                 switch error {
                 case .ResponseBodyDeserializationError(let error as NSError):
-                    XCTAssert(error.domain == NSCocoaErrorDomain)
-                    XCTAssert(error.code == 3840)
+                    XCTAssertEqual(error.domain, NSCocoaErrorDomain)
+                    XCTAssertEqual(error.code, 3840)
 
                 default:
                     XCTFail()
@@ -182,9 +182,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.GetRoot()
+        let request = MockSession.GetRoot()
         
-        MockAPI.sendRequest(request) { response in
+        MockSession.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -192,8 +192,8 @@ class APITests: XCTestCase {
             case .Failure(let error):
                 switch error {
                 case .ConnectionError(let error):
-                    XCTAssert(error.domain == NSURLErrorDomain)
-                    XCTAssert(error.code == NSURLErrorCancelled)
+                    XCTAssertEqual(error.domain, NSURLErrorDomain)
+                    XCTAssertEqual(error.code, NSURLErrorCancelled)
 
                 default:
                     XCTFail()
@@ -203,7 +203,7 @@ class APITests: XCTestCase {
             expectation.fulfill()
         }
         
-        MockAPI.cancelRequest(MockAPI.GetRoot.self)
+        MockSession.cancelRequest(MockSession.GetRoot.self)
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
@@ -221,9 +221,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockAPI.GetRoot()
+        let request = MockSession.GetRoot()
         
-        MockAPI.sendRequest(request) { response in
+        MockSession.sendRequest(request) { response in
             switch response {
             case .Success:
                 break
@@ -235,7 +235,7 @@ class APITests: XCTestCase {
             expectation.fulfill()
         }
         
-        MockAPI.cancelRequest(MockAPI.GetRoot.self) { request in
+        MockSession.cancelRequest(MockSession.GetRoot.self) { request in
             return false
         }
         
