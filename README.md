@@ -50,7 +50,7 @@ If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa
 
 ## Usage
 
-1. Create a request protocol that inherits `Request` protocol.
+1. Create a request protocol that inherits `RequestType` protocol.
 2. Add `baseURL` property in an extension of request protocol.
 3. Define request types that conform to request protocol.
     1. Create a type that represents a request of the web API.
@@ -59,7 +59,7 @@ If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa
     4. Implement `buildResponseFromObject(_:URLResponse:)` to build `Response` from a raw object, which may be an array or a dictionary.
 
 ```swift
-protocol GitHubRequest: Request {
+protocol GitHubRequest: RequestType {
 
 }
 
@@ -145,7 +145,7 @@ GitHub.cancelRequest(GetSearchRepositoriesRequest.self) { request in
 
 ### Configuring request
 
-APIKit uses following 4 properties in `Request` when build `NSURLRequest`.
+APIKit uses following 4 properties in `RequestType` when build `NSURLRequest`.
 
 ```swift
 var baseURL: NSURL
@@ -244,7 +244,7 @@ func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Error
 ```swift
 var GithubAccessToken: String?
 
-protocol GitHubRequest: Request {
+protocol GitHubRequest: RequestType {
     var authenticate: Bool { get }
 }
 
@@ -302,7 +302,7 @@ struct PaginatedResponse<T> {
     }
 }
 
-struct SomePaginatedRequest: Request {
+struct SomePaginatedRequest: RequestType {
     typealias Response = PaginatedResponse<Some>
 
     var method: HTTPMethod {
