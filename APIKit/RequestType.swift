@@ -21,6 +21,10 @@ public protocol RequestType {
     /// value for nullable keys, those should be existed in the encoded query or
     /// the request body.
     var parameters: [String: AnyObject] { get }
+    
+    /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
+    /// You can override values for those fields here.
+    var HTTPHeaderFields: [String: String] { get }
 
     /// You can add any configurations here
     ///
@@ -49,6 +53,10 @@ public protocol RequestType {
 
 /// Default implementation of RequestType protocol
 public extension RequestType {
+    public var HTTPHeaderFields: [String: String] {
+        return [:]
+    }
+    
     public var parameters: [String: AnyObject] {
         return [:]
     }
@@ -88,6 +96,7 @@ public extension RequestType {
             if parameters.count > 0 {
                 components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
             }
+            
         default:
             do {
                 URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
@@ -100,6 +109,10 @@ public extension RequestType {
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
         URLRequest.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
+        
+        for (key, value) in HTTPHeaderFields {
+            URLRequest.setValue(value, forHTTPHeaderField: key)
+        }
 
         do {
             try configureURLRequest(URLRequest)
