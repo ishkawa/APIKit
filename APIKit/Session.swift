@@ -12,9 +12,23 @@ public class Session {
 
     // send request and build response object
     public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+        func callbackHandler(result: Result<T.Response, APIError>) {
+            dispatch_async(dispatch_get_main_queue()) {
+                handler(result)
+                
+                for requestInterceptor in self.requestInterceptors {
+                    requestInterceptor.interceptAfterRequest(request, result: result)
+                }
+            }
+        }
+        
+        for requestInterceptor in requestInterceptors {
+            requestInterceptor.interceptBeforeRequest(request)
+        }
+        
         switch request.buildURLRequest() {
         case .Failure(let error):
-            handler(.Failure(error))
+            callbackHandler(.Failure(error))
             return nil
 
         case .Success(let URLRequest):
@@ -32,9 +46,7 @@ public class Session {
                     request.parseData(data, URLResponse: URLResponse)
                 }
 
-                dispatch_async(dispatch_get_main_queue()) {
-                    handler(result)
-                }
+                callbackHandler(result)
             }
             
             dataTask.resume()

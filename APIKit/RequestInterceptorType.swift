@@ -1,5 +1,7 @@
 import Foundation
+import Result
 
 public protocol RequestInterceptorType {
-    func interceptRequest<T: RequestType>(request: T, phase: RequestPhase<T>)
+    func interceptBeforeRequest<T: RequestType>(request: T)
+    func interceptAfterRequest<T: RequestType>(request: T, result: Result<T.Response, APIError>)
 }
