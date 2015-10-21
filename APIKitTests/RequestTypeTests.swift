@@ -96,7 +96,7 @@ class RequestTypeTests: XCTestCase {
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
     
-    func testInterceptRequest() {
+    func testObserveRequest() {
         class TestRequestObserver: RequestObserverType {
             var beforeHandlerCalled = false
             var afterHandlerCalled = false
