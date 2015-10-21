@@ -97,28 +97,28 @@ class RequestTypeTests: XCTestCase {
     }
     
     func testInterceptRequest() {
-        class TestRequestInterceptor: RequestInterceptorType {
-            var beforeInterceptorCalled = false
-            var afterInterceptorCalled = false
+        class TestRequestObserver: RequestObserverType {
+            var beforeHandlerCalled = false
+            var afterHandlerCalled = false
         
-            func interceptBeforeRequest<T: RequestType>(request: T) {
-                beforeInterceptorCalled = true
+            func handleBeforeRequest<T: RequestType>(request: T) {
+                beforeHandlerCalled = true
             }
             
-            func interceptAfterRequest<T: RequestType>(request: T, result: Result<T.Response, APIError>) {
-                afterInterceptorCalled = true
+            func handleAfterRequest<T: RequestType>(request: T, result: Result<T.Response, APIError>) {
+                afterHandlerCalled = true
             }
         }
         
         let request = SearchRequest(query: "APIKit")
-        let interceptor = TestRequestInterceptor()
+        let observer = TestRequestObserver()
         let session = Session(URLSession: NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
             delegate: URLSessionDelegate(),
             delegateQueue: nil)
         )
         
-        session.requestInterceptors.append(interceptor)
+        session.requestObservers.append(observer)
         
         let expectation = expectationWithDescription("waiting for the response.")
         
@@ -128,8 +128,8 @@ class RequestTypeTests: XCTestCase {
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
         
-        XCTAssertTrue(interceptor.beforeInterceptorCalled)
-        XCTAssertTrue(interceptor.afterInterceptorCalled)
+        XCTAssertTrue(observer.beforeHandlerCalled)
+        XCTAssertTrue(observer.afterHandlerCalled)
     }
     
     func testBuildURL() {

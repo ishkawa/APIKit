@@ -3,11 +3,11 @@ import Result
 
 public class Session {
     public let URLSession: NSURLSession
-    public var requestInterceptors: [RequestInterceptorType]
+    public var requestObservers: [RequestObserverType]
     
-    public init(URLSession: NSURLSession, requestInterceptors: [RequestInterceptorType] = []) {
+    public init(URLSession: NSURLSession, requestObservers: [RequestObserverType] = []) {
         self.URLSession = URLSession
-        self.requestInterceptors = requestInterceptors
+        self.requestObservers = requestObservers
     }
 
     // send request and build response object
@@ -16,14 +16,14 @@ public class Session {
             dispatch_async(dispatch_get_main_queue()) {
                 handler(result)
                 
-                for requestInterceptor in self.requestInterceptors {
-                    requestInterceptor.interceptAfterRequest(request, result: result)
+                for requestObserver in self.requestObservers {
+                    requestObserver.handleAfterRequest(request, result: result)
                 }
             }
         }
         
-        for requestInterceptor in requestInterceptors {
-            requestInterceptor.interceptBeforeRequest(request)
+        for requestObserver in requestObservers {
+            requestObserver.handleBeforeRequest(request)
         }
         
         switch request.buildURLRequest() {
