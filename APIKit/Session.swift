@@ -16,13 +16,13 @@ public class Session {
             dispatch_async(dispatch_get_main_queue()) {
                 handler(result)
                 
-                for requestObserver in self.requestObservers {
+                self.requestObservers.forEach { requestObserver in
                     requestObserver.handleAfterRequest(request, result: result)
                 }
             }
         }
         
-        for requestObserver in requestObservers {
+        requestObservers.forEach { requestObserver in
             requestObserver.handleBeforeRequest(request)
         }
         
