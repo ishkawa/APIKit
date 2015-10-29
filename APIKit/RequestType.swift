@@ -82,6 +82,7 @@ public extension RequestType {
         }
 
         let URLRequest = NSMutableURLRequest()
+        let parameters = self.parameters
 
         switch method {
         case .GET, .HEAD, .DELETE:
