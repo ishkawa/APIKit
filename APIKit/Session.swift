@@ -3,16 +3,32 @@ import Result
 
 public class Session {
     public let URLSession: NSURLSession
+    public var requestObservers: [RequestObserverType]
     
-    public init(URLSession: NSURLSession) {
+    public init(URLSession: NSURLSession, requestObservers: [RequestObserverType] = []) {
         self.URLSession = URLSession
+        self.requestObservers = requestObservers
     }
 
     // send request and build response object
     public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+        func callbackHandler(result: Result<T.Response, APIError>) {
+            dispatch_async(dispatch_get_main_queue()) {
+                handler(result)
+                
+                self.requestObservers.forEach { requestObserver in
+                    requestObserver.handleAfterRequest(request, result: result)
+                }
+            }
+        }
+        
+        requestObservers.forEach { requestObserver in
+            requestObserver.handleBeforeRequest(request)
+        }
+        
         switch request.buildURLRequest() {
         case .Failure(let error):
-            handler(.Failure(error))
+            callbackHandler(.Failure(error))
             return nil
 
         case .Success(let URLRequest):
@@ -30,9 +46,7 @@ public class Session {
                     request.parseData(data, URLResponse: URLResponse)
                 }
 
-                dispatch_async(dispatch_get_main_queue()) {
-                    handler(result)
-                }
+                callbackHandler(result)
             }
             
             dataTask.resume()

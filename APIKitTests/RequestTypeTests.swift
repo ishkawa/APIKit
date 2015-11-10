@@ -1,6 +1,7 @@
 import XCTest
 import OHHTTPStubs
 import APIKit
+import Result
 
 class RequestTypeTests: XCTestCase {
     struct SearchRequest: MockSessionRequestType {
@@ -93,6 +94,42 @@ class RequestTypeTests: XCTestCase {
         }
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testObserveRequest() {
+        class TestRequestObserver: RequestObserverType {
+            var beforeHandlerCalled = false
+            var afterHandlerCalled = false
+        
+            func handleBeforeRequest<T: RequestType>(request: T) {
+                beforeHandlerCalled = true
+            }
+            
+            func handleAfterRequest<T: RequestType>(request: T, result: Result<T.Response, APIError>) {
+                afterHandlerCalled = true
+            }
+        }
+        
+        let request = SearchRequest(query: "APIKit")
+        let observer = TestRequestObserver()
+        let session = Session(URLSession: NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate: URLSessionDelegate(),
+            delegateQueue: nil)
+        )
+        
+        session.requestObservers.append(observer)
+        
+        let expectation = expectationWithDescription("waiting for the response.")
+        
+        session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+        
+        XCTAssertTrue(observer.beforeHandlerCalled)
+        XCTAssertTrue(observer.afterHandlerCalled)
     }
     
     func testBuildURL() {
