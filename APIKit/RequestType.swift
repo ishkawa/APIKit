@@ -53,14 +53,14 @@ public protocol RequestType {
 
 /// Default implementation of RequestType protocol
 public extension RequestType {
-    public var HTTPHeaderFields: [String: String] {
-        return [:]
-    }
-    
     public var parameters: [String: AnyObject] {
         return [:]
     }
 
+    public var HTTPHeaderFields: [String: String] {
+        return [:]
+    }
+    
     public var acceptableStatusCodes: Set<Int> {
         return Set(200..<300)
     }
