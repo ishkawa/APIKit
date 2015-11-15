@@ -111,7 +111,7 @@ public extension RequestType {
         URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
         URLRequest.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
         
-        for (key, value) in HTTPHeaderFields {
+        HTTPHeaderFields.forEach { key, value in
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
