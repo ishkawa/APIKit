@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "1.0.0-beta.9"
+  s.version  = "1.0.0-beta.13"
   s.summary  = "A networking library for building type safe web API client in Swift."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
@@ -27,5 +27,5 @@ Pod::Spec.new do |s|
     LICENSE
   }
 
-  s.dependency "Result", "~> 0.6-beta.1"
+  s.dependency "Result", "~> 0.6-beta.6"
 end

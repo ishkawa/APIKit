@@ -90,6 +90,7 @@ public extension RequestType {
         }
 
         let URLRequest = NSMutableURLRequest()
+        let parameters = self.parameters
 
         switch method {
         case .GET, .HEAD, .DELETE:
@@ -124,7 +125,7 @@ public extension RequestType {
     }
 
     // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
-    internal func parseData(data: NSData, URLResponse: NSURLResponse?) -> Result<Self.Response, APIError> {
+    public func parseData(data: NSData, URLResponse: NSURLResponse?) -> Result<Self.Response, APIError> {
         guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
             return .Failure(.NotHTTPURLResponse(URLResponse))
         }
