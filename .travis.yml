@@ -18,6 +18,7 @@ script:
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-tvOS -sdk appletvsimulator | xcpretty -c
+  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-watchOS -sdk watchsimulator | xcpretty -c
 
 before_deploy:
   - ./script/import-certificates
