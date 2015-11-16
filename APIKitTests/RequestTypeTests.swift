@@ -33,7 +33,7 @@ class RequestTypeTests: XCTestCase {
     struct ParameterizedRequest: RequestType {
         typealias Response = Void
         
-        init?(baseURL: String, path: String, method: HTTPMethod = .GET, parameters: [String: AnyObject] = [:]) {
+        init?(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: [String: AnyObject] = [:], HTTPHeaderFields: [String: String] = [:]) {
             guard let baseURL = NSURL(string: baseURL) else {
                 return nil
             }
@@ -42,12 +42,14 @@ class RequestTypeTests: XCTestCase {
             self.path = path
             self.method = method
             self.parameters = parameters
+            self.HTTPHeaderFields = HTTPHeaderFields
         }
         
         let baseURL: NSURL
         let method: HTTPMethod
         let path: String
         let parameters: [String: AnyObject]
+        let HTTPHeaderFields: [String: String]
         
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
             abort()
@@ -93,6 +95,14 @@ class RequestTypeTests: XCTestCase {
         }
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+    
+    func testHTTPHeaderFields() {
+        let request = ParameterizedRequest(HTTPHeaderFields: ["Foo": "f", "Accept": "a", "Content-Type": "c"])
+        let URLReqeust = request?.buildURLRequest().value
+        XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Foo"), "f")
+        XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Accept"), "a")
+        XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Content-Type"), "c")
     }
     
     func testBuildURL() {
