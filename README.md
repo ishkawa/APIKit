@@ -1,5 +1,3 @@
-Latest release is redesigned for Swift 2. See [the release note](https://github.com/ishkawa/APIKit/releases/tag/1.0.0-beta1) for migration guide.
-
 APIKit
 ======
 
@@ -29,47 +27,45 @@ Session.sendRequest(request) { result in
 
 ## Requirements
 
-- Swift 2 beta 6
+- Swift 2.1
 - iOS 8.0 or later
 - Mac OS 10.9 or later
-
-If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa/APIKit/releases/tag/0.8.2).
 
 ## Installation
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit" "1.0.0-beta.14"` to your Cartfile.
+- Insert `github "ishkawa/APIKit" ~> 1.0.0` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `pod "APIKit", "1.0.0-beta4"` to your Podfile.
+- Insert `pod 'APIKit', '~> 1.0.0'` to your Podfile.
 - Run `pod install`.
 
 ## Usage
 
 1. Create a request protocol that inherits `RequestType` protocol.
-2. Add `baseURL` property in an extension of request protocol.
+2. Add `baseURL` property in the extension of the request protocol.
 3. Define request types that conform to request protocol.
-    1. Create a type that represents a request of the web API.
+    1. Create a type that represents request of the web API.
     2. Assign type that represents a response object to `Response` typealiase.
     3. Add `method` and `path` variables.
-    4. Implement `buildResponseFromObject(_:URLResponse:)` to build `Response` from a raw object, which may be an array or a dictionary.
+    4. Implement `responseFromObject(_:URLResponse:)` to build `Response` from a raw object, which may be an array or a dictionary.
 
 ```swift
-protocol GitHubRequest: RequestType {
+protocol GitHubRequestType: RequestType {
 
 }
 
-extension GitHubRequest {
+extension GitHubRequestType {
     var baseURL: NSURL {
         return NSURL(string: "https://api.github.com")!
     }
 }
 
-struct GetRateLimitRequest: GitHubRequest {
+struct GetRateLimitRequest: GitHubRequestType {
     typealias Response = RateLimit
 
     var method: HTTPMethod {
