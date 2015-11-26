@@ -39,7 +39,7 @@ If you want to use APIKit with Swift 1.2, try [0.8.2](https://github.com/ishkawa
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit" "1.0.0-beta4"` to your Cartfile.
+- Insert `github "ishkawa/APIKit" "1.0.0-beta.14"` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
 
