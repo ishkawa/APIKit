@@ -12,7 +12,7 @@ before_install:
 
 install:
   - carthage bootstrap --use-submodules --no-build
-  - pod repo update
+  - pod repo update --silent
 
 script:
   - pod lib lint
