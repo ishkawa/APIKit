@@ -15,7 +15,7 @@ install:
   - pod repo update --silent
 
 script:
-  - pod spec lint APIKit.podspec
+  - pod lib lint
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-iOS -sdk iphonesimulator | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit-Mac | xcpretty -c
