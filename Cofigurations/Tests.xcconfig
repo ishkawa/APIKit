@@ -1,0 +1,10 @@
+COMBINE_HIDPI_IMAGES = YES
+INFOPLIST_FILE = APIKitTests/Info.plist
+PRODUCT_BUNDLE_IDENTIFIER = org.ishkawa.$(PRODUCT_NAME:rfc1034identifier)
+PRODUCT_NAME = $(PROJECT_NAME)Tests
+
+SUPPORTED_PLATFORMS = macosx iphoneos iphonesimulator appletvos appletvsimulator
+
+LD_RUNPATH_SEARCH_PATHS[sdk=macosx*] = $(inherited) @executable_path/../Frameworks @loader_path/../Frameworks
+LD_RUNPATH_SEARCH_PATHS[sdk=iphone*] = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS[sdk=appletv*] = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
