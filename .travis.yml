@@ -9,11 +9,13 @@ env:
 before_install:
   - brew update 
   - brew install carthage
+
+install:
   - carthage bootstrap --use-submodules --no-build
+  - pod repo update --silent
 
 script:
-  - pod repo update
-  - pod spec lint APIKit.podspec
+  - pod lib lint
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator -destination 'name=iPhone 6,OS=9.1' | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator -destination 'name=Apple TV 1080p,OS=9.0' | xcpretty -c
