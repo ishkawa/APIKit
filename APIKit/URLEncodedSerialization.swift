@@ -28,7 +28,7 @@ public final class URLEncodedSerialization {
 
     /// - Throws: URLEncodedSerialization.Error
     public static func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> [String: String] {
-        guard let string = NSString(data: data, encoding: encoding) as? String else {
+        guard let string = String(data: data, encoding: encoding) else {
             throw Error.CannotGetStringFromData(data, encoding)
         }
 
