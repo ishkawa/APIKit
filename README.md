@@ -130,13 +130,13 @@ Session.sendRequest(request) { result in
 ### Canceling request
 
 ```swift
-GitHub.cancelRequest(GetRateLimitRequest.self)
+Session.cancelRequest(GetRateLimitRequest.self)
 ```
 
 If you want to filter requests to be cancelled, add closure that identifies the request should be cancelled or not.
 
 ```swift
-GitHub.cancelRequest(GetSearchRepositoriesRequest.self) { request in
+Session.cancelRequest(GetSearchRepositoriesRequest.self) { request in
     return request.query == "APIKit"
 }
 ```
