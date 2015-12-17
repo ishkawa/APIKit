@@ -12,7 +12,9 @@ public class Session {
     public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         switch request.buildURLRequest() {
         case .Failure(let error):
-            handler(.Failure(error))
+            dispatch_async(dispatch_get_main_queue()) {
+                handler(.Failure(error))
+            }
             return nil
 
         case .Success(let URLRequest):
@@ -48,7 +50,7 @@ public class Session {
                 + downloadTasks as [NSURLSessionTask]
 
             allTasks.filter { task in
-                var request: T?
+                let request: T?
                 switch task {
                 case let x as NSURLSessionDataTask:
                     request = x.request?.value as? T
@@ -57,7 +59,7 @@ public class Session {
                     request = x.request?.value as? T
                     
                 default:
-                    break
+                    request = nil
                 }
                 
                 if let request = request {

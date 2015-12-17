@@ -101,6 +101,7 @@ public extension RequestType {
         default:
             do {
                 URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
+                URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
             } catch {
                 return .Failure(.RequestBodySerializationError(error))
             }
@@ -108,7 +109,6 @@ public extension RequestType {
 
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
-        URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
         URLRequest.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
         
         HTTPHeaderFields.forEach { key, value in
