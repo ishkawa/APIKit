@@ -12,9 +12,9 @@ public class Session {
     public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         switch request.buildURLRequest() {
         case .Failure(let error):
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            dispatch_async(dispatch_get_main_queue()) {
                 handler(.Failure(error))
-            })
+            }
             return nil
 
         case .Success(let URLRequest):
