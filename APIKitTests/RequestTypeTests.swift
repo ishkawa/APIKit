@@ -81,7 +81,7 @@ class RequestTypeTests: XCTestCase {
     
     func testSymbolURLQueryParameterEncoding() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
-            XCTAssertEqual(request.URL?.query, "q=%21%22%23%24%25%26%27%28%290%3D~%7C%60%7B%7D%2A%2B%3C%3E%3F_&dummy")
+            XCTAssertEqual(request.URL?.query, "q=%21%22%23%24%25%26%27%28%290%3D~%7C%60%7B%7D%2A%2B%3C%3E?_&dummy")
             return true
         }, withStubResponse: { request in
             return OHHTTPStubsResponse(data: NSData(), statusCode: 200, headers: nil)
