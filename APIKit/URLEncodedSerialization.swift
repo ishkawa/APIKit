@@ -3,7 +3,7 @@ import Foundation
 private func escape(string: String) -> String {
     // Reserved characters defined by RFC 3986
     // Reference: https://www.ietf.org/rfc/rfc3986.txt
-    let generalDelimiters = ":/?#[]@"
+    let generalDelimiters = ":#[]@"
     let subDelimiters = "!$&'()*+,;="
     let reservedCharacters = generalDelimiters + subDelimiters
     
