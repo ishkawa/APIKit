@@ -3,7 +3,7 @@ import Foundation
 private func escape(string: String) -> String {
     // Reserved characters defined by RFC 3986
     // Reference: https://www.ietf.org/rfc/rfc3986.txt
-    let generalDelimiters = ":/?#[]@"
+    let generalDelimiters = ":#[]@"
     let subDelimiters = "!$&'()*+,;="
     let reservedCharacters = generalDelimiters + subDelimiters
     
@@ -11,7 +11,30 @@ private func escape(string: String) -> String {
     allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
     allowedCharacterSet.removeCharactersInString(reservedCharacters)
     
-    return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
+    // Crashes due to internal bug in iOS 7 ~ iOS 8.2.
+    // References:
+    //   - https://github.com/Alamofire/Alamofire/issues/206
+    //   - https://github.com/AFNetworking/AFNetworking/issues/3028
+    // return string.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? string
+    
+    let batchSize = 50
+    var index = string.startIndex
+    
+    var escaped = ""
+    
+    while index != string.endIndex {
+        let startIndex = index
+        let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
+        let range = Range(start: startIndex, end: endIndex)
+        
+        let substring = string.substringWithRange(range)
+        
+        escaped += substring.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? substring
+        
+        index = endIndex
+    }
+    
+    return escaped
 }
 
 private func unescape(string: String) -> String {
