@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "1.1.2"
+  s.version  = "1.1.3"
   s.summary  = "A networking library for building type safe web API client in Swift."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
