@@ -85,11 +85,10 @@ public final class URLEncodedSerialization {
     
     public static func stringFromDictionary(dictionary: [String: AnyObject]) -> String {
         let pairs = dictionary.map { key, value -> String in
-            if value is NSNull {
+            guard let valueAsString = value.description where !(value is NSNull) else {
                 return "\(escape(key))"
             }
             
-            let valueAsString = (value as? String) ?? "\(value)"
             return "\(escape(key))=\(escape(valueAsString))"
         }
 
