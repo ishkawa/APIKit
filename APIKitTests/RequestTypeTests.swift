@@ -28,6 +28,30 @@ class RequestTypeTests: XCTestCase {
             return object as? [String: AnyObject]
         }
     }
+
+    struct JsonRpcRequest: MockSessionRequestType {
+        // MARK: RequestType
+        typealias Response = [String: AnyObject]
+        
+        var method: HTTPMethod {
+            return .POST
+        }
+        
+        var path: String {
+            return "/"
+        }
+
+        var arrayParameters: [JSON] {
+            return [
+                ["id": "1"],
+                ["id": "2"],
+            ]
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+            return object as? [String: AnyObject]
+        }
+    }
     
     // request type for URL building tests
     struct ParameterizedRequest: RequestType {
@@ -455,5 +479,14 @@ class RequestTypeTests: XCTestCase {
             ParameterizedRequest(baseURL: "https://example.com///", path: "foo//bar//")?.buildURLRequest().value?.URL,
             NSURL(string: "https://example.com///foo//bar//")
         )
+    }
+
+    func testJsonRpcRequest() {
+        let request = JsonRpcRequest()
+        let expectation = expectationWithDescription("waiting for the response.")
+        Session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
     }
 }
