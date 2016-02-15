@@ -510,6 +510,19 @@ class RequestTypeTests: XCTestCase {
     func testJsonRpcRequest() {
         let request = JsonRpcRequest()
         XCTAssert(request.objectParameters.count == 3)
+        switch request.buildURLRequest() {
+        case .Success(let urlReq):
+            XCTAssert(urlReq.HTTPBody != nil)
+             let json = try! NSJSONSerialization.JSONObjectWithData(urlReq.HTTPBody!, options: NSJSONReadingOptions.AllowFragments)
+            XCTAssert(json.count == 3)
+            XCTAssert(json[0]["id"]! == "1")
+            XCTAssert(json[1]["id"]! == "2")
+            let arr = json[2] as! [String]
+            XCTAssert(arr[0] == "hello")
+            XCTAssert(arr[1] == "yellow")
+        case .Failure:
+            XCTFail()
+        }
         let expectation = expectationWithDescription("waiting for the response.")
         Session.sendRequest(request) { result in
             expectation.fulfill()
