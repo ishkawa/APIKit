@@ -41,7 +41,7 @@ class RequestTypeTests: XCTestCase {
             return "/"
         }
 
-        var arrayParameters: [JSON] {
+        var objectParameters: AnyObject {
             return [
                 ["id": "1"],
                 ["id": "2"],

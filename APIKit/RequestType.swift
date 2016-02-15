@@ -1,8 +1,6 @@
 import Foundation
 import Result
 
-public typealias JSON = [String: AnyObject]
-
 /// RequestType protocol represents a request for Web API.
 /// Following 5 items must be implemented.
 /// - typealias Response
@@ -22,8 +20,8 @@ public protocol RequestType {
     /// A parameter dictionary for the request. You can pass `NSNull()` as a
     /// value for nullable keys, those should be existed in the encoded query or
     /// the request body.
-    var parameters: JSON { get }
-    var arrayParameters: [JSON] { get }
+    var parameters: [String: AnyObject] { get }
+    var objectParameters: AnyObject { get }
     
     /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
     /// You can override values for those fields here.
@@ -56,7 +54,7 @@ public protocol RequestType {
 
 /// Default implementation of RequestType protocol
 public extension RequestType {
-    public var arrayParameters: [JSON] {
+    public var objectParameters: AnyObject {
         return []
     }
 
@@ -109,8 +107,8 @@ public extension RequestType {
             do {
                 if parameters.count > 0 {
                     URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
-                } else if arrayParameters.count > 0 {
-                    URLRequest.HTTPBody = try NSJSONSerialization.dataWithJSONObject(arrayParameters, options: NSJSONWritingOptions.PrettyPrinted)
+                } else if objectParameters.count > 0 {
+                    URLRequest.HTTPBody = try NSJSONSerialization.dataWithJSONObject(objectParameters, options: NSJSONWritingOptions.PrettyPrinted)
                 }
                 URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
             } catch {
