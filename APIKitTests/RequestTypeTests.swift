@@ -45,6 +45,9 @@ class RequestTypeTests: XCTestCase {
             return [
                 ["id": "1"],
                 ["id": "2"],
+                [
+                    "hello", "yellow"
+                ]
             ]
         }
 
@@ -52,7 +55,30 @@ class RequestTypeTests: XCTestCase {
             return object as? [String: AnyObject]
         }
     }
-    
+
+    struct InvalidJsonRequest: MockSessionRequestType {
+        // MARK: RequestType
+        typealias Response = [String: AnyObject]
+        
+        var method: HTTPMethod {
+            return .POST
+        }
+        
+        var path: String {
+            return "/"
+        }
+
+        /// - Note: JSON object should contain an array or an object
+        /// - SeeAlso: http://json.org
+        var objectParameters: AnyObject {
+            return "hello"
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+            return object as? [String: AnyObject]
+        }
+    }
+
     // request type for URL building tests
     struct ParameterizedRequest: RequestType {
         typealias Response = Void
@@ -483,6 +509,22 @@ class RequestTypeTests: XCTestCase {
 
     func testJsonRpcRequest() {
         let request = JsonRpcRequest()
+        XCTAssert(request.objectParameters.count == 3)
+        let expectation = expectationWithDescription("waiting for the response.")
+        Session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+
+    func testInvalidJsonRequest() {
+        let request = InvalidJsonRequest()
+        switch request.buildURLRequest() {
+        case .Success(let urlReq):
+            XCTAssert(urlReq.HTTPBody == nil)
+        case .Failure:
+            XCTFail()
+        }
         let expectation = expectationWithDescription("waiting for the response.")
         Session.sendRequest(request) { result in
             expectation.fulfill()
