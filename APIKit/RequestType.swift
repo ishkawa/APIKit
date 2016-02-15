@@ -100,8 +100,17 @@ public extension RequestType {
             
         default:
             do {
-                URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
-                URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
+                let requestBody = try requestBodyBuilder.buildRequestBodyFromObject(parameters)
+
+                URLRequest.setValue(requestBody.contentType, forHTTPHeaderField: "Content-Type")
+
+                switch requestBody.entity {
+                case .Data(let data):
+                    URLRequest.HTTPBody = data
+
+                case .InputStream(let inputStream):
+                    URLRequest.HTTPBodyStream = inputStream
+                }
             } catch {
                 return .Failure(.RequestBodySerializationError(error))
             }
