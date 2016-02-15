@@ -39,13 +39,13 @@ class RequestBodyBuilderTests: XCTestCase {
     }
     
     func testURLHeader() {
-        let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
+        let builder = RequestBodyBuilder.FormURLEncoded(encoding: NSUTF8StringEncoding)
         XCTAssertEqual(builder.contentTypeHeader, "application/x-www-form-urlencoded")
     }
     
     func testURLSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
-        let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
+        let builder = RequestBodyBuilder.FormURLEncoded(encoding: NSUTF8StringEncoding)
 
         do {
             let data = try builder.buildBodyFromObject(object)

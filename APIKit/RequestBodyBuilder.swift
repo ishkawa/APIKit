@@ -3,7 +3,7 @@ import Result
 
 public enum RequestBodyBuilder {
     case JSON(writingOptions: NSJSONWritingOptions)
-    case URL(encoding: NSStringEncoding)
+    case FormURLEncoded(encoding: NSStringEncoding)
     case Custom(contentTypeHeader: String, buildBodyFromObject: AnyObject throws -> NSData)
     
     public var contentTypeHeader: String {
@@ -11,7 +11,7 @@ public enum RequestBodyBuilder {
         case .JSON:
             return "application/json"
             
-        case .URL:
+        case .FormURLEncoded:
             return "application/x-www-form-urlencoded"
             
         case .Custom(let (type, _)):
@@ -29,7 +29,7 @@ public enum RequestBodyBuilder {
             }
             return try NSJSONSerialization.dataWithJSONObject(object, options: writingOptions)
 
-        case .URL(let encoding):
+        case .FormURLEncoded(let encoding):
             return try URLEncodedSerialization.dataFromObject(object, encoding: encoding)
 
         case .Custom(let (_, buildBodyFromObject)):
