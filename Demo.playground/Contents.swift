@@ -2,7 +2,7 @@ import XCPlayground
 import UIKit
 import APIKit
 
-XCPSetExecutionShouldContinueIndefinitely()
+XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
 //: Step 1: Define request protocol
 protocol GitHubRequestType: RequestType {
