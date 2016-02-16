@@ -10,39 +10,47 @@ public class Session {
 
     // send request and build response object
     public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        switch request.buildURLRequest() {
-        case .Failure(let error):
+        let URLRequest: NSURLRequest
+        do {
+            URLRequest = try request.buildURLRequest()
+        } catch {
             dispatch_async(dispatch_get_main_queue()) {
-                handler(.Failure(error))
+                handler(.Failure(.RequestError(error)))
             }
             return nil
-
-        case .Success(let URLRequest):
-            let dataTask = URLSession.dataTaskWithRequest(URLRequest)
-            dataTask.request = Box(request)
-            dataTask.completionHandler = { data, URLResponse, connectionError in
-                let sessionResult: Result<(NSData, NSURLResponse?), APIError>
-                if let error = connectionError {
-                    sessionResult = .Failure(.ConnectionError(error))
-                } else {
-                    sessionResult = .Success((data, URLResponse))
-                }
-
-                let result: Result<T.Response, APIError> = sessionResult.flatMap { data, URLResponse in
-                    request.parseData(data, URLResponse: URLResponse)
-                }
-
-                dispatch_async(dispatch_get_main_queue()) {
-                    handler(result)
-                }
-            }
-            
-            dataTask.resume()
-            
-            return dataTask
         }
+
+        let dataTask = URLSession.dataTaskWithRequest(URLRequest)
+        dataTask.request = Box(request)
+        dataTask.completionHandler = { data, URLResponse, error in
+            let result: Result<T.Response, APIError>
+
+            switch (data, URLResponse, error) {
+            case (_, _, let error?):
+                result = .Failure(.ConnectionError(error))
+
+            case (let data, let URLResponse as NSHTTPURLResponse, _):
+                do {
+                    result = .Success(try request.parseData(data, URLResponse: URLResponse))
+                } catch {
+                    result = .Failure(.ResponseError(error))
+                }
+
+            default:
+                let error = FatalError("Unexpected URLResponse \(URLResponse) and data \(data).")
+                result = .Failure(.ResponseError(error))
+            }
+
+            dispatch_async(dispatch_get_main_queue()) {
+                handler(result)
+            }
+        }
+
+        dataTask.resume()
+
+        return dataTask
     }
-    
+
     public func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [NSURLSessionTask]

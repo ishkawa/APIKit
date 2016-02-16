@@ -75,12 +75,10 @@ public extension RequestType {
         return object
     }
 
-    // Use Result here because `throws` loses type info of an error.
-    // This method is not overridable. If you need to add customization, override configureURLRequest.
-    public func buildURLRequest() -> Result<NSURLRequest, APIError> {
+    public func buildURLRequest() throws -> NSURLRequest {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
-            return .Failure(.InvalidBaseURL(baseURL))
+            throw FatalError("Invalid base URL \(baseURL) in \(self).")
         }
 
         let URLRequest = NSMutableURLRequest()
@@ -93,12 +91,8 @@ public extension RequestType {
             }
             
         default:
-            do {
-                URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
-                URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
-            } catch {
-                return .Failure(.RequestBodySerializationError(error))
-            }
+            URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
+            URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
         }
 
         URLRequest.URL = components.URL
@@ -109,38 +103,14 @@ public extension RequestType {
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
-        do {
-            try configureURLRequest(URLRequest)
-        } catch {
-            return .Failure(.ConfigurationError(error))
-        }
-        
-        return .Success(URLRequest)
+        try configureURLRequest(URLRequest)
+
+        return URLRequest
     }
 
-    // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
-    public func parseData(data: NSData, URLResponse: NSURLResponse?) -> Result<Self.Response, APIError> {
-        guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
-            return .Failure(.NotHTTPURLResponse(URLResponse))
-        }
-
-        var object: AnyObject
-        do {
-            object = try responseBodyParser.parseData(data)
-        } catch {
-            return .Failure(.ResponseBodyDeserializationError(error))
-        }
-
-        do {
-            object = try validateObject(object, URLResponse: HTTPURLResponse)
-        } catch {
-            return .Failure(.UnacceptableStatusCode(HTTPURLResponse.statusCode, error))
-        }
-
-        guard let response = try? responseFromObject(object, URLResponse: HTTPURLResponse) else {
-            return .Failure(.InvalidResponseStructure(object))
-        }
-
-        return .Success(response)
+    public func parseData(data: NSData, URLResponse: NSHTTPURLResponse) throws -> Response {
+        let parsedObject = try responseBodyParser.parseData(data)
+        let validatedObject = try validateObject(parsedObject, URLResponse: URLResponse)
+        return try responseFromObject(validatedObject, URLResponse: URLResponse)
     }
 }

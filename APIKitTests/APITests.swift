@@ -124,8 +124,9 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .UnacceptableStatusCode(let statusCode, _ as FatalError):
-                    XCTAssertEqual(statusCode, 400)
+                case .ResponseError:
+                    break
+
                 default:
                     XCTFail()
                 }
@@ -156,7 +157,7 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .ResponseBodyDeserializationError(let error as NSError):
+                case .ResponseError(let error as NSError):
                     XCTAssertEqual(error.domain, NSCocoaErrorDomain)
                     XCTAssertEqual(error.code, 3840)
 
