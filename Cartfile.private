@@ -1,1 +1,2 @@
-github "AliSoftware/OHHTTPStubs" ~> 4.6.0
+github "ishkawa/OHHTTPStubs" "feature/avoid-module-version-issue"
+
