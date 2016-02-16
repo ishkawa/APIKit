@@ -24,8 +24,11 @@ class MockSession: Session {
             return "/"
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            return object as? [String: AnyObject]
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            guard let response = object as? [String: AnyObject] else {
+                throw FatalError("Invalid object \(object)")
+            }
+            return response
         }
     }
 }

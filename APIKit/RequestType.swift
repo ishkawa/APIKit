@@ -44,7 +44,7 @@ public protocol RequestType {
 
     /// Build `Response` instance from raw response object.
     /// This method will be called if `acceptableStatusCode` contains status code of NSHTTPURLResponse.
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
 
     /// Build `ErrorType` instance from raw response object.
     /// This method will be called if `acceptableStatusCode` does not contain status code of NSHTTPURLResponse.
@@ -144,7 +144,7 @@ public extension RequestType {
             return .Failure(.UnacceptableStatusCode(HTTPURLResponse.statusCode, error))
         }
 
-        guard let response = responseFromObject(object, URLResponse: HTTPURLResponse) else {
+        guard let response = try? responseFromObject(object, URLResponse: HTTPURLResponse) else {
             return .Failure(.InvalidResponseStructure(object))
         }
 

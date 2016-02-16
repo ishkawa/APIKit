@@ -23,6 +23,7 @@
 		141F12321C1C9AC70026D415 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; };
 		141F12361C1C9AC70026D415 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		141F12371C1C9AC70026D415 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7F23BA251C7381BB00B735FC /* FatalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F23BA241C7381BB00B735FC /* FatalError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,7 @@
 		19C16B531B83327A001D77CC /* RequestTypeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTypeTests.swift; sourceTree = "<group>"; };
 		7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F1B190A1AA2CA1300C7AFCF /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
+		7F23BA241C7381BB00B735FC /* FatalError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FatalError.swift; sourceTree = "<group>"; };
 		7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilderTests.swift; sourceTree = "<group>"; };
 		7F45FCE11A94D02C006863BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F45FCE21A94D02C006863BB /* APIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIKit.h; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				7F68ABD91AC4412E00688D68 /* RequestType.swift */,
 				7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */,
 				7F5FA6B41B3C58210090B0AF /* APIError.swift */,
+				7F23BA241C7381BB00B735FC /* FatalError.swift */,
 				7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */,
 				7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */,
 				7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */,
@@ -271,6 +274,7 @@
 				141F121A1C1C9ABE0026D415 /* HTTPMethod.swift in Sources */,
 				141F121B1C1C9ABE0026D415 /* RequestType.swift in Sources */,
 				141F121C1C1C9ABE0026D415 /* ResponseBodyParser.swift in Sources */,
+				7F23BA251C7381BB00B735FC /* FatalError.swift in Sources */,
 				141F121D1C1C9ABE0026D415 /* APIError.swift in Sources */,
 				141F121E1C1C9ABE0026D415 /* URLEncodedSerialization.swift in Sources */,
 			);

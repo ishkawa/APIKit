@@ -24,8 +24,11 @@ class RequestTypeTests: XCTestCase {
             ]
         }
         
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            return object as? [String: AnyObject]
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            guard let response = object as? [String: AnyObject] else {
+                throw FatalError("Invalid object \(object)")
+            }
+            return response
         }
     }
     
@@ -51,7 +54,7 @@ class RequestTypeTests: XCTestCase {
         let parameters: [String: AnyObject]
         let HTTPHeaderFields: [String: String]
         
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             abort()
         }
     }
