@@ -39,8 +39,7 @@ public protocol RequestType {
 
     /// Validate `AnyObject` instance, which is a result of response body parse, using `AnyObject`
     /// instance itself and `NSHTTPURLResponse`. If an error is thrown in this method, the result
-    /// of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`. This method provides
-    /// default implementation that throws an error if `NSHTTPURLResponse.statusCode` is not 2xx.
+    /// of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
     ///
     /// - Throws: ErrorType
     func validateObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
@@ -75,11 +74,6 @@ public extension RequestType {
     }
 
     func validateObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
-        let acceptableStatusCode = 200..<300
-        guard acceptableStatusCode.contains(URLResponse.statusCode) else {
-            throw FatalError("Received unacceptable status code \(URLResponse.statusCode) and object \(object)")
-        }
-
         return object
     }
 
