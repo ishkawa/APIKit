@@ -37,11 +37,19 @@ public protocol RequestType {
     /// An object that parses body of HTTP response.
     var responseBodyParser: ResponseBodyParser { get }
 
-    /// Build `Response` instance from raw response object.
-    /// This method will be called if `acceptableStatusCode` contains status code of NSHTTPURLResponse.
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
-
+    /// Validate `AnyObject` instance, which is a result of response body parse, using `AnyObject`
+    /// instance itself and `NSHTTPURLResponse`. If an error is thrown in this method, the result
+    /// of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`. This method provides
+    /// default implementation that throws an error if `NSHTTPURLResponse.statusCode` is not 2xx.
+    ///
+    /// - Throws: ErrorType
     func validateObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
+
+    /// Build `Response` instance from raw response object. This method is called after
+    /// `validateObject(:URLResponse:)` if it does not throw any error.
+    ///
+    /// - Throws: ErrorType
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
 }
 
 /// Default implementation of RequestType protocol
