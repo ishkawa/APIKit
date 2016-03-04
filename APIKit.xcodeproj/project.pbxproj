@@ -24,6 +24,7 @@
 		141F12361C1C9AC70026D415 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		141F12371C1C9AC70026D415 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F23BA251C7381BB00B735FC /* FatalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F23BA241C7381BB00B735FC /* FatalError.swift */; };
+		7F4460821C891F8800293D33 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4460811C891F8800293D33 /* ResponseError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,7 @@
 		7F1B190A1AA2CA1300C7AFCF /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		7F23BA241C7381BB00B735FC /* FatalError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FatalError.swift; sourceTree = "<group>"; };
 		7F30A8551A975BD600A8C136 /* RequestBodyBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilderTests.swift; sourceTree = "<group>"; };
+		7F4460811C891F8800293D33 /* ResponseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
 		7F45FCE11A94D02C006863BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F45FCE21A94D02C006863BB /* APIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIKit.h; sourceTree = "<group>"; };
 		7F45FD171A94D085006863BB /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				7F45FD171A94D085006863BB /* Session.swift */,
 				7F68ABD91AC4412E00688D68 /* RequestType.swift */,
 				7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */,
+				7F4460811C891F8800293D33 /* ResponseError.swift */,
 				7F5FA6B41B3C58210090B0AF /* APIError.swift */,
 				7F23BA241C7381BB00B735FC /* FatalError.swift */,
 				7F0869A51A978BCA001AD3E1 /* URLEncodedSerialization.swift */,
@@ -270,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				141F12181C1C9ABE0026D415 /* RequestBodyBuilder.swift in Sources */,
+				7F4460821C891F8800293D33 /* ResponseError.swift in Sources */,
 				141F12191C1C9ABE0026D415 /* Session.swift in Sources */,
 				141F121A1C1C9ABE0026D415 /* HTTPMethod.swift in Sources */,
 				141F121B1C1C9ABE0026D415 /* RequestType.swift in Sources */,

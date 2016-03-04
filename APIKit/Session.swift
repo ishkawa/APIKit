@@ -37,8 +37,7 @@ public class Session {
                 }
 
             default:
-                let error = FatalError("Unexpected URLResponse \(URLResponse) and data \(data).")
-                result = .Failure(.ResponseError(error))
+                result = .Failure(.ResponseError(ResponseError.NonHTTPResponse(URLResponse)))
             }
 
             dispatch_async(dispatch_get_main_queue()) {
