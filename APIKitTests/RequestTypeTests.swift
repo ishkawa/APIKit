@@ -26,7 +26,7 @@ class RequestTypeTests: XCTestCase {
         
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let response = object as? [String: AnyObject] else {
-                throw FatalError("Invalid object \(object)")
+                throw MockError()
             }
             return response
         }
