@@ -74,6 +74,9 @@ public extension RequestType {
     }
 
     func validateObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
+        guard (200..<300).contains(URLResponse.statusCode) else {
+            throw ResponseError.UnacceptableStatusCode(URLResponse.statusCode)
+        }
         return object
     }
 

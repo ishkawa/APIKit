@@ -177,6 +177,37 @@ class APITests: XCTestCase {
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
 
+    func testFailureCausedByUnacceptableStatusCode() {
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 400, headers: nil)
+        })
+        
+        let expectation = expectationWithDescription("wait for response")
+        let request = MockSession.GetRoot()
+        
+        MockSession.sendRequest(request) { response in
+            switch response {
+            case .Success:
+                XCTFail()
+                
+            case .Failure(let error):
+                switch error {
+                case .ResponseError(let error):
+                    XCTAssert(error is ResponseError)
+
+                default:
+                    XCTFail()
+                }
+            }
+            
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+
     func testSuccessIfCancelingTestReturnsFalse() {
         OHHTTPStubs.stubRequestsPassingTest({ request in
             return true
