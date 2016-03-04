@@ -4,18 +4,14 @@ import Result
 import XCTest
 
 class RequestBodyBuilderTests: XCTestCase {
-    func testJSONHeader() {
-        let builder = RequestBodyBuilder.JSON(writingOptions: [])
-        XCTAssertEqual(builder.contentTypeHeader, "application/json")
-    }
-    
     func testJSONSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
         let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
         do {
-            let data = try builder.buildBodyFromObject(object)
+            let (contentTypeHeader, data) = try builder.buildBodyFromObject(object)
             let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+            XCTAssertEqual(contentTypeHeader, "application/json")
             XCTAssertEqual(dictionary["foo"], 1)
             XCTAssertEqual(dictionary["bar"], 2)
             XCTAssertEqual(dictionary["baz"], 3)
@@ -37,19 +33,15 @@ class RequestBodyBuilderTests: XCTestCase {
             XCTAssertEqual(nserror.code, 3840)
         }
     }
-    
-    func testURLHeader() {
-        let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
-        XCTAssertEqual(builder.contentTypeHeader, "application/x-www-form-urlencoded")
-    }
-    
+
     func testURLSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
         let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
 
         do {
-            let data = try builder.buildBodyFromObject(object)
+            let (contentTypeHeader, data) = try builder.buildBodyFromObject(object)
             let dictionary = try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
+            XCTAssertEqual(contentTypeHeader, "application/x-www-form-urlencoded")
             XCTAssertEqual(dictionary["foo"], "1")
             XCTAssertEqual(dictionary["bar"], "2")
             XCTAssertEqual(dictionary["baz"], "3")
@@ -57,23 +49,41 @@ class RequestBodyBuilderTests: XCTestCase {
             XCTFail()
         }
     }
-    
-    func testCustomHeader() {
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo") { object in
-            NSData()
+
+    func testMultipartFormDataSuccess() {
+        let value1 = "1".dataUsingEncoding(NSUTF8StringEncoding)!
+        let value2 = "2".dataUsingEncoding(NSUTF8StringEncoding)!
+        let object: [String : AnyObject] = ["foo": value1, "bar": value2]
+        let builder = RequestBodyBuilder.MultipartFormData
+
+        do {
+            let (contentTypeHeader, data) = try builder.buildBodyFromObject(object)
+            let encodedData = String(data: data, encoding:NSUTF8StringEncoding)!
+            let returnCode = "\r\n"
+            // Boundary changed each time
+            let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
+            let regexp = try NSRegularExpression(pattern: pattern, options: [])
+            let match = regexp.matchesInString(contentTypeHeader, options: [], range: NSMakeRange(0, (contentTypeHeader as NSString).length))
+            XCTAssertTrue(match.count > 0)
+            let boundary = (contentTypeHeader as NSString).substringWithRange(match.first!.rangeAtIndex(1))
+
+            XCTAssertEqual(contentTypeHeader, "multipart/form-data; boundary=\(boundary)")
+            XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
+        } catch {
+            XCTFail()
         }
-        XCTAssertEqual(builder.contentTypeHeader, "foo")
     }
-    
+
     func testCustomSuccess() {
         let string = "foo"
         let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "") { object in
+        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo") { object in
             expectedData
         }
 
         do {
-            let data = try builder.buildBodyFromObject(string)
+            let (contentTypeHeader, data) = try builder.buildBodyFromObject(string)
+            XCTAssertEqual(contentTypeHeader, "foo")
             XCTAssertEqual(data, expectedData)
         } catch {
             XCTFail()
