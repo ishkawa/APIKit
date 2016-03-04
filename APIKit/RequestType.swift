@@ -108,7 +108,7 @@ public extension RequestType {
                 if parameters.count > 0 {
                     URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
                 } else if let count = objectParameters.count where count > 0 {
-                    URLRequest.HTTPBody = try NSJSONSerialization.dataWithJSONObject(objectParameters, options: NSJSONWritingOptions.PrettyPrinted)
+                    URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(objectParameters)
                 }
                 URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
             } catch {
