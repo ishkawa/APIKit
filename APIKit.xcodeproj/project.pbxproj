@@ -25,6 +25,7 @@
 		141F12371C1C9AC70026D415 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F23BA251C7381BB00B735FC /* FatalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F23BA241C7381BB00B735FC /* FatalError.swift */; };
 		7F4460821C891F8800293D33 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4460811C891F8800293D33 /* ResponseError.swift */; };
+		7FDE29131C89314100B77B54 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDE29121C89314100B77B54 /* RequestError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,6 +66,7 @@
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; };
 		7FCBE9DC1A9734880075AFD9 /* RequestBodyBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilder.swift; sourceTree = "<group>"; };
 		7FCBE9DF1A9734950075AFD9 /* ResponseBodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseBodyParser.swift; sourceTree = "<group>"; };
+		7FDE29121C89314100B77B54 /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		7FEC5A171A96FE2600B1D3C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FEC5A181A96FE2600B1D3C0 /* ResponseBodyParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseBodyParserTests.swift; sourceTree = "<group>"; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +133,7 @@
 				7F45FD171A94D085006863BB /* Session.swift */,
 				7F68ABD91AC4412E00688D68 /* RequestType.swift */,
 				7F68ABDC1AC4414500688D68 /* HTTPMethod.swift */,
+				7FDE29121C89314100B77B54 /* RequestError.swift */,
 				7F4460811C891F8800293D33 /* ResponseError.swift */,
 				7F5FA6B41B3C58210090B0AF /* APIError.swift */,
 				7F23BA241C7381BB00B735FC /* FatalError.swift */,
@@ -278,6 +281,7 @@
 				141F121A1C1C9ABE0026D415 /* HTTPMethod.swift in Sources */,
 				141F121B1C1C9ABE0026D415 /* RequestType.swift in Sources */,
 				141F121C1C1C9ABE0026D415 /* ResponseBodyParser.swift in Sources */,
+				7FDE29131C89314100B77B54 /* RequestError.swift in Sources */,
 				7F23BA251C7381BB00B735FC /* FatalError.swift in Sources */,
 				141F121D1C1C9ABE0026D415 /* APIError.swift in Sources */,
 				141F121E1C1C9ABE0026D415 /* URLEncodedSerialization.swift in Sources */,

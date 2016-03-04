@@ -83,7 +83,7 @@ public extension RequestType {
     public func buildURLRequest() throws -> NSURLRequest {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
-            throw FatalError("Invalid base URL \(baseURL) in \(self).")
+            throw RequestError.InvalidBaseURL(baseURL)
         }
 
         let URLRequest = NSMutableURLRequest()
