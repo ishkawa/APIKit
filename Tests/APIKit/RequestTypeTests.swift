@@ -31,7 +31,65 @@ class RequestTypeTests: XCTestCase {
             return response
         }
     }
-    
+
+    struct JsonRpcRequest: MockSessionRequestType {
+        // MARK: RequestType
+        typealias Response = [String: AnyObject]
+        
+        var method: HTTPMethod {
+            return .POST
+        }
+        
+        var path: String {
+            return "/"
+        }
+
+        var objectParameters: AnyObject {
+            return [
+                ["id": "1"],
+                ["id": "2"],
+                [
+                    "hello", "yellow"
+                ]
+            ]
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            if let dictionary = object as? [String: AnyObject] {
+                return dictionary
+            } else {
+                throw MockError()
+            }
+        }
+    }
+
+    struct InvalidJsonRequest: MockSessionRequestType {
+        // MARK: RequestType
+        typealias Response = [String: AnyObject]
+        
+        var method: HTTPMethod {
+            return .POST
+        }
+        
+        var path: String {
+            return "/"
+        }
+
+        /// - Note: JSON object should contain an array or an object
+        /// - SeeAlso: http://json.org
+        var objectParameters: AnyObject {
+            return "hello"
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            if let dictionary = object as? [String: AnyObject] {
+                return dictionary
+            } else {
+                throw MockError()
+            }
+        }
+    }
+
     // request type for URL building tests
     struct ParameterizedRequest: RequestType {
         typealias Response = Void
@@ -470,5 +528,50 @@ class RequestTypeTests: XCTestCase {
             URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "foo//bar//")),
             NSURL(string: "https://example.com///foo//bar//")
         )
+    }
+
+    func testJsonRpcRequest() {
+        let request = JsonRpcRequest()
+        XCTAssert(request.objectParameters.count == 3)
+
+        do {
+            let URLRequest = try request.buildURLRequest()
+            XCTAssertNotNil(URLRequest.HTTPBody)
+
+            let json = try! NSJSONSerialization.JSONObjectWithData(URLRequest.HTTPBody!, options: NSJSONReadingOptions.AllowFragments)
+            XCTAssert(json.count == 3)
+            XCTAssert(json[0]["id"]! == "1")
+            XCTAssert(json[1]["id"]! == "2")
+
+            let arr = json[2] as! [String]
+            XCTAssert(arr[0] == "hello")
+            XCTAssert(arr[1] == "yellow")
+        } catch {
+            XCTFail()
+        }
+
+        let expectation = expectationWithDescription("waiting for the response.")
+        Session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+
+    func testInvalidJsonRequest() {
+        let request = InvalidJsonRequest()
+
+        do {
+            let URLRequest = try request.buildURLRequest()
+            XCTAssertNil(URLRequest.HTTPBody)
+        } catch {
+            XCTFail()
+            return
+        }
+
+        let expectation = expectationWithDescription("waiting for the response.")
+        Session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
     }
 }
