@@ -17,8 +17,9 @@ script:
   - pod lib lint
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator -destination 'name=iPhone 6,OS=9.1' | xcpretty -c
-  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator -destination 'name=Apple TV 1080p,OS=9.1' | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit | xcpretty -c
+  - xcodebuild build -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvos | xcpretty -c
+  - xcodebuild build -workspace APIKit.xcworkspace -scheme APIKit -sdk watchos | xcpretty -c
 
 before_deploy:
   - ./script/import-certificates
