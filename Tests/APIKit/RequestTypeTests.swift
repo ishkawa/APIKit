@@ -24,8 +24,11 @@ class RequestTypeTests: XCTestCase {
             ]
         }
         
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            return object as? [String: AnyObject]
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            guard let response = object as? [String: AnyObject] else {
+                throw MockError()
+            }
+            return response
         }
     }
 
@@ -51,8 +54,12 @@ class RequestTypeTests: XCTestCase {
             ]
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            return object as? [String: AnyObject]
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            if let dictionary = object as? [String: AnyObject] {
+                return dictionary
+            } else {
+                throw MockError()
+            }
         }
     }
 
@@ -74,8 +81,12 @@ class RequestTypeTests: XCTestCase {
             return "hello"
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            return object as? [String: AnyObject]
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            if let dictionary = object as? [String: AnyObject] {
+                return dictionary
+            } else {
+                throw MockError()
+            }
         }
     }
 
@@ -101,9 +112,17 @@ class RequestTypeTests: XCTestCase {
         let parameters: [String: AnyObject]
         let HTTPHeaderFields: [String: String]
         
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             abort()
         }
+    }
+
+    func URLOfRequest<T: RequestType>(request: T?) -> NSURL? {
+        guard let request = request, URL = try? request.buildURLRequest().URL else {
+            return nil
+        }
+
+        return URL
     }
 
     override func tearDown() {
@@ -148,361 +167,365 @@ class RequestTypeTests: XCTestCase {
     }
     
     func testHTTPHeaderFields() {
-        let request = ParameterizedRequest(HTTPHeaderFields: ["Foo": "f", "Accept": "a", "Content-Type": "c"])
-        let URLReqeust = request?.buildURLRequest().value
+        guard let request = ParameterizedRequest(HTTPHeaderFields: ["Foo": "f", "Accept": "a", "Content-Type": "c"]) else {
+            XCTFail()
+            return
+        }
+
+        let URLReqeust = try? request.buildURLRequest()
         XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Foo"), "f")
         XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Accept"), "a")
         XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Content-Type"), "c")
     }
-    
+
     func testBuildURL() {
         // MARK: - baseURL = https://example.com
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "")),
             NSURL(string: "https://example.com")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/")),
             NSURL(string: "https://example.com/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "foo")),
             NSURL(string: "https://example.com/foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo", parameters: ["p": 1])),
             NSURL(string: "https://example.com/foo?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/")),
             NSURL(string: "https://example.com/foo/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/foo/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "foo/bar")),
             NSURL(string: "https://example.com/foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar")),
             NSURL(string: "https://example.com/foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar", parameters: ["p": 1])),
             NSURL(string: "https://example.com/foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar/")),
             NSURL(string: "https://example.com/foo/bar/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar//")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com", path: "/foo/bar//")),
             NSURL(string: "https://example.com/foo/bar//")
         )
         
         // MARK: - baseURL = https://example.com/
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "")),
             NSURL(string: "https://example.com/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/")),
             NSURL(string: "https://example.com//")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/", parameters: ["p": 1])),
             NSURL(string: "https://example.com//?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "foo")),
             NSURL(string: "https://example.com/foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo")),
             NSURL(string: "https://example.com//foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo", parameters: ["p": 1])),
             NSURL(string: "https://example.com//foo?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/")),
             NSURL(string: "https://example.com//foo/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/", parameters: ["p": 1])),
             NSURL(string: "https://example.com//foo/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "foo/bar")),
             NSURL(string: "https://example.com/foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar")),
             NSURL(string: "https://example.com//foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar", parameters: ["p": 1])),
             NSURL(string: "https://example.com//foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar/")),
             NSURL(string: "https://example.com//foo/bar/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "/foo/bar/", parameters: ["p": 1])),
             NSURL(string: "https://example.com//foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/", path: "foo//bar//")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/", path: "foo//bar//")),
             NSURL(string: "https://example.com/foo//bar//")
         )
         
         // MARK: - baseURL = https://example.com/api
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "")),
             NSURL(string: "https://example.com/api")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/")),
             NSURL(string: "https://example.com/api/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "foo")),
             NSURL(string: "https://example.com/api/foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo")),
             NSURL(string: "https://example.com/api/foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api/foo?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/")),
             NSURL(string: "https://example.com/api/foo/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api/foo/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "foo/bar")),
             NSURL(string: "https://example.com/api/foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar")),
             NSURL(string: "https://example.com/api/foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api/foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar/")),
             NSURL(string: "https://example.com/api/foo/bar/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "/foo/bar/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api/foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api", path: "foo//bar//")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api", path: "foo//bar//")),
             NSURL(string: "https://example.com/api/foo//bar//")
         )
         
         // MARK: - baseURL = https://example.com/api/
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "")),
             NSURL(string: "https://example.com/api/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/")),
             NSURL(string: "https://example.com/api//")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api//?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo")),
             NSURL(string: "https://example.com/api/foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo")),
             NSURL(string: "https://example.com/api//foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api//foo?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/")),
             NSURL(string: "https://example.com/api//foo/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api//foo/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo/bar")),
             NSURL(string: "https://example.com/api/foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar")),
             NSURL(string: "https://example.com/api//foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api//foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar/")),
             NSURL(string: "https://example.com/api//foo/bar/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api//foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo//bar//")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo//bar//")),
             NSURL(string: "https://example.com/api/foo//bar//")
         )
         
         //　MARK: - baseURL = https://example.com///
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "")),
             NSURL(string: "https://example.com///")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/")),
             NSURL(string: "https://example.com////")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/", parameters: ["p": 1])),
             NSURL(string: "https://example.com////?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "foo")),
             NSURL(string: "https://example.com///foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo")),
             NSURL(string: "https://example.com////foo")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo", parameters: ["p": 1])),
             NSURL(string: "https://example.com////foo?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/")),
             NSURL(string: "https://example.com////foo/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/", parameters: ["p": 1])),
             NSURL(string: "https://example.com////foo/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "foo/bar")),
             NSURL(string: "https://example.com///foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar")),
             NSURL(string: "https://example.com////foo/bar")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar", parameters: ["p": 1])),
             NSURL(string: "https://example.com////foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar/")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar/")),
             NSURL(string: "https://example.com////foo/bar/")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar/", parameters: ["p": 1])?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "/foo/bar/", parameters: ["p": 1])),
             NSURL(string: "https://example.com////foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            ParameterizedRequest(baseURL: "https://example.com///", path: "foo//bar//")?.buildURLRequest().value?.URL,
+            URLOfRequest(ParameterizedRequest(baseURL: "https://example.com///", path: "foo//bar//")),
             NSURL(string: "https://example.com///foo//bar//")
         )
     }
@@ -510,19 +533,23 @@ class RequestTypeTests: XCTestCase {
     func testJsonRpcRequest() {
         let request = JsonRpcRequest()
         XCTAssert(request.objectParameters.count == 3)
-        switch request.buildURLRequest() {
-        case .Success(let urlReq):
-            XCTAssert(urlReq.HTTPBody != nil)
-             let json = try! NSJSONSerialization.JSONObjectWithData(urlReq.HTTPBody!, options: NSJSONReadingOptions.AllowFragments)
+
+        do {
+            let URLRequest = try request.buildURLRequest()
+            XCTAssertNotNil(URLRequest.HTTPBody)
+
+            let json = try! NSJSONSerialization.JSONObjectWithData(URLRequest.HTTPBody!, options: NSJSONReadingOptions.AllowFragments)
             XCTAssert(json.count == 3)
             XCTAssert(json[0]["id"]! == "1")
             XCTAssert(json[1]["id"]! == "2")
+
             let arr = json[2] as! [String]
             XCTAssert(arr[0] == "hello")
             XCTAssert(arr[1] == "yellow")
-        case .Failure:
+        } catch {
             XCTFail()
         }
+
         let expectation = expectationWithDescription("waiting for the response.")
         Session.sendRequest(request) { result in
             expectation.fulfill()
@@ -532,12 +559,15 @@ class RequestTypeTests: XCTestCase {
 
     func testInvalidJsonRequest() {
         let request = InvalidJsonRequest()
-        switch request.buildURLRequest() {
-        case .Success(let urlReq):
-            XCTAssert(urlReq.HTTPBody == nil)
-        case .Failure:
+
+        do {
+            let URLRequest = try request.buildURLRequest()
+            XCTAssertNil(URLRequest.HTTPBody)
+        } catch {
             XCTFail()
+            return
         }
+
         let expectation = expectationWithDescription("waiting for the response.")
         Session.sendRequest(request) { result in
             expectation.fulfill()
