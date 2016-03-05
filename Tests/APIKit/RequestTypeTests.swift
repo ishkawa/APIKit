@@ -28,7 +28,57 @@ class RequestTypeTests: XCTestCase {
             return object as? [String: AnyObject]
         }
     }
-    
+
+    struct JsonRpcRequest: MockSessionRequestType {
+        // MARK: RequestType
+        typealias Response = [String: AnyObject]
+        
+        var method: HTTPMethod {
+            return .POST
+        }
+        
+        var path: String {
+            return "/"
+        }
+
+        var objectParameters: AnyObject {
+            return [
+                ["id": "1"],
+                ["id": "2"],
+                [
+                    "hello", "yellow"
+                ]
+            ]
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+            return object as? [String: AnyObject]
+        }
+    }
+
+    struct InvalidJsonRequest: MockSessionRequestType {
+        // MARK: RequestType
+        typealias Response = [String: AnyObject]
+        
+        var method: HTTPMethod {
+            return .POST
+        }
+        
+        var path: String {
+            return "/"
+        }
+
+        /// - Note: JSON object should contain an array or an object
+        /// - SeeAlso: http://json.org
+        var objectParameters: AnyObject {
+            return "hello"
+        }
+
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
+            return object as? [String: AnyObject]
+        }
+    }
+
     // request type for URL building tests
     struct ParameterizedRequest: RequestType {
         typealias Response = Void
@@ -455,5 +505,43 @@ class RequestTypeTests: XCTestCase {
             ParameterizedRequest(baseURL: "https://example.com///", path: "foo//bar//")?.buildURLRequest().value?.URL,
             NSURL(string: "https://example.com///foo//bar//")
         )
+    }
+
+    func testJsonRpcRequest() {
+        let request = JsonRpcRequest()
+        XCTAssert(request.objectParameters.count == 3)
+        switch request.buildURLRequest() {
+        case .Success(let urlReq):
+            XCTAssert(urlReq.HTTPBody != nil)
+             let json = try! NSJSONSerialization.JSONObjectWithData(urlReq.HTTPBody!, options: NSJSONReadingOptions.AllowFragments)
+            XCTAssert(json.count == 3)
+            XCTAssert(json[0]["id"]! == "1")
+            XCTAssert(json[1]["id"]! == "2")
+            let arr = json[2] as! [String]
+            XCTAssert(arr[0] == "hello")
+            XCTAssert(arr[1] == "yellow")
+        case .Failure:
+            XCTFail()
+        }
+        let expectation = expectationWithDescription("waiting for the response.")
+        Session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+
+    func testInvalidJsonRequest() {
+        let request = InvalidJsonRequest()
+        switch request.buildURLRequest() {
+        case .Success(let urlReq):
+            XCTAssert(urlReq.HTTPBody == nil)
+        case .Failure:
+            XCTFail()
+        }
+        let expectation = expectationWithDescription("waiting for the response.")
+        Session.sendRequest(request) { result in
+            expectation.fulfill()
+        }
+        waitForExpectationsWithTimeout(1.0, handler: nil)
     }
 }

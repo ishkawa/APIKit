@@ -21,6 +21,7 @@ public protocol RequestType {
     /// value for nullable keys, those should be existed in the encoded query or
     /// the request body.
     var parameters: [String: AnyObject] { get }
+    var objectParameters: AnyObject { get }
     
     /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
     /// You can override values for those fields here.
@@ -53,6 +54,10 @@ public protocol RequestType {
 
 /// Default implementation of RequestType protocol
 public extension RequestType {
+    public var objectParameters: AnyObject {
+        return []
+    }
+
     public var parameters: [String: AnyObject] {
         return [:]
     }
@@ -80,7 +85,7 @@ public extension RequestType {
     public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
         return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: ["object":object, "URLResponse": URLResponse])
     }
-    
+
     // Use Result here because `throws` loses type info of an error.
     // This method is not overridable. If you need to add customization, override configureURLRequest.
     public func buildURLRequest() -> Result<NSURLRequest, APIError> {
@@ -97,11 +102,18 @@ public extension RequestType {
             if parameters.count > 0 {
                 components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
             }
-            
+
         default:
             do {
-                URLRequest.HTTPBody = try requestBodyBuilder.buildBodyFromObject(parameters)
-                URLRequest.setValue(requestBodyBuilder.contentTypeHeader, forHTTPHeaderField: "Content-Type")
+                if parameters.count > 0 {
+                    let (contentTypeHeader, body) = try requestBodyBuilder.buildBodyFromObject(parameters)
+                    URLRequest.HTTPBody = body
+                    URLRequest.setValue(contentTypeHeader, forHTTPHeaderField: "Content-Type")
+                } else if let count = objectParameters.count where count > 0 {
+                    let (contentTypeHeader, body) = try requestBodyBuilder.buildBodyFromObject(objectParameters)
+                    URLRequest.HTTPBody = body
+                    URLRequest.setValue(contentTypeHeader, forHTTPHeaderField: "Content-Type")
+                }
             } catch {
                 return .Failure(.RequestBodySerializationError(error))
             }
