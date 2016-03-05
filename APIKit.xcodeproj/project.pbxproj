@@ -308,7 +308,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F123F1C1C9EA30026D415 /* APIKit.xcconfig */;
 			buildSettings = {
-				INFOPLIST_FILE = Sources/Info.plist;
 			};
 			name = Debug;
 		};
@@ -316,7 +315,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F123F1C1C9EA30026D415 /* APIKit.xcconfig */;
 			buildSettings = {
-				INFOPLIST_FILE = Sources/Info.plist;
 			};
 			name = Release;
 		};
@@ -324,7 +322,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12401C1C9EA30026D415 /* Tests.xcconfig */;
 			buildSettings = {
-				INFOPLIST_FILE = Tests/APIKit/Info.plist;
 			};
 			name = Debug;
 		};
@@ -332,7 +329,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12401C1C9EA30026D415 /* Tests.xcconfig */;
 			buildSettings = {
-				INFOPLIST_FILE = Tests/APIKit/Info.plist;
 			};
 			name = Release;
 		};
