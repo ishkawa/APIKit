@@ -18,7 +18,7 @@ public final class MultipartFormDataSerialization {
     }
 
     public final class Parameter {
-        private enum Type {
+        private enum `Type` {
             case DataWithMimeType(data: NSData, mimeType: String)
             case DataWithFileNameMimeType(data: NSData, fileName: String, mimeType: String)
             case FileURLWithFileNameMimeType(fileURL: NSURL, fileName: String, mimeType: String)
