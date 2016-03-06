@@ -28,6 +28,7 @@
 		7F7E8F1B1C8AD4B1008A13A9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F111C8AD4B1008A13A9 /* ResponseBodyParser.swift */; };
 		7F7E8F1C1C8AD4B1008A13A9 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F121C8AD4B1008A13A9 /* Session.swift */; };
 		7F7E8F1D1C8AD4B1008A13A9 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */; };
+		7F8EE4351C8C808200BDBAB1 /* RequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EE4341C8C808200BDBAB1 /* RequestBody.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -72,6 +73,7 @@
 		7F7E8F121C8AD4B1008A13A9 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; };
+		7F8EE4341C8C808200BDBAB1 /* RequestBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBody.swift; sourceTree = "<group>"; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -168,6 +170,7 @@
 				7F7E8F0A1C8AD4B1008A13A9 /* APIError.swift */,
 				7F3734551C8B245D006C5214 /* RequestError.swift */,
 				7F3734561C8B245D006C5214 /* ResponseError.swift */,
+				7F8EE4341C8C808200BDBAB1 /* RequestBody.swift */,
 				7F7E8F0F1C8AD4B1008A13A9 /* RequestBodyBuilder.swift */,
 				7F7E8F111C8AD4B1008A13A9 /* ResponseBodyParser.swift */,
 				7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */,
@@ -298,6 +301,7 @@
 				7F3734581C8B245D006C5214 /* ResponseError.swift in Sources */,
 				7F7E8F141C8AD4B1008A13A9 /* APIError.swift in Sources */,
 				7F3734571C8B245D006C5214 /* RequestError.swift in Sources */,
+				7F8EE4351C8C808200BDBAB1 /* RequestBody.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

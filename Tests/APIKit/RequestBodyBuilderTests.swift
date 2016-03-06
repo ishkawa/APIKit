@@ -9,9 +9,15 @@ class RequestBodyBuilderTests: XCTestCase {
         let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
         do {
-            let (contentTypeHeader, data) = try builder.buildBodyFromObject(object)
+            let requestBody = try builder.buildRequestBodyFromObject(object)
+            XCTAssertEqual(requestBody.contentType, "application/json")
+
+            guard case .Data(let data) = requestBody.entity else {
+                XCTFail()
+                return
+            }
+
             let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [])
-            XCTAssertEqual(contentTypeHeader, "application/json")
             XCTAssertEqual(dictionary["foo"], 1)
             XCTAssertEqual(dictionary["bar"], 2)
             XCTAssertEqual(dictionary["baz"], 3)
@@ -25,7 +31,7 @@ class RequestBodyBuilderTests: XCTestCase {
         let builder = RequestBodyBuilder.JSON(writingOptions: [])
 
         do {
-            try builder.buildBodyFromObject(object)
+            try builder.buildRequestBodyFromObject(object)
             XCTFail()
         } catch {
             let nserror = error as NSError
@@ -36,15 +42,45 @@ class RequestBodyBuilderTests: XCTestCase {
 
     func testURLSuccess() {
         let object = ["foo": 1, "bar": 2, "baz": 3]
-        let builder = RequestBodyBuilder.URL(encoding: NSUTF8StringEncoding)
+        let builder = RequestBodyBuilder.FormURLEncoded(encoding: NSUTF8StringEncoding)
 
         do {
-            let (contentTypeHeader, data) = try builder.buildBodyFromObject(object)
+            let requestBody = try builder.buildRequestBodyFromObject(object)
+            XCTAssertEqual(requestBody.contentType, "application/x-www-form-urlencoded")
+
+            guard case .Data(let data) = requestBody.entity else {
+                XCTFail()
+                return
+            }
+
             let dictionary = try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
-            XCTAssertEqual(contentTypeHeader, "application/x-www-form-urlencoded")
             XCTAssertEqual(dictionary["foo"], "1")
             XCTAssertEqual(dictionary["bar"], "2")
             XCTAssertEqual(dictionary["baz"], "3")
+        } catch {
+            XCTFail()
+        }
+    }
+    
+    func testCustomDataSuccess() {
+        let string = "test"
+
+        let expectedContentType = "custom"
+        let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        let builder = RequestBodyBuilder.Custom { object in
+            return RequestBody(entity: .Data(expectedData), contentType: expectedContentType)
+        }
+
+        do {
+            let requestBody = try builder.buildRequestBodyFromObject(string)
+            XCTAssertEqual(requestBody.contentType, expectedContentType)
+
+            guard case .Data(let data) = requestBody.entity else {
+                XCTFail()
+                return
+            }
+
+            XCTAssertEqual(data, expectedData)
         } catch {
             XCTFail()
         }
@@ -57,18 +93,51 @@ class RequestBodyBuilderTests: XCTestCase {
         let builder = RequestBodyBuilder.MultipartFormData
 
         do {
-            let (contentTypeHeader, data) = try builder.buildBodyFromObject(object)
-            let encodedData = String(data: data, encoding:NSUTF8StringEncoding)!
-            let returnCode = "\r\n"
-            // Boundary changed each time
-            let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
-            let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let match = regexp.matchesInString(contentTypeHeader, options: [], range: NSMakeRange(0, (contentTypeHeader as NSString).length))
-            XCTAssertTrue(match.count > 0)
-            let boundary = (contentTypeHeader as NSString).substringWithRange(match.first!.rangeAtIndex(1))
+            let body = try builder.buildRequestBodyFromObject(object)
 
-            XCTAssertEqual(contentTypeHeader, "multipart/form-data; boundary=\(boundary)")
-            XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
+            switch body.entity {
+            case .InputStream:
+                XCTFail()
+
+            case .Data(let data):
+                let encodedData = String(data: data, encoding:NSUTF8StringEncoding)!
+                let returnCode = "\r\n"
+
+                // Boundary changed each time
+                let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
+                let regexp = try NSRegularExpression(pattern: pattern, options: [])
+                let match = regexp.matchesInString(body.contentType, options: [], range: NSMakeRange(0, (body.contentType as NSString).length))
+                XCTAssertTrue(match.count > 0)
+
+                let boundary = (body.contentType as NSString).substringWithRange(match.first!.rangeAtIndex(1))
+                XCTAssertEqual(body.contentType, "multipart/form-data; boundary=\(boundary)")
+                XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
+            }
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testCustomInputStreamSuccess() {
+        let string = "test"
+
+        let expectedContentType = "custom"
+        let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        let expectedInputStream = NSInputStream(data: expectedData)
+        let builder = RequestBodyBuilder.Custom { object in
+            return RequestBody(entity: .InputStream(expectedInputStream), contentType: expectedContentType)
+        }
+
+        do {
+            let requestBody = try builder.buildRequestBodyFromObject(string)
+            XCTAssertEqual(requestBody.contentType, expectedContentType)
+
+            guard case .InputStream(let inputStream) = requestBody.entity else {
+                XCTFail()
+                return
+            }
+
+            XCTAssertEqual(inputStream, expectedInputStream)
         } catch {
             XCTFail()
         }
@@ -77,28 +146,35 @@ class RequestBodyBuilderTests: XCTestCase {
     func testCustomSuccess() {
         let string = "foo"
         let expectedData = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "foo") { object in
-            expectedData
+        let builder = RequestBodyBuilder.Custom { object in
+            return RequestBody(entity: .Data(expectedData), contentType: "foo")
         }
 
         do {
-            let (contentTypeHeader, data) = try builder.buildBodyFromObject(string)
-            XCTAssertEqual(contentTypeHeader, "foo")
-            XCTAssertEqual(data, expectedData)
+            let body = try builder.buildRequestBodyFromObject(string)
+
+            switch body.entity {
+            case .Data(let data):
+                XCTAssertEqual(body.contentType, "foo")
+                XCTAssertEqual(data, expectedData)
+
+            case .InputStream:
+                XCTFail()
+            }
         } catch {
             XCTFail()
         }
     }
 
     func testCustomFailure() {
-        let string = "foo"
-        let expectedError = NSError(domain: "Foo", code: 1234, userInfo: nil)
-        let builder = RequestBodyBuilder.Custom(contentTypeHeader: "") { object in
+        let string = "test"
+        let expectedError = NSError(domain: "Test", code: 1234, userInfo: nil)
+        let builder = RequestBodyBuilder.Custom { object in
             throw expectedError
         }
 
         do {
-            try builder.buildBodyFromObject(string)
+            try builder.buildRequestBodyFromObject(string)
             XCTFail()
         } catch {
             XCTAssertEqual((error as NSError), expectedError)
