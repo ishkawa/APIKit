@@ -20,8 +20,8 @@ public class Session {
 
     // Shared session for static methods
     public static var sharedSession: Session = {
-        let URLSession = NSURLSession.sharedSession()
-        let adapter = NSURLSessionAdapter(URLSession: URLSession)
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let adapter = NSURLSessionAdapter(configuration: configuration)
         return Session(adapter: adapter)
     }()
 
