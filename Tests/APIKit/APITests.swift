@@ -24,8 +24,11 @@ class MockSession: Session {
             return "/"
         }
 
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-            return object as? [String: AnyObject]
+        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+            guard let response = object as? [String: AnyObject] else {
+                throw MockError()
+            }
+            return response
         }
     }
 }
@@ -102,40 +105,6 @@ class APITests: XCTestCase {
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
 
-    func testFailureOfResponseStatusCode() {
-        OHHTTPStubs.stubRequestsPassingTest({ request in
-            return true
-        }, withStubResponse: { request in
-            let dictionary: [String: String] = [:]
-            let data = try! NSJSONSerialization.dataWithJSONObject(dictionary, options: [])
-            return OHHTTPStubsResponse(data: data, statusCode: 400, headers: nil)
-        })
-        
-        let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
-        
-        MockSession.sendRequest(request) { response in
-            switch response {
-            case .Success:
-                XCTFail()
-                
-            case .Failure(let error):
-                switch error {
-                case .UnacceptableStatusCode(let statusCode, let error as NSError):
-                    XCTAssertEqual(statusCode, 400)
-                    XCTAssertEqual(error.domain, "APIKitErrorDomain")
-                    XCTAssertNotNil(error.userInfo)
-                default:
-                    XCTFail()
-                }
-            }
-            
-            expectation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(1.0, handler: nil)
-    }
-    
     func testFailureOfDecodingResponseBody() {
         let data = "{\"broken\": \"json}".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
         
@@ -155,7 +124,7 @@ class APITests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .ResponseBodyDeserializationError(let error as NSError):
+                case .ResponseError(let error as NSError):
                     XCTAssertEqual(error.domain, NSCocoaErrorDomain)
                     XCTAssertEqual(error.code, 3840)
 
@@ -204,6 +173,37 @@ class APITests: XCTestCase {
         }
         
         MockSession.cancelRequest(MockSession.GetRoot.self)
+        
+        waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+
+    func testFailureCausedByUnacceptableStatusCode() {
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            return OHHTTPStubsResponse(data: NSData(), statusCode: 400, headers: nil)
+        })
+        
+        let expectation = expectationWithDescription("wait for response")
+        let request = MockSession.GetRoot()
+        
+        MockSession.sendRequest(request) { response in
+            switch response {
+            case .Success:
+                XCTFail()
+                
+            case .Failure(let error):
+                switch error {
+                case .ResponseError(let error):
+                    XCTAssert(error is ResponseError)
+
+                default:
+                    XCTFail()
+                }
+            }
+            
+            expectation.fulfill()
+        }
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }

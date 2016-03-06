@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "1.1.3"
+  s.version  = "1.2.0"
   s.summary  = "A networking library for building type safe web API client in Swift."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
     s.tvos.deployment_target = "9.0"
   end
 
-  s.source_files = "APIKit/*.swift"
+  s.source_files = "Sources/*.swift"
   s.source = {
       :git => "https://github.com/ishkawa/APIKit.git",
       :tag => "#{s.version}",

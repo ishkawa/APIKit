@@ -4,6 +4,7 @@ import Result
 public enum RequestBodyBuilder {
     case JSON(writingOptions: NSJSONWritingOptions)
     case FormURLEncoded(encoding: NSStringEncoding)
+    case MultipartFormData
     case Custom(builder: AnyObject throws -> RequestBody)
 
     /// - Throws: NSError, URLEncodedSerialization.Error, ErrorType
@@ -21,6 +22,10 @@ public enum RequestBodyBuilder {
         case .FormURLEncoded(let encoding):
             let data = try URLEncodedSerialization.dataFromObject(object, encoding: encoding)
             return RequestBody(entity: .Data(data), contentType: "application/x-www-form-urlencoded")
+
+        case .MultipartFormData:
+            let (boundary, body) = try MultipartFormDataSerialization.dataFromObject(object)
+            return RequestBody(entity: .Data(body), contentType: "multipart/form-data; boundary=\(boundary)")
 
         case .Custom(let builder):
             return try builder(object)
