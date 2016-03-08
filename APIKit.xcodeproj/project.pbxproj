@@ -30,6 +30,7 @@
 		7F7E8F1D1C8AD4B1008A13A9 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */; };
 		7F8EE4311C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EE4301C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift */; };
 		7F8EE4331C8C1A4900BDBAB1 /* SessionAdapterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EE4321C8C1A4900BDBAB1 /* SessionAdapterType.swift */; };
+		7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC40331C8F2C900098C4B2 /* Box.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,6 +77,7 @@
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; };
 		7F8EE4301C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLSessionAdapter.swift; sourceTree = "<group>"; };
 		7F8EE4321C8C1A4900BDBAB1 /* SessionAdapterType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionAdapterType.swift; sourceTree = "<group>"; };
+		7FAC40331C8F2C900098C4B2 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -178,6 +180,7 @@
 				7F7E8F111C8AD4B1008A13A9 /* ResponseBodyParser.swift */,
 				7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */,
 				7F7E8F0E1C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift */,
+				7FAC40331C8F2C900098C4B2 /* Box.swift */,
 				7F7E8F1E1C8AD4E6008A13A9 /* Supporting Files */,
 			);
 			path = Sources;
@@ -300,6 +303,7 @@
 				7F7E8F181C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift in Sources */,
 				7F7E8F1D1C8AD4B1008A13A9 /* URLEncodedSerialization.swift in Sources */,
 				7F7E8F191C8AD4B1008A13A9 /* RequestBodyBuilder.swift in Sources */,
+				7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */,
 				7F8EE4331C8C1A4900BDBAB1 /* SessionAdapterType.swift in Sources */,
 				7F8EE4311C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift in Sources */,
 				7F7E8F161C8AD4B1008A13A9 /* HTTPMethod.swift in Sources */,

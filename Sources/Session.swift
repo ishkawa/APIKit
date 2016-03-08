@@ -3,14 +3,6 @@ import Result
 
 private var taskRequestKey = 0
 
-private final class Box<T> {
-    let value: T
-
-    init(_ value: T) {
-        self.value = value
-    }
-}
-
 public class Session {
     public let adapter: SessionAdapterType
 

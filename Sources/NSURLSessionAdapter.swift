@@ -7,14 +7,6 @@ extension NSURLSessionTask: SessionTaskType {
 private var dataTaskResponseBufferKey = 0
 private var taskAssociatedObjectCompletionHandlerKey = 0
 
-private final class Box<T> {
-    let value: T
-
-    init(_ value: T) {
-        self.value = value
-    }
-}
-
 public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDelegate {
     public var URLSession: NSURLSession!
     
