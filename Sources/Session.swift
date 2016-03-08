@@ -33,7 +33,7 @@ public class Session {
         sharedSession.cancelRequest(requestType, passingTest: test)
     }
 
-    func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> SessionTaskType? {
+    public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> SessionTaskType? {
         let URLRequest: NSURLRequest
         do {
             URLRequest = try request.buildURLRequest()
@@ -72,7 +72,7 @@ public class Session {
         return task
     }
 
-    func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+    public func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         adapter.getTasksWithHandler { [weak self] tasks in
             tasks
                 .filter { task in
