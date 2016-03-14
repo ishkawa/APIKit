@@ -7,5 +7,6 @@ public enum RequestBodyEntity {
 
 public protocol BodyParametersType {
     var contentType: String { get }
-    var entity: RequestBodyEntity { get }
+
+    func buildEntity() throws -> RequestBodyEntity
 }
