@@ -19,18 +19,18 @@
 		7F18BD0F1C972C38003A31DF /* BodyParametersType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */; };
 		7F18BD111C972C69003A31DF /* JSONBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */; };
 		7F18BD131C972E5A003A31DF /* FormURLEncodedBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */; };
+		7F18BD191C9730ED003A31DF /* MultipartFormDataSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD171C9730ED003A31DF /* MultipartFormDataSerialization.swift */; };
+		7F18BD1A1C9730ED003A31DF /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD181C9730ED003A31DF /* URLEncodedSerialization.swift */; };
 		7F3734571C8B245D006C5214 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3734551C8B245D006C5214 /* RequestError.swift */; };
 		7F3734581C8B245D006C5214 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3734561C8B245D006C5214 /* ResponseError.swift */; };
 		7F37345A1C8B2467006C5214 /* MockError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3734591C8B2467006C5214 /* MockError.swift */; };
 		7F7E8F141C8AD4B1008A13A9 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F0A1C8AD4B1008A13A9 /* APIError.swift */; };
 		7F7E8F151C8AD4B1008A13A9 /* APIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F7E8F0B1C8AD4B1008A13A9 /* APIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F7E8F161C8AD4B1008A13A9 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F0C1C8AD4B1008A13A9 /* HTTPMethod.swift */; };
-		7F7E8F181C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F0E1C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift */; };
 		7F7E8F191C8AD4B1008A13A9 /* RequestBodyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F0F1C8AD4B1008A13A9 /* RequestBodyBuilder.swift */; };
 		7F7E8F1A1C8AD4B1008A13A9 /* RequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F101C8AD4B1008A13A9 /* RequestType.swift */; };
 		7F7E8F1B1C8AD4B1008A13A9 /* ResponseBodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F111C8AD4B1008A13A9 /* ResponseBodyParser.swift */; };
 		7F7E8F1C1C8AD4B1008A13A9 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F121C8AD4B1008A13A9 /* Session.swift */; };
-		7F7E8F1D1C8AD4B1008A13A9 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */; };
 		7F8EE4311C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EE4301C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift */; };
 		7F8EE4331C8C1A4900BDBAB1 /* SessionAdapterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EE4321C8C1A4900BDBAB1 /* SessionAdapterType.swift */; };
 		7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC40331C8F2C900098C4B2 /* Box.swift */; };
@@ -67,6 +67,8 @@
 		7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParametersType.swift; sourceTree = "<group>"; };
 		7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONBodyParameters.swift; sourceTree = "<group>"; };
 		7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormURLEncodedBodyParameters.swift; sourceTree = "<group>"; };
+		7F18BD171C9730ED003A31DF /* MultipartFormDataSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartFormDataSerialization.swift; sourceTree = "<group>"; };
+		7F18BD181C9730ED003A31DF /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F3734551C8B245D006C5214 /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		7F3734561C8B245D006C5214 /* ResponseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
 		7F3734591C8B2467006C5214 /* MockError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockError.swift; sourceTree = "<group>"; };
@@ -74,12 +76,10 @@
 		7F7E8F0B1C8AD4B1008A13A9 /* APIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIKit.h; sourceTree = "<group>"; };
 		7F7E8F0C1C8AD4B1008A13A9 /* HTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		7F7E8F0D1C8AD4B1008A13A9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7F7E8F0E1C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartFormDataSerialization.swift; sourceTree = "<group>"; };
 		7F7E8F0F1C8AD4B1008A13A9 /* RequestBodyBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBodyBuilder.swift; sourceTree = "<group>"; };
 		7F7E8F101C8AD4B1008A13A9 /* RequestType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestType.swift; sourceTree = "<group>"; };
 		7F7E8F111C8AD4B1008A13A9 /* ResponseBodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseBodyParser.swift; sourceTree = "<group>"; };
 		7F7E8F121C8AD4B1008A13A9 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; };
 		7F8EE4301C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLSessionAdapter.swift; sourceTree = "<group>"; };
 		7F8EE4321C8C1A4900BDBAB1 /* SessionAdapterType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionAdapterType.swift; sourceTree = "<group>"; };
@@ -161,6 +161,15 @@
 			path = BodyParametersType;
 			sourceTree = "<group>";
 		};
+		7F18BD161C9730ED003A31DF /* Serializations */ = {
+			isa = PBXGroup;
+			children = (
+				7F18BD171C9730ED003A31DF /* MultipartFormDataSerialization.swift */,
+				7F18BD181C9730ED003A31DF /* URLEncodedSerialization.swift */,
+			);
+			path = Serializations;
+			sourceTree = "<group>";
+		};
 		7F45FCD31A94D02C006863BB = {
 			isa = PBXGroup;
 			children = (
@@ -194,10 +203,9 @@
 				7F3734561C8B245D006C5214 /* ResponseError.swift */,
 				7F7E8F0F1C8AD4B1008A13A9 /* RequestBodyBuilder.swift */,
 				7F7E8F111C8AD4B1008A13A9 /* ResponseBodyParser.swift */,
-				7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */,
-				7F7E8F0E1C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift */,
 				7FAC40331C8F2C900098C4B2 /* Box.swift */,
 				7F18BD0D1C972C38003A31DF /* BodyParametersType */,
+				7F18BD161C9730ED003A31DF /* Serializations */,
 				7F7E8F1E1C8AD4E6008A13A9 /* Supporting Files */,
 			);
 			path = Sources;
@@ -316,9 +324,8 @@
 			files = (
 				7F7E8F1A1C8AD4B1008A13A9 /* RequestType.swift in Sources */,
 				7F7E8F1B1C8AD4B1008A13A9 /* ResponseBodyParser.swift in Sources */,
+				7F18BD191C9730ED003A31DF /* MultipartFormDataSerialization.swift in Sources */,
 				7F7E8F1C1C8AD4B1008A13A9 /* Session.swift in Sources */,
-				7F7E8F181C8AD4B1008A13A9 /* MultipartFormDataSerialization.swift in Sources */,
-				7F7E8F1D1C8AD4B1008A13A9 /* URLEncodedSerialization.swift in Sources */,
 				7F18BD0F1C972C38003A31DF /* BodyParametersType.swift in Sources */,
 				7F7E8F191C8AD4B1008A13A9 /* RequestBodyBuilder.swift in Sources */,
 				7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */,
@@ -326,6 +333,7 @@
 				7F18BD111C972C69003A31DF /* JSONBodyParameters.swift in Sources */,
 				7F8EE4331C8C1A4900BDBAB1 /* SessionAdapterType.swift in Sources */,
 				7F8EE4311C8C19EF00BDBAB1 /* NSURLSessionAdapter.swift in Sources */,
+				7F18BD1A1C9730ED003A31DF /* URLEncodedSerialization.swift in Sources */,
 				7F7E8F161C8AD4B1008A13A9 /* HTTPMethod.swift in Sources */,
 				7F3734581C8B245D006C5214 /* ResponseError.swift in Sources */,
 				7F7E8F141C8AD4B1008A13A9 /* APIError.swift in Sources */,
