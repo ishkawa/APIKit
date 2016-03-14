@@ -17,7 +17,7 @@ class RequestTypeTests: XCTestCase {
             return "/"
         }
         
-        var parameters: [String: AnyObject] {
+        var parameters: AnyObject? {
             return [
                 "q": query,
                 "dummy": NSNull()
@@ -44,7 +44,7 @@ class RequestTypeTests: XCTestCase {
             return "/"
         }
 
-        var objectParameters: AnyObject {
+        var parameters: AnyObject? {
             return [
                 ["id": "1"],
                 ["id": "2"],
@@ -94,7 +94,7 @@ class RequestTypeTests: XCTestCase {
     struct ParameterizedRequest: RequestType {
         typealias Response = Void
         
-        init?(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: [String: AnyObject] = [:], HTTPHeaderFields: [String: String] = [:]) {
+        init?(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], HTTPHeaderFields: [String: String] = [:]) {
             guard let baseURL = NSURL(string: baseURL) else {
                 return nil
             }
@@ -109,7 +109,7 @@ class RequestTypeTests: XCTestCase {
         let baseURL: NSURL
         let method: HTTPMethod
         let path: String
-        let parameters: [String: AnyObject]
+        let parameters: AnyObject?
         let HTTPHeaderFields: [String: String]
         
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
@@ -452,7 +452,7 @@ class RequestTypeTests: XCTestCase {
             URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "/foo/bar/", parameters: ["p": 1])),
             NSURL(string: "https://example.com/api//foo/bar/?p=1")
         )
-        
+
         XCTAssertEqual(
             URLOfRequest(ParameterizedRequest(baseURL: "https://example.com/api/", path: "foo//bar//")),
             NSURL(string: "https://example.com/api/foo//bar//")
@@ -532,7 +532,7 @@ class RequestTypeTests: XCTestCase {
 
     func testJsonRpcRequest() {
         let request = JsonRpcRequest()
-        XCTAssert(request.objectParameters.count == 3)
+        XCTAssert(request.parameters.map { $0.count } == 3)
 
         do {
             let URLRequest = try request.buildURLRequest()
