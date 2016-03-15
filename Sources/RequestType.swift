@@ -38,15 +38,14 @@ public protocol RequestType {
     /// An object that parses body of HTTP response.
     var responseBodyParser: ResponseBodyParser { get }
 
-    /// Validate `AnyObject` instance, which is a result of response body parse, using `AnyObject`
-    /// instance itself and `NSHTTPURLResponse`. If an error is thrown in this method, the result
-    /// of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
+    /// Intercept response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
+    /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
     ///
     /// - Throws: ErrorType
-    func validateObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
+    func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
 
     /// Build `Response` instance from raw response object. This method is called after
-    /// `validateObject(:URLResponse:)` if it does not throw any error.
+    /// `interceptObject(:URLResponse:)` if it does not throw any error.
     ///
     /// - Throws: ErrorType
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
@@ -78,7 +77,7 @@ public extension RequestType {
         return URLRequest
     }
 
-    func validateObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
+    func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
         guard (200..<300).contains(URLResponse.statusCode) else {
             throw ResponseError.UnacceptableStatusCode(URLResponse.statusCode)
         }
@@ -127,7 +126,7 @@ public extension RequestType {
 
     public func parseData(data: NSData, URLResponse: NSHTTPURLResponse) throws -> Response {
         let parsedObject = try responseBodyParser.parseData(data)
-        let validatedObject = try validateObject(parsedObject, URLResponse: URLResponse)
-        return try responseFromObject(validatedObject, URLResponse: URLResponse)
+        let passedObject = try interceptObject(parsedObject, URLResponse: URLResponse)
+        return try responseFromObject(passedObject, URLResponse: URLResponse)
     }
 }
