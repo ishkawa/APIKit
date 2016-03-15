@@ -32,9 +32,6 @@ public protocol RequestType {
     /// - Throws: ErrorType
     func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
-    /// An object that builds body of HTTP request.
-    var requestBodyBuilder: RequestBodyBuilder { get }
-
     /// An object that parses body of HTTP response.
     var responseBodyParser: ResponseBodyParser { get }
 
@@ -89,10 +86,6 @@ public extension RequestType {
         return [:]
     }
     
-    public var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: [])
-    }
-
     public var responseBodyParser: ResponseBodyParser {
         return .JSON(readingOptions: [])
     }
