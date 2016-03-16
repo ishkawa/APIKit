@@ -6,7 +6,7 @@ import Foundation
     import CoreServices
 #endif
 
-public final class MultipartFormDataSerialization {
+public struct MultipartFormDataBodyParameters: BodyParametersType {
     public enum Error: ErrorType {
         case CannotCastObjectToSupportedType(AnyObject)
         case UnsupportedType(String, AnyObject)
@@ -16,94 +16,101 @@ public final class MultipartFormDataSerialization {
         case InputStreamReadFailed(String)
         case OutputStreamWriteFailed(String)
     }
+    
+    public enum Part {
+        case Data(name: String, data: NSData)
+        case DataWithMimeType(name: String, data: NSData, mimeType: String)
+        case DataWithFileNameMimeType(name: String, data: NSData, fileName: String, mimeType: String)
 
-    public final class Parameter {
-        private enum `Type` {
-            case DataWithMimeType(data: NSData, mimeType: String)
-            case DataWithFileNameMimeType(data: NSData, fileName: String, mimeType: String)
-            case FileURLWithFileNameMimeType(fileURL: NSURL, fileName: String, mimeType: String)
+        case FileURL(name: String, fileURL: NSURL)
+        case FileURLWithFileNameMimeType(name: String, fileURL: NSURL, fileName: String, mimeType: String)
+
+        case NumberValue(name: String, number: NSNumber)
+        case StringValue(name: String, string: String)
+
+        public init(data: NSData, name: String) {
+            self = .Data(name: name, data: data)
         }
 
-        private let type: Type
-
-        public init(data: NSData, mimeType: String) {
-            type = .DataWithMimeType(data: data, mimeType: mimeType)
+        public init(name: String, data: NSData, mimeType: String) {
+            self = .DataWithMimeType(name: name, data: data, mimeType: mimeType)
         }
 
-        public init(data: NSData, fileName: String, mimeType: String) {
-            type = .DataWithFileNameMimeType(data: data, fileName: fileName, mimeType: mimeType)
+        public init(name: String, data: NSData, fileName: String, mimeType: String) {
+            self = .DataWithFileNameMimeType(name: name, data: data, fileName: fileName, mimeType: mimeType)
         }
 
-        public init(fileURL: NSURL, fileName: String, mimeType: String) {
-            type = .FileURLWithFileNameMimeType(fileURL: fileURL, fileName: fileName, mimeType: mimeType)
+        public init(name: String, fileURL: NSURL) {
+            self = .FileURL(name: name, fileURL: fileURL)
+        }
+
+        public init(name: String, fileURL: NSURL, fileName: String, mimeType: String) {
+            self = .FileURLWithFileNameMimeType(name: name, fileURL: fileURL, fileName: fileName, mimeType: mimeType)
+        }
+
+        public init(name: String, number: NSNumber) throws {
+            self = .NumberValue(name: name, number: number)
+        }
+
+        public init(name: String, string: String) throws {
+            self = .StringValue(name: name, string: string)
         }
     }
 
-    public static func dataFromObject(object: AnyObject) throws -> (boundary: String, body: NSData) {
-        switch object {
-        case let array as [(String, AnyObject)]:
-            return try dataFromArray(array)
+    public let parts: [Part]
+    private let encoder = MultipartFormData()
 
-        case let dictionary as [String : AnyObject] :
-            let array = dictionary.map { key, val in (key, val) }
-            return try dataFromArray(array)
-
-        default:
-            throw Error.CannotCastObjectToSupportedType(object)
-        }
+    public init(parts: [Part]) {
+        self.parts = parts
     }
 
-    private static func dataFromArray(array: [(String, AnyObject)]) throws -> (boundary: String, body: NSData) {
-        let encoder = MultipartFormData()
+    // MARK: BodyParametersType
+    public var contentType: String {
+        return "multipart/form-data; boundary=\(encoder.boundary)"
+    }
 
-        for (key, val) in array {
-            switch val {
-            case let parameter as Parameter:
-                switch parameter.type {
-                case .DataWithMimeType(let data, let mimeType):
-                    encoder.appendBodyPart(data: data, name: key, mimeType: mimeType)
+    public func buildEntity() throws -> RequestBodyEntity {
+        for part in parts {
+            switch part {
+            case .Data(let name, let data):
+                encoder.appendBodyPart(data: data, name: name)
 
-                case .DataWithFileNameMimeType(let data, let fileName, let mimeType):
-                    encoder.appendBodyPart(data: data, name: key, fileName: fileName, mimeType: mimeType)
+            case .DataWithMimeType(let name, let data, let mimeType):
+                encoder.appendBodyPart(data: data, name: name, mimeType: mimeType)
 
-                case .FileURLWithFileNameMimeType(let fileURL, let fileName, let mimeType):
-                    encoder.appendBodyPart(fileURL: fileURL, name: key, fileName: fileName, mimeType: mimeType)
-                }
+            case .DataWithFileNameMimeType(let name, let data, let fileName, let mimeType):
+                encoder.appendBodyPart(data: data, name: name, fileName: fileName, mimeType: mimeType)
 
-            case let data as NSData:
-                encoder.appendBodyPart(data: data, name: key)
+            case .FileURL(let name, let fileURL):
+                encoder.appendBodyPart(fileURL: fileURL, name: name)
 
-            case let fileURL as NSURL where fileURL.fileURL:
-                encoder.appendBodyPart(fileURL: fileURL, name: key)
+            case .FileURLWithFileNameMimeType(let name, let fileURL, let fileName, let mimeType):
+                encoder.appendBodyPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
 
             // avoid cast problem e.g. "Bool -> AnyObject -> Int"
-            case let bool as NSNumber where bool.isKindOfClass(objc_getClass("__NSCFBoolean") as! AnyClass):
-                guard let data = "\(bool.boolValue)".dataUsingEncoding(NSUTF8StringEncoding) else {
-                    throw Error.UnsupportedType(key, val)
+            case .NumberValue(let name, let number) where number.isKindOfClass(objc_getClass("__NSCFBoolean") as! AnyClass):
+                guard let data = "\(number.boolValue)".dataUsingEncoding(NSUTF8StringEncoding) else {
+                    throw Error.UnsupportedType(name, number)
                 }
-                encoder.appendBodyPart(data: data, name: key)
+                encoder.appendBodyPart(data: data, name: name)
 
-            case let number as NSNumber:
+            case .NumberValue(let name, let number):
                 guard let data = "\(number)".dataUsingEncoding(NSUTF8StringEncoding) else {
-                    throw Error.UnsupportedType(key, val)
+                    throw Error.UnsupportedType(name, number)
                 }
-                encoder.appendBodyPart(data: data, name: key)
+                encoder.appendBodyPart(data: data, name: name)
 
-            case let string as String:
+            case .StringValue(let name, let string):
                 guard let data = string.dataUsingEncoding(NSUTF8StringEncoding) else {
-                    throw Error.UnsupportedType(key, val)
+                    throw Error.UnsupportedType(name, string)
                 }
-                encoder.appendBodyPart(data: data, name: key)
-
-            default:
-                throw Error.UnsupportedType(key, val)
+                encoder.appendBodyPart(data: data, name: name)
             }
         }
 
-        return (encoder.boundary, try encoder.encode())
+        return .Data(try encoder.encode())
     }
 }
-
 
 /**
   Copied from [Alamofire](https://github.com/Alamofire/Alamofire).
@@ -281,7 +288,7 @@ private final class MultipartFormData {
             appendBodyPart(fileURL: fileURL, name: name, fileName: fileName, mimeType: mimeType)
         } else {
             let failureReason = "Failed to extract the fileName of the provided URL: \(fileURL)"
-            setBodyPartError(MultipartFormDataSerialization.Error.NSURLErrorBadURL(failureReason))
+            setBodyPartError(MultipartFormDataBodyParameters.Error.NSURLErrorBadURL(failureReason))
         }
     }
 
@@ -306,7 +313,7 @@ private final class MultipartFormData {
 
         guard fileURL.fileURL else {
             let failureReason = "The file URL does not point to a file URL: \(fileURL)"
-            let error = MultipartFormDataSerialization.Error.NSURLErrorBadURL(failureReason)
+            let error = MultipartFormDataBodyParameters.Error.NSURLErrorBadURL(failureReason)
             setBodyPartError(error)
             return
         }
@@ -322,7 +329,7 @@ private final class MultipartFormData {
         }
 
         guard isReachable else {
-            let error = MultipartFormDataSerialization.Error.NSURLErrorBadURL("The file URL is not reachable: \(fileURL)")
+            let error = MultipartFormDataBodyParameters.Error.NSURLErrorBadURL("The file URL is not reachable: \(fileURL)")
             setBodyPartError(error)
             return
         }
@@ -338,7 +345,7 @@ private final class MultipartFormData {
             where NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory) && !isDirectory else
         {
             let failureReason = "The file URL is a directory, not a file: \(fileURL)"
-            let error = MultipartFormDataSerialization.Error.NSURLErrorBadURL(failureReason)
+            let error = MultipartFormDataBodyParameters.Error.NSURLErrorBadURL(failureReason)
             setBodyPartError(error)
             return
         }
@@ -362,7 +369,7 @@ private final class MultipartFormData {
 
         guard let length = bodyContentLength else {
             let failureReason = "Could not fetch attributes from the file URL: \(fileURL)"
-            let error = MultipartFormDataSerialization.Error.NSURLErrorBadURL(failureReason)
+            let error = MultipartFormDataBodyParameters.Error.NSURLErrorBadURL(failureReason)
             setBodyPartError(error)
             return
         }
@@ -373,7 +380,7 @@ private final class MultipartFormData {
 
         guard let stream = NSInputStream(URL: fileURL) else {
             let failureReason = "Failed to create an input stream from the file URL: \(fileURL)"
-            let error = MultipartFormDataSerialization.Error.NSURLErrorCannotOpenFile(failureReason)
+            let error = MultipartFormDataBodyParameters.Error.NSURLErrorCannotOpenFile(failureReason)
             setBodyPartError(error)
             return
         }
@@ -462,10 +469,10 @@ private final class MultipartFormData {
 
         if let path = fileURL.path where NSFileManager.defaultManager().fileExistsAtPath(path) {
             let failureReason = "A file already exists at the given file URL: \(fileURL)"
-            throw MultipartFormDataSerialization.Error.NSURLErrorBadURL(failureReason)
+            throw MultipartFormDataBodyParameters.Error.NSURLErrorBadURL(failureReason)
         } else if !fileURL.fileURL {
             let failureReason = "The URL does not point to a valid file: \(fileURL)"
-            throw MultipartFormDataSerialization.Error.NSURLErrorBadURL(failureReason)
+            throw MultipartFormDataBodyParameters.Error.NSURLErrorBadURL(failureReason)
         }
 
         let outputStream: NSOutputStream
@@ -474,7 +481,7 @@ private final class MultipartFormData {
             outputStream = possibleOutputStream
         } else {
             let failureReason = "Failed to create an output stream with the given URL: \(fileURL)"
-            throw MultipartFormDataSerialization.Error.NSURLErrorCannotOpenFile(failureReason)
+            throw MultipartFormDataBodyParameters.Error.NSURLErrorCannotOpenFile(failureReason)
         }
 
         outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
@@ -544,7 +551,7 @@ private final class MultipartFormData {
                 encoded.appendBytes(buffer, length: bytesRead)
             } else if bytesRead < 0 {
                 let failureReason = "Failed to read from input stream: \(inputStream)"
-                error = MultipartFormDataSerialization.Error.InputStreamReadFailed(failureReason)
+                error = MultipartFormDataBodyParameters.Error.InputStreamReadFailed(failureReason)
                 break
             } else {
                 break
@@ -605,7 +612,7 @@ private final class MultipartFormData {
                 try writeBuffer(&buffer, toOutputStream: outputStream)
             } else if bytesRead < 0 {
                 let failureReason = "Failed to read from input stream: \(inputStream)"
-                throw MultipartFormDataSerialization.Error.InputStreamReadFailed(failureReason)
+                throw MultipartFormDataBodyParameters.Error.InputStreamReadFailed(failureReason)
             } else {
                 break
             }
@@ -647,7 +654,7 @@ private final class MultipartFormData {
 
                 if bytesWritten < 0 {
                     let failureReason = "Failed to write to output stream: \(outputStream)"
-                    throw MultipartFormDataSerialization.Error.OutputStreamWriteFailed(failureReason)
+                    throw MultipartFormDataBodyParameters.Error.OutputStreamWriteFailed(failureReason)
                 }
 
                 bytesToWrite -= bytesWritten

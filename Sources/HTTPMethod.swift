@@ -10,4 +10,14 @@ public enum HTTPMethod: String {
     case TRACE
     case OPTIONS
     case CONNECT
+
+    var prefersQueryParameters: Bool {
+        switch self {
+        case .GET, .HEAD, .DELETE:
+            return true
+
+        default:
+            return false
+        }
+    }
 }

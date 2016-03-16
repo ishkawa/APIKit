@@ -17,11 +17,11 @@ public protocol RequestType {
     var method: HTTPMethod { get }
     var path: String { get }
 
-    /// A parameter dictionary for the request. You can pass `NSNull()` as a
-    /// value for nullable keys, those should be existed in the encoded query or
-    /// the request body.
-    var parameters: [String: AnyObject] { get }
-    var objectParameters: AnyObject { get }
+    /// Convenience property for queryParameters and bodyParameters.
+    var parameters: AnyObject? { get }
+
+    var queryParameters: [NSURLQueryItem]? { get }
+    var bodyParameters: BodyParametersType? { get }
     
     /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
     /// You can override values for those fields here.
@@ -31,9 +31,6 @@ public protocol RequestType {
     ///
     /// - Throws: ErrorType
     func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
-
-    /// An object that builds body of HTTP request.
-    var requestBodyBuilder: RequestBodyBuilder { get }
 
     /// An object that parses body of HTTP response.
     var responseBodyParser: ResponseBodyParser { get }
@@ -53,22 +50,41 @@ public protocol RequestType {
 
 /// Default implementation of RequestType protocol
 public extension RequestType {
-    public var objectParameters: AnyObject {
-        return []
+    public var parameters: AnyObject? {
+        return nil
     }
 
-    public var parameters: [String: AnyObject] {
-        return [:]
+    public var queryParameters: [NSURLQueryItem]? {
+        guard let parameters = parameters as? [String: AnyObject] where method.prefersQueryParameters else {
+            return nil
+        }
+
+        return parameters.map { key, value in
+            let string: String?
+
+            if value is NSNull {
+                string = nil
+            } else {
+                string = value as? String ?? "\(value)"
+            }
+
+            return NSURLQueryItem(name: key, value: string)
+        }
     }
+
+    public var bodyParameters: BodyParametersType? {
+        guard let parameters = parameters where !method.prefersQueryParameters else {
+            return nil
+        }
+
+        return JSONBodyParameters(JSONObject: parameters)
+    }
+
 
     public var HTTPHeaderFields: [String: String] {
         return [:]
     }
     
-    public var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: [])
-    }
-
     public var responseBodyParser: ResponseBodyParser {
         return .JSON(readingOptions: [])
     }
@@ -91,23 +107,20 @@ public extension RequestType {
         }
 
         let URLRequest = NSMutableURLRequest()
-        let parameters = self.parameters
 
-        switch method {
-        case .GET, .HEAD, .DELETE:
-            if parameters.count > 0 {
-                components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
-            }
+        if let queryParameters = queryParameters where !queryParameters.isEmpty {
+            components.queryItems = queryParameters
+        }
 
-        default:
-            if parameters.count > 0 {
-                let (contentTypeHeader, body) = try requestBodyBuilder.buildBodyFromObject(parameters)
-                URLRequest.HTTPBody = body
-                URLRequest.setValue(contentTypeHeader, forHTTPHeaderField: "Content-Type")
-            } else if let count = objectParameters.count where count > 0 {
-                let (contentTypeHeader, body) = try requestBodyBuilder.buildBodyFromObject(objectParameters)
-                URLRequest.HTTPBody = body
-                URLRequest.setValue(contentTypeHeader, forHTTPHeaderField: "Content-Type")
+        if let bodyParameters = bodyParameters {
+            URLRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
+
+            switch try bodyParameters.buildEntity() {
+            case .Data(let data):
+                URLRequest.HTTPBody = data
+
+            case .InputStream(let inputStream):
+                URLRequest.HTTPBodyStream = inputStream
             }
         }
 
