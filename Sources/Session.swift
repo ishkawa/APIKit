@@ -17,7 +17,7 @@ public class Session {
         return Session(adapter: adapter)
     }()
 
-    public static func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> SessionTaskType? {
+    public static func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         return sharedSession.sendRequest(request, handler: handler)
     }
     
@@ -25,7 +25,7 @@ public class Session {
         sharedSession.cancelRequest(requestType, passingTest: test)
     }
 
-    public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> SessionTaskType? {
+    public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         let URLRequest: NSURLRequest
         do {
             URLRequest = try request.buildURLRequest()
@@ -37,7 +37,7 @@ public class Session {
         }
 
         let task = adapter.resumedTaskWithURLRequest(URLRequest) { data, URLResponse, error in
-            let result: Result<T.Response, APIError>
+            let result: Result<T.Response, SessionTaskError>
 
             switch (data, URLResponse, error) {
             case (_, _, let error?):
