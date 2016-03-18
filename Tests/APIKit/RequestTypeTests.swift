@@ -26,7 +26,7 @@ class RequestTypeTests: XCTestCase {
         
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
             guard let response = object as? [String: AnyObject] else {
-                throw MockError()
+                throw ResponseError.UnexpectedObject(object)
             }
             return response
         }
@@ -58,7 +58,7 @@ class RequestTypeTests: XCTestCase {
             if let dictionary = object as? [String: AnyObject] {
                 return dictionary
             } else {
-                throw MockError()
+                throw ResponseError.UnexpectedObject(object)
             }
         }
     }
@@ -85,7 +85,7 @@ class RequestTypeTests: XCTestCase {
             if let dictionary = object as? [String: AnyObject] {
                 return dictionary
             } else {
-                throw MockError()
+                throw ResponseError.UnexpectedObject(object)
             }
         }
     }
