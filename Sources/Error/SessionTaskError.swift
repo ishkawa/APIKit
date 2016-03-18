@@ -1,6 +1,6 @@
 import Foundation
 
-public enum APIError: ErrorType {
+public enum SessionTaskError: ErrorType {
     /// Error of `NSURLSession`.
     case ConnectionError(NSError)
 
