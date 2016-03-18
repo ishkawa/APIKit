@@ -27,13 +27,14 @@ public protocol RequestType {
     /// You can override values for those fields here.
     var HTTPHeaderFields: [String: String] { get }
 
-    /// You can add any configurations here
-    ///
-    /// - Throws: ErrorType
-    func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
-
     /// An object that parses body of HTTP response.
     var responseBodyParser: ResponseBodyParser { get }
+
+    /// Intercept `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
+    /// thrown in this method, the result of `Session.sendRequest()` truns `.Failure(.RequestError(error))`.
+    ///
+    /// - Throws: ErrorType
+    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
     /// Intercept response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
@@ -89,11 +90,11 @@ public extension RequestType {
         return .JSON(readingOptions: [])
     }
 
-    public func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
+    public func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
         return URLRequest
     }
 
-    func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
+    public func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
         guard (200..<300).contains(URLResponse.statusCode) else {
             throw ResponseError.UnacceptableStatusCode(URLResponse.statusCode)
         }
@@ -132,7 +133,7 @@ public extension RequestType {
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
-        try configureURLRequest(URLRequest)
+        try interceptURLRequest(URLRequest)
 
         return URLRequest
     }
