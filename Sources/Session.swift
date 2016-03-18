@@ -51,7 +51,7 @@ public class Session {
                 }
 
             default:
-                result = .Failure(.ResponseError(ResponseError.NonHTTPResponse(URLResponse)))
+                result = .Failure(.ResponseError(ResponseError.NonHTTPURLResponse(URLResponse)))
             }
 
             dispatch_async(dispatch_get_main_queue()) {

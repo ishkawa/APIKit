@@ -1,6 +1,7 @@
 import Foundation
 
 public enum ResponseError: ErrorType {
-    case NonHTTPResponse(NSURLResponse?)
+    case NonHTTPURLResponse(NSURLResponse?)
     case UnacceptableStatusCode(Int)
+    case UnexpectedObject(AnyObject)
 }

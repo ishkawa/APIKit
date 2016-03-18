@@ -233,9 +233,9 @@
 		7FA19A3D1C9CBF2A005D25AE /* Error */ = {
 			isa = PBXGroup;
 			children = (
+				7FA19A401C9CBF2A005D25AE /* SessionTaskError.swift */,
 				7FA19A3E1C9CBF2A005D25AE /* RequestError.swift */,
 				7FA19A3F1C9CBF2A005D25AE /* ResponseError.swift */,
-				7FA19A401C9CBF2A005D25AE /* SessionTaskError.swift */,
 			);
 			path = Error;
 			sourceTree = "<group>";
