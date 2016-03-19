@@ -1,6 +1,6 @@
 import Foundation
 
-/// A type that parses HTTP response body and states Content-Type to accept.
+/// `DataParserType` protocol provides inteface to parse HTTP response body and to state Content-Type to accept.
 public protocol DataParserType {
     /// Value for `Accept` header field of HTTP request.
     var contentType: String? { get }

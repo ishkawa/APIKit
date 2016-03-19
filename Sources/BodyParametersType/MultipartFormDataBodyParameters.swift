@@ -6,7 +6,9 @@ import Foundation
     import CoreServices
 #endif
 
+/// `MultipartFormDataBodyParameters` serializes multipart/form-data object for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParametersType {
+    /// Errors while building multipart/form-data content.
     public enum Error: ErrorType {
         case CannotCastObjectToSupportedType(AnyObject)
         case UnsupportedType(String, AnyObject)
@@ -17,6 +19,7 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
         case OutputStreamWriteFailed(String)
     }
     
+    /// `Part` represents a part of multipart/form-data content.
     public enum Part {
         case Data(name: String, data: NSData)
         case DataWithMimeType(name: String, data: NSData, mimeType: String)
@@ -69,6 +72,8 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
         return "multipart/form-data; boundary=\(encoder.boundary)"
     }
 
+    /// Builds `RequestBodyEntity.Data` that represents `parts`.
+    /// - Throws: MultipartFormDataBodyParameters.Error
     public func buildEntity() throws -> RequestBodyEntity {
         for part in parts {
             switch part {

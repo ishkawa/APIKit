@@ -1,6 +1,6 @@
 import Foundation
 
-/// A type that parses response JSON data.
+/// `JSONDataParser` response JSON data.
 public class JSONDataParser: DataParserType {
     public let readingOptions: NSJSONReadingOptions
 

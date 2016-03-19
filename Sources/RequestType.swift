@@ -1,55 +1,65 @@
 import Foundation
 import Result
 
-/// RequestType protocol represents a request for Web API.
+/// `RequestType` protocol represents a request for Web API.
 /// Following 5 items must be implemented.
-/// - typealias Response
-/// - var baseURL: NSURL
-/// - var method: Method
-/// - var path: String
-/// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
+/// - `typealias Response`
+/// - `var baseURL: NSURL`
+/// - `var method: Method`
+/// - `var path: String`
+/// - `func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response`
 public protocol RequestType {
-    /// Type represents a model object
+    /// The response type associated with this request.
     typealias Response
 
-    /// Configurations of request
+    /// The base URL.
     var baseURL: NSURL { get }
+
+    /// The HTTP request method.
     var method: HTTPMethod { get }
+
+    /// The path URL component.
     var path: String { get }
 
-    /// Convenience property for queryParameters and bodyParameters.
+    /// The convenience property for `queryParameters` and `bodyParameters`. If the implementation of
+    /// `queryParameters` and `bodyParameters` are not provided, the values for them will be computed
+    /// from this property depends on `method`.
     var parameters: AnyObject? { get }
 
+    /// The parameters for the URL query. The values of this property will be escaped using `URLEncodedSerializetion`.
+    /// If this property is not implemented and `method.prefersQueryParameter` is `true`, the value of this property
+    /// will be computed from `parameters`.
     var queryParameters: [String: AnyObject]? { get }
+
+    /// The parameters for HTTP body. The values of this property will be escaped using `URLEncodedSerializetion`.
+    /// If this property is not implemented and `method.prefersQueryParameter` is `false`, the value of this property
+    /// will be computed from `parameters` using `JSONBodyParameters`.
     var bodyParameters: BodyParametersType? { get }
-    
-    /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
-    /// You can override values for those fields here.
+
+    /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
+    /// fields will be added by `dataParser` and `bodyParameters`. If you define `Accept` and `Content-Type`
+    /// in this property, the values in this property are preferred.
     var HTTPHeaderFields: [String: String] { get }
 
-    /// An object that states Content-Type to accept and parses response body .
+    /// The parser object that states `Content-Type` to accept and parses response body.
     var dataParser: DataParserType { get }
 
-    /// Intercept `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
+    /// Intercepts `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.sendRequest()` truns `.Failure(.RequestError(error))`.
-    ///
-    /// - Throws: ErrorType
+    /// - Throws: `ErrorType`
     func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
-    /// Intercept response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
+    /// Intercepts response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
-    ///
-    /// - Throws: ErrorType
+    /// - Throws: `ErrorType`
     func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
 
     /// Build `Response` instance from raw response object. This method is called after
     /// `interceptObject(:URLResponse:)` if it does not throw any error.
-    ///
-    /// - Throws: ErrorType
+    /// - Throws: `ErrorType`
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
 }
 
-/// Default implementation of RequestType protocol
 public extension RequestType {
     public var parameters: AnyObject? {
         return nil
@@ -90,6 +100,8 @@ public extension RequestType {
         return object
     }
 
+    /// Builds `NSURLRequest` from properties of `self`.
+    /// - Throws: `RequestError`, `ErrorType`
     public func buildURLRequest() throws -> NSURLRequest {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
@@ -127,6 +139,8 @@ public extension RequestType {
         return URLRequest
     }
 
+    /// Builds `Response` from response `NSData`.
+    /// - Throws: `ResponseError`, `ErrorType`
     public func parseData(data: NSData, URLResponse: NSHTTPURLResponse) throws -> Response {
         let parsedObject = try dataParser.parseData(data)
         let passedObject = try interceptObject(parsedObject, URLResponse: URLResponse)
