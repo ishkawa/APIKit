@@ -1,5 +1,6 @@
 import Foundation
 
+/// `HTTPMethod` represents HTTP methods.
 public enum HTTPMethod: String {
     case GET
     case POST
@@ -11,6 +12,7 @@ public enum HTTPMethod: String {
     case OPTIONS
     case CONNECT
 
+    /// Indicates if the query parameters are suitable for parameters.
     var prefersQueryParameters: Bool {
         switch self {
         case .GET, .HEAD, .DELETE:
