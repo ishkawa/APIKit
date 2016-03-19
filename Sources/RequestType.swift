@@ -20,7 +20,7 @@ public protocol RequestType {
     /// Convenience property for queryParameters and bodyParameters.
     var parameters: AnyObject? { get }
 
-    var queryParameters: [NSURLQueryItem]? { get }
+    var queryParameters: [String: AnyObject]? { get }
     var bodyParameters: BodyParametersType? { get }
     
     /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
@@ -55,22 +55,12 @@ public extension RequestType {
         return nil
     }
 
-    public var queryParameters: [NSURLQueryItem]? {
+    public var queryParameters: [String: AnyObject]? {
         guard let parameters = parameters as? [String: AnyObject] where method.prefersQueryParameters else {
             return nil
         }
 
-        return parameters.map { key, value in
-            let string: String?
-
-            if value is NSNull {
-                string = nil
-            } else {
-                string = value as? String ?? "\(value)"
-            }
-
-            return NSURLQueryItem(name: key, value: string)
-        }
+        return parameters
     }
 
     public var bodyParameters: BodyParametersType? {
@@ -80,7 +70,6 @@ public extension RequestType {
 
         return JSONBodyParameters(JSONObject: parameters)
     }
-
 
     public var HTTPHeaderFields: [String: String] {
         return [:]
@@ -110,7 +99,7 @@ public extension RequestType {
         let URLRequest = NSMutableURLRequest()
 
         if let queryParameters = queryParameters where !queryParameters.isEmpty {
-            components.queryItems = queryParameters
+            components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(queryParameters)
         }
 
         if let bodyParameters = bodyParameters {
