@@ -1,7 +1,7 @@
 import Foundation
 
-/// A type that parses URL encoded response data.
-public class URLFormEncodedDataParser: DataParserType {
+/// A type that parses form URL encoded response data.
+public class FormURLEncodedDataParser: DataParserType {
     public enum Error: ErrorType {
         case CannotGetStringFromData(NSData)
     }
