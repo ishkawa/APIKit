@@ -47,13 +47,10 @@ struct GetRateLimitRequest: GitHubRequestType {
         return "/rate_limit"
     }
 
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-        guard let dictionary = object as? [String: AnyObject] else {
-            return nil
-        }
-
-        guard let rateLimit = RateLimit(dictionary: dictionary) else {
-            return nil
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+        guard let dictionary = object as? [String: AnyObject],
+              let rateLimit = RateLimit(dictionary: dictionary) else {
+            throw ResponseError.UnexpectedObject(object)
         }
 
         return rateLimit
@@ -66,10 +63,10 @@ let request = GetRateLimitRequest()
 Session.sendRequest(request) { result in
     switch result {
     case .Success(let rateLimit):
-        debugPrint("count: \(rateLimit.count)")
-        debugPrint("reset: \(rateLimit.resetDate)")
+        print("count: \(rateLimit.count)")
+        print("reset: \(rateLimit.resetDate)")
 
     case .Failure(let error):
-        debugPrint("error: \(error)")
+        print("error: \(error)")
     }
 }
