@@ -244,8 +244,8 @@
 		7F85FB8B1C9D317300CEE132 /* SessionAdapterType */ = {
 			isa = PBXGroup;
 			children = (
-				7F85FB8C1C9D317300CEE132 /* NSURLSessionAdapter.swift */,
 				7F85FB8D1C9D317300CEE132 /* SessionAdapterType.swift */,
+				7F85FB8C1C9D317300CEE132 /* NSURLSessionAdapter.swift */,
 			);
 			path = SessionAdapterType;
 			sourceTree = "<group>";

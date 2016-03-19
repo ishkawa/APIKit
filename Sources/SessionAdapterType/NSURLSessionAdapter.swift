@@ -7,9 +7,18 @@ extension NSURLSessionTask: SessionTaskType {
 private var dataTaskResponseBufferKey = 0
 private var taskAssociatedObjectCompletionHandlerKey = 0
 
+/// `NSURLSessionAdapter` connects `NSURLSession` with `Session`.
+///
+/// If you want to add custom behavior of `NSURLSession` by implementing delegate methods defined in
+/// `NSURLSessionDelegate` or related protocols, define a subclass of `NSURLSessionAdapter` and implment
+/// delegate methods that you want to implement. Since `NSURLSessionAdapter` also implements delegate methods
+/// `URLSession(_:task: didCompleteWithError:)` and `URLSession(_:dataTask:didReceiveData:)`, you have to call
+/// `super` in these methods if you implement them.
 public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDelegate {
+    /// The undelying `NSURLSession` instance.
     public var URLSession: NSURLSession!
     
+    /// Returns `NSURLSessionAdapter` initialized with `NSURLSessionConfiguration`.
     public init(configuration: NSURLSessionConfiguration) {
         super.init()
         self.URLSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
