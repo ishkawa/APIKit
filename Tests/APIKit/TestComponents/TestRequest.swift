@@ -2,6 +2,18 @@ import Foundation
 import APIKit
 
 struct TestRequest: RequestType {
+    static func URLOf(baseURL baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], HTTPHeaderFields: [String: String] = [:]) -> NSURL? {
+        guard let baseURL = NSURL(string: baseURL) else {
+            return nil
+        }
+
+        let request = TestRequest(baseURL: baseURL, path: path, method: method, parameters: parameters, HTTPHeaderFields: HTTPHeaderFields)
+        let URLRequest = try? request.buildURLRequest()
+
+        return URLRequest?.URL
+    }
+
+    // MARK: RequestType
     typealias Response = AnyObject
 
     init(baseURL: NSURL = NSURL(string: "https://example.com")!, path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], HTTPHeaderFields: [String: String] = [:]) {
