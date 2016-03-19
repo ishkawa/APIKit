@@ -20,25 +20,6 @@ public struct FormURLEncodedBodyParameters: BodyParametersType {
     }
 
     public func buildEntity() throws -> RequestBodyEntity {
-        let queryItems = form.map { key, value -> NSURLQueryItem in
-            if let string = value as? String {
-                return NSURLQueryItem(name: key, value: string)
-            } else {
-                return NSURLQueryItem(name: key, value: "\(value)")
-            }
-        }
-
-        let components = NSURLComponents()
-        components.queryItems = queryItems
-
-        guard let encodedQuery = components.percentEncodedQuery else {
-            throw Error.InvalidQueryItems(queryItems)
-        }
-
-        guard let data = encodedQuery.dataUsingEncoding(encoding) else {
-            throw Error.InvalidEncodedQuery(encodedQuery)
-        }
-
-        return .Data(data)
+        return .Data(try URLEncodedSerialization.dataFromObject(form, encoding: encoding))
     }
 }

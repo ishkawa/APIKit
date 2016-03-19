@@ -15,9 +15,18 @@ class FormURLEncodedBodyParametersTests: XCTestCase {
             }
 
             let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-            XCTAssertEqual(string, "baz=3&foo=1&bar=2")
+            XCTAssertEqual(string, "baz=3&bar=2&foo=1")
         } catch {
             XCTFail()
         }
+    }
+
+    // NSURLComponents crashes on iOS 8.2 or earlier while escaping long CJK string.
+    // This test ensures that FormURLEncodedBodyParameters avoids this issue correctly.
+    func testLongCJKString() {
+        let key = "key"
+        let value = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"
+        let parameters = FormURLEncodedBodyParameters(formObject: [key: value])
+        _ = try? parameters.buildEntity()
     }
 }
