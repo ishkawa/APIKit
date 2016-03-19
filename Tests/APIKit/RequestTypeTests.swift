@@ -141,6 +141,7 @@ class RequestTypeTests: XCTestCase {
         let request = SearchRequest(query: "こんにちは")
         let expectation = expectationWithDescription("waiting for the response.")
         
+
         Session.sendRequest(request) { result in
             expectation.fulfill()
         }

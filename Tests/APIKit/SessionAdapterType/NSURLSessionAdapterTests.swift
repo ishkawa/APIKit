@@ -12,32 +12,17 @@ extension MockSessionRequestType {
     }
 }
 
-class MockSession: Session {
-    struct GetRoot: MockSessionRequestType {
-        typealias Response = [String: AnyObject]
+class NSURLSessionAdapterTests: XCTestCase {
+    var session: Session!
 
-        var method: HTTPMethod {
-            return .GET
-        }
+    override func setUp() {
+        super.setUp()
 
-        var path: String {
-            return "/"
-        }
-
-        func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
-            guard let response = object as? [String: AnyObject] else {
-                throw ResponseError.UnexpectedObject(object)
-            }
-            return response
-        }
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let adapter = NSURLSessionAdapter(configuration: configuration)
+        session = Session(adapter: adapter)
     }
-}
 
-class AnotherMockSession: Session {
-
-}
-
-class APITests: XCTestCase {
     override func tearDown() {
         OHHTTPStubs.removeAllStubs()
         super.tearDown()
@@ -55,12 +40,12 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
+        let request = TestRequest()
         
-        MockSession.sendRequest(request) { response in
+        session.sendRequest(request) { response in
             switch response {
             case .Success(let dictionary):
-                XCTAssertEqual(dictionary["key"] as? String, "value")
+                XCTAssertEqual(dictionary["key"], "value")
 
             case .Failure:
                 XCTFail()
@@ -82,9 +67,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
+        let request = TestRequest()
 
-        MockSession.sendRequest(request) { response in
+        session.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -115,9 +100,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
+        let request = TestRequest()
         
-        MockSession.sendRequest(request) { response in
+        session.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -151,9 +136,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
+        let request = TestRequest()
         
-        MockSession.sendRequest(request) { response in
+        session.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -172,7 +157,7 @@ class APITests: XCTestCase {
             expectation.fulfill()
         }
         
-        MockSession.cancelRequest(MockSession.GetRoot.self)
+        session.cancelRequest(TestRequest.self)
         
         waitForExpectationsWithTimeout(1.0, handler: nil)
     }
@@ -185,9 +170,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
+        let request = TestRequest()
         
-        MockSession.sendRequest(request) { response in
+        session.sendRequest(request) { response in
             switch response {
             case .Success:
                 XCTFail()
@@ -221,9 +206,9 @@ class APITests: XCTestCase {
         })
         
         let expectation = expectationWithDescription("wait for response")
-        let request = MockSession.GetRoot()
+        let request = TestRequest()
         
-        MockSession.sendRequest(request) { response in
+        session.sendRequest(request) { response in
             switch response {
             case .Success:
                 break
@@ -235,7 +220,7 @@ class APITests: XCTestCase {
             expectation.fulfill()
         }
         
-        MockSession.cancelRequest(MockSession.GetRoot.self) { request in
+        session.cancelRequest(TestRequest.self) { request in
             return false
         }
         
