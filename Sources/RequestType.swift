@@ -27,8 +27,8 @@ public protocol RequestType {
     /// You can override values for those fields here.
     var HTTPHeaderFields: [String: String] { get }
 
-    /// An object that parses body of HTTP response.
-    var responseBodyParser: ResponseBodyParser { get }
+    /// An object that states Content-Type to accept and parses response body .
+    var dataParser: DataParserType { get }
 
     /// Intercept `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.sendRequest()` truns `.Failure(.RequestError(error))`.
@@ -85,9 +85,9 @@ public extension RequestType {
     public var HTTPHeaderFields: [String: String] {
         return [:]
     }
-    
-    public var responseBodyParser: ResponseBodyParser {
-        return .JSON(readingOptions: [])
+
+    public var dataParser: DataParserType {
+        return JSONDataParser(readingOptions: [])
     }
 
     public func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
@@ -127,7 +127,7 @@ public extension RequestType {
 
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
-        URLRequest.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
+        URLRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
         
         HTTPHeaderFields.forEach { key, value in
             URLRequest.setValue(value, forHTTPHeaderField: key)
@@ -139,7 +139,7 @@ public extension RequestType {
     }
 
     public func parseData(data: NSData, URLResponse: NSHTTPURLResponse) throws -> Response {
-        let parsedObject = try responseBodyParser.parseData(data)
+        let parsedObject = try dataParser.parseData(data)
         let passedObject = try interceptObject(parsedObject, URLResponse: URLResponse)
         return try responseFromObject(passedObject, URLResponse: URLResponse)
     }
