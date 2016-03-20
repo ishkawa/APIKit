@@ -28,7 +28,7 @@ Session.sendRequest(request) { result in
 ## Requirements
 
 - Swift 2.1
-- Mac OS 10.9 or later
+- Mac OS 10.10 or later
 - iOS 8.0 or later
 - watchOS 2.0 or later
 - tvOS 9.0 or later
