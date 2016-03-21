@@ -45,9 +45,8 @@ Session.sendRequest(request) { result in
 ### Basic Usage
 
 - [Getting started](Documentation/GettingStarted.md)
+- [Defining Request Protocol for Web Service](Documentation/DefiningRequestProtocolForWebService.md)
 - Query parameters and body parameters
-- Throwing error response as `ErrorType`
-- Combination with JSON decode libraries
 
 ### Advanced Usage
 
