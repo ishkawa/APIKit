@@ -42,16 +42,14 @@ Session.sendRequest(request) { result in
 
 ## Documentation
 
-### Basic Usage
-
 - [Getting started](Documentation/GettingStarted.md)
 - [Defining Request Protocol for Web Service](Documentation/DefiningRequestProtocolForWebService.md)
 - [Convenience Parameters and Actual Parameters](Documentation/ConvenienceParametersAndActualParameters.md)
 
-### Advanced Usage
+### Advanced Guides
 
 - [Customizing Networking Backend](Documentation/CustomizingNetworkingBackend.md)
 
-### Migration
+### Migration Guides
 
 - [APIKit 2 Migration Guide](Documentation/APIKit2MigrationGuide.md)
