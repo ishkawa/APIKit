@@ -46,13 +46,11 @@ Session.sendRequest(request) { result in
 
 - [Getting started](Documentation/GettingStarted.md)
 - [Defining Request Protocol for Web Service](Documentation/DefiningRequestProtocolForWebService.md)
-- Query parameters and body parameters
+- [Convenience Parameters and Actual Parameters](Documentation/ConvenienceParametersAndActualParameters.md)
 
 ### Advanced Usage
 
-- Creating request body parameter type
-- Creating response body parser type
-- Customizing backend of `Session`
+- Customizing Networking Backend
 
 ### Migration
 
