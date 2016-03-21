@@ -55,7 +55,6 @@ Session.sendRequest(request) { result in
 - Creating response body parser type
 - Customizing backend of `Session`
 
-
 ### Migration
 
-- Migrating from APIKit 1.x
+- [APIKit 2 Migration Guide](Documentation/APIKit2MigrationGuide.md)
