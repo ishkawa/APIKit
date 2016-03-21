@@ -44,7 +44,7 @@ Session.sendRequest(request) { result in
 
 ### Basic Usage
 
-- Getting started
+- [Getting started](Documentation/GettingStarted.md)
 - Query parameters and body parameters
 - Throwing error response as `ErrorType`
 - Combination with JSON decode libraries
