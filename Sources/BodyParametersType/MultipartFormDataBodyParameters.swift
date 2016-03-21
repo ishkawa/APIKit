@@ -327,11 +327,7 @@ private final class MultipartFormData {
         //              Check 2 - is file URL reachable?
         //============================================================
 
-        var isReachable = true
-
-        if #available(OSX 10.10, *) {
-            isReachable = fileURL.checkPromisedItemIsReachableAndReturnError(nil)
-        }
+        let isReachable = fileURL.checkPromisedItemIsReachableAndReturnError(nil)
 
         guard isReachable else {
             let error = MultipartFormDataBodyParameters.Error.NSURLErrorBadURL("The file URL is not reachable: \(fileURL)")
