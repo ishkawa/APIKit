@@ -50,7 +50,7 @@ Session.sendRequest(request) { result in
 
 ### Advanced Usage
 
-- Customizing Networking Backend
+- [Customizing Networking Backend](Documentation/CustomizingNetworkingBackend.md)
 
 ### Migration
 
