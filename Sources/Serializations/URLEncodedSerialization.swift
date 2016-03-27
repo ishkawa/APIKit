@@ -25,7 +25,7 @@ private func escape(string: String) -> String {
     while index != string.endIndex {
         let startIndex = index
         let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-        let range = Range(start: startIndex, end: endIndex)
+        let range = startIndex..<endIndex
         
         let substring = string.substringWithRange(range)
         
