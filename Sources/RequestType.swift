@@ -10,7 +10,7 @@ import Result
 /// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
 public protocol RequestType {
     /// Type represents a model object
-    typealias Response
+    associatedtype Response
 
     /// Configurations of request
     var baseURL: NSURL { get }
