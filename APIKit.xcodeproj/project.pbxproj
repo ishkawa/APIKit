@@ -27,6 +27,16 @@
 		7F7E8F1D1C8AD4B1008A13A9 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7E8F131C8AD4B1008A13A9 /* URLEncodedSerialization.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		7F4A73AC1CA839AE002554B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7F45FCD41A94D02C006863BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 141F12161C1C9ABE0026D415;
+			remoteInfo = APIKit;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		141F12351C1C9AC70026D415 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -222,6 +232,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				7F4A73AD1CA839AE002554B1 /* PBXTargetDependency */,
 			);
 			name = Tests;
 			productName = APIKitTests;
@@ -302,6 +313,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7F4A73AD1CA839AE002554B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 141F12161C1C9ABE0026D415 /* APIKit */;
+			targetProxy = 7F4A73AC1CA839AE002554B1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		141F12241C1C9ABE0026D415 /* Debug */ = {
