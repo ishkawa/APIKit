@@ -246,7 +246,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Yosuke Ishikawa";
 			};
 			buildConfigurationList = 7F45FCD71A94D02C006863BB /* Build configuration list for PBXProject "APIKit" */;
@@ -355,6 +355,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12101C1C96820026D415 /* Debug.xcconfig */;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
