@@ -41,7 +41,7 @@ class RequestTypeTests: XCTestCase {
         let URLRequest = try? request.buildURLRequest()
         XCTAssertNotNil(URLRequest?.HTTPBody)
 
-        let json = URLRequest?.HTTPBody.flatMap { try? NSJSONSerialization.JSONObjectWithData($0, options: []) }
+        let json = URLRequest?.HTTPBody.flatMap { try? NSJSONSerialization.JSONObjectWithData($0, options: []) } as? [AnyObject]
         XCTAssertEqual(json?.count, 3)
         XCTAssertEqual(json?[0]["id"], "1")
         XCTAssertEqual(json?[1]["id"], "2")
