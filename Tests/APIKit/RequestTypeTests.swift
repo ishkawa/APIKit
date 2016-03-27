@@ -513,7 +513,7 @@ class RequestTypeTests: XCTestCase {
         switch request.buildURLRequest() {
         case .Success(let urlReq):
             XCTAssert(urlReq.HTTPBody != nil)
-             let json = try! NSJSONSerialization.JSONObjectWithData(urlReq.HTTPBody!, options: NSJSONReadingOptions.AllowFragments)
+            let json = try! NSJSONSerialization.JSONObjectWithData(urlReq.HTTPBody!, options: NSJSONReadingOptions.AllowFragments) as! [AnyObject]
             XCTAssert(json.count == 3)
             XCTAssert(json[0]["id"]! == "1")
             XCTAssert(json[1]["id"]! == "2")
