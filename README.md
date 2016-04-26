@@ -369,7 +369,7 @@ struct GetRateLimitRequest: GitHubRequest {
 Additionally, you can provide default implementation of `responseFromObject(_:URLResponse:)` if `Response` typealias of a request type conforms to `Decodable`.
 
 ```swift
-extension GitHubRequest where Self.Response: Decodable, Self.Response == Self.Response.DecodedType {
+extension GitHubRequest where Self.Response: Decodable {
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Self.Response? {
         return try? decode(object)
     }
