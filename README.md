@@ -361,7 +361,7 @@ struct GetRateLimitRequest: GitHubRequest {
     }
 
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-        return try? decode(object) // get Response from AnyObject using Himotoki
+        return try? decodeValue(object) // get Response from AnyObject using Himotoki
     }
 }
 ```
@@ -371,7 +371,7 @@ Additionally, you can provide default implementation of `responseFromObject(_:UR
 ```swift
 extension GitHubRequest where Self.Response: Decodable {
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Self.Response? {
-        return try? decode(object)
+        return try? decodeValue(object)
     }
 }
 ```
