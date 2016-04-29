@@ -18,7 +18,7 @@ script:
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator | xcpretty -c
-  - xcodebuild build -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator | xcpretty -c
+  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator | xcpretty -c
 
 before_deploy:
   - ./script/import-certificates
