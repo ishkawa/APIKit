@@ -14,8 +14,10 @@ class FormURLEncodedBodyParametersTests: XCTestCase {
                 return
             }
 
-            let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-            XCTAssertEqual(string, "baz=3&bar=2&foo=1")
+            let createdObject = try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
+            XCTAssertEqual(createdObject["foo"], "1")
+            XCTAssertEqual(createdObject["bar"], "2")
+            XCTAssertEqual(createdObject["baz"], "3")
         } catch {
             XCTFail()
         }
