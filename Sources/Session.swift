@@ -24,7 +24,7 @@ public class Session {
     /// - parameter request: The request to be sent.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
-    public static func sendRequest<Request: RequestType>(request: Request, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+    public static func sendRequest<Request: RequestType>(request: Request, queue: dispatch_queue_t? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         return sharedSession.sendRequest(request, handler: handler)
     }
 
@@ -41,12 +41,12 @@ public class Session {
     /// - parameter request: The request to be sent.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
-    public func sendRequest<Request: RequestType>(request: Request, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+    public func sendRequest<Request: RequestType>(request: Request, queue: dispatch_queue_t? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         let URLRequest: NSURLRequest
         do {
             URLRequest = try request.buildURLRequest()
         } catch {
-            dispatch_async(dispatch_get_main_queue()) {
+            dispatch_async(queue ?? dispatch_get_main_queue()) {
                 handler(.Failure(.RequestError(error)))
             }
             return nil
@@ -69,8 +69,7 @@ public class Session {
             default:
                 result = .Failure(.ResponseError(ResponseError.NonHTTPURLResponse(URLResponse)))
             }
-
-            dispatch_async(dispatch_get_main_queue()) {
+            dispatch_async(queue ?? dispatch_get_main_queue()) {
                 handler(result)
             }
         }
