@@ -13,6 +13,8 @@
 		141F12361C1C9AC70026D415 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		141F12371C1C9AC70026D415 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F09BF931C8AE8DB00F4A59A /* RequestTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F09BF8D1C8AE8DB00F4A59A /* RequestTypeTests.swift */; };
+		7F10D8EE1CD5CF8D00722F66 /* CallbackQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */; };
+		7F10D8F01CD5D10100722F66 /* SessionCallbackQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */; };
 		7F18BD0F1C972C38003A31DF /* BodyParametersType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */; };
 		7F18BD111C972C69003A31DF /* JSONBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */; };
 		7F18BD131C972E5A003A31DF /* FormURLEncodedBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */; };
@@ -78,6 +80,8 @@
 		141F12401C1C9EA30026D415 /* Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Tests.xcconfig; path = Configurations/Tests.xcconfig; sourceTree = "<group>"; };
 		7F09BF8B1C8AE8DB00F4A59A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F09BF8D1C8AE8DB00F4A59A /* RequestTypeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTypeTests.swift; sourceTree = "<group>"; };
+		7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackQueue.swift; sourceTree = "<group>"; };
+		7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCallbackQueueTests.swift; sourceTree = "<group>"; };
 		7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParametersType.swift; sourceTree = "<group>"; };
 		7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONBodyParameters.swift; sourceTree = "<group>"; };
 		7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormURLEncodedBodyParameters.swift; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				7F85FB9E1C9D3F0B00CEE132 /* SessionTests.swift */,
+				7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */,
 				7F09BF8D1C8AE8DB00F4A59A /* RequestTypeTests.swift */,
 				7F85FB901C9D335F00CEE132 /* SessionAdapterType */,
 				7F85FB811C9CF24900CEE132 /* DataParserType */,
@@ -221,6 +226,7 @@
 				7F7E8F121C8AD4B1008A13A9 /* Session.swift */,
 				7F7E8F101C8AD4B1008A13A9 /* RequestType.swift */,
 				7F7E8F0C1C8AD4B1008A13A9 /* HTTPMethod.swift */,
+				7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */,
 				7FAC40331C8F2C900098C4B2 /* Box.swift */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapterType */,
 				7F18BD0D1C972C38003A31DF /* BodyParametersType */,
@@ -420,6 +426,7 @@
 				7F18BD131C972E5A003A31DF /* FormURLEncodedBodyParameters.swift in Sources */,
 				7FA19A461C9CC9D0005D25AE /* DataParserType.swift in Sources */,
 				7F18BD111C972C69003A31DF /* JSONBodyParameters.swift in Sources */,
+				7F10D8EE1CD5CF8D00722F66 /* CallbackQueue.swift in Sources */,
 				7FA19A411C9CBF2A005D25AE /* RequestError.swift in Sources */,
 				7F85FB8F1C9D317300CEE132 /* SessionAdapterType.swift in Sources */,
 				7F85FB801C9CF12600CEE132 /* JSONDataParser.swift in Sources */,
@@ -435,6 +442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FA19A3C1C98642F005D25AE /* MultipartFormDataParametersTests.swift in Sources */,
+				7F10D8F01CD5D10100722F66 /* SessionCallbackQueueTests.swift in Sources */,
 				7F85FB891C9CF7B000CEE132 /* FormURLEncodedDataParserTests.swift in Sources */,
 				7F85FBA11C9D637B00CEE132 /* TestSessionTask.swift in Sources */,
 				7FA19A3A1C98642F005D25AE /* FormURLEncodedBodyParametersTests.swift in Sources */,
