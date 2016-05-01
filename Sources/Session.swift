@@ -7,10 +7,16 @@ private var taskRequestKey = 0
 public class Session {
     /// The adapter that connects lower level backend with Session interface.
     public let adapter: SessionAdapterType
+    
+    /// Default callback queue for `sendRequest(_:handler:)`.
+    public let callbackQueue: CallbackQueue
 
     /// Returns `Session` instance that is initialized with `adapter`.
-    public init(adapter: SessionAdapterType) {
+    /// - parameter adapter: The adapter that connects lower level backend with Session interface.
+    /// - parameter callbackQueue: Default callback queue for `sendRequest(_:handler:)`.
+    public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .Main) {
         self.adapter = adapter
+        self.callbackQueue = callbackQueue
     }
 
     /// The shared `Session` instance for static methods, `Session.sendRequest(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
@@ -39,14 +45,17 @@ public class Session {
     /// `Request.Response` is inferred from `Request` type parameter,  type of response changes
     /// depending on the request type.
     /// - parameter request: The request to be sent.
+    /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
-    public func sendRequest<Request: RequestType>(request: Request, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+    public func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+        let callbackQueue = callbackQueue ?? self.callbackQueue
+
         let URLRequest: NSURLRequest
         do {
             URLRequest = try request.buildURLRequest()
         } catch {
-            dispatch_async(dispatch_get_main_queue()) {
+            callbackQueue.execute {
                 handler(.Failure(.RequestError(error)))
             }
             return nil
@@ -70,7 +79,7 @@ public class Session {
                 result = .Failure(.ResponseError(ResponseError.NonHTTPURLResponse(URLResponse)))
             }
 
-            dispatch_async(dispatch_get_main_queue()) {
+            callbackQueue.execute {
                 handler(result)
             }
         }
