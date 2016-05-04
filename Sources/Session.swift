@@ -19,23 +19,28 @@ public class Session {
         self.callbackQueue = callbackQueue
     }
 
-    /// The shared `Session` instance for static methods, `Session.sendRequest(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
-    public static var sharedSession: Session = {
+    // Shared session for class methods
+    private static let privateSharedSession: Session = {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         let adapter = NSURLSessionAdapter(configuration: configuration)
         return Session(adapter: adapter)
     }()
 
+    /// The shared `Session` instance for class methods, `Session.sendRequest(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
+    public class var sharedSession: Session {
+        return privateSharedSession
+    }
+
     /// Calls `sendRequest(_:handler:)` of `sharedSession`.
     /// - parameter request: The request to be sent.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
-    public static func sendRequest<Request: RequestType>(request: Request, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+    public class func sendRequest<Request: RequestType>(request: Request, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         return sharedSession.sendRequest(request, handler: handler)
     }
 
     /// Calls `cancelRequest(_:passingTest:)` of `sharedSession`.
-    public static func cancelRequest<Request: RequestType>(requestType: Request.Type, passingTest test: Request -> Bool = { r in true }) {
+    public class func cancelRequest<Request: RequestType>(requestType: Request.Type, passingTest test: Request -> Bool = { r in true }) {
         sharedSession.cancelRequest(requestType, passingTest: test)
     }
 
