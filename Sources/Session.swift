@@ -71,18 +71,22 @@ public class Session {
         }
     }
     
-    // Shared session for static methods
-    public static let sharedSession = Session(URLSession: NSURLSession(
+    // Shared session for class methods
+    private static let privateSharedSession = Session(URLSession: NSURLSession(
         configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
         delegate: URLSessionDelegate(),
         delegateQueue: nil
     ))
-    
-    public static func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
+
+    public class var sharedSession: Session {
+        return privateSharedSession
+    }
+
+    public class func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
         return sharedSession.sendRequest(request, handler: handler)
     }
     
-    public static func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+    public class func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
         sharedSession.cancelRequest(requestType, passingTest: test)
     }
 }
