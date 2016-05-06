@@ -43,6 +43,8 @@
 		7FA19A431C9CBF2A005D25AE /* SessionTaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA19A401C9CBF2A005D25AE /* SessionTaskError.swift */; };
 		7FA19A461C9CC9D0005D25AE /* DataParserType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA19A451C9CC9D0005D25AE /* DataParserType.swift */; };
 		7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC40331C8F2C900098C4B2 /* Box.swift */; };
+		7FAC64981CDC2B5C00F1BB45 /* NSData+NSInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC64971CDC2B5C00F1BB45 /* NSData+NSInputStream.swift */; };
+		7FAC64AE1CDC7ADE00F1BB45 /* AbstractInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC64AC1CDC7ADE00F1BB45 /* AbstractInputStream.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +114,8 @@
 		7FA19A401C9CBF2A005D25AE /* SessionTaskError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTaskError.swift; sourceTree = "<group>"; };
 		7FA19A451C9CC9D0005D25AE /* DataParserType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataParserType.swift; sourceTree = "<group>"; };
 		7FAC40331C8F2C900098C4B2 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
+		7FAC64971CDC2B5C00F1BB45 /* NSData+NSInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+NSInputStream.swift"; sourceTree = "<group>"; };
+		7FAC64AC1CDC7ADE00F1BB45 /* AbstractInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractInputStream.m; sourceTree = "<group>"; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -188,6 +192,7 @@
 				7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */,
 				7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */,
 				7FA19A311C98542E005D25AE /* MultipartFormDataBodyParameters.swift */,
+				7FAC64AC1CDC7ADE00F1BB45 /* AbstractInputStream.m */,
 			);
 			path = BodyParametersType;
 			sourceTree = "<group>";
@@ -290,6 +295,7 @@
 				7FA19A371C98642F005D25AE /* FormURLEncodedBodyParametersTests.swift */,
 				7FA19A381C98642F005D25AE /* JSONBodyParametersTests.swift */,
 				7FA19A391C98642F005D25AE /* MultipartFormDataParametersTests.swift */,
+				7FAC64971CDC2B5C00F1BB45 /* NSData+NSInputStream.swift */,
 			);
 			path = BodyParametersType;
 			sourceTree = "<group>";
@@ -371,7 +377,7 @@
 		7F45FCD41A94D02C006863BB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Yosuke Ishikawa";
 			};
@@ -431,6 +437,7 @@
 				7F85FB8F1C9D317300CEE132 /* SessionAdapterType.swift in Sources */,
 				7F85FB801C9CF12600CEE132 /* JSONDataParser.swift in Sources */,
 				7F18BD1A1C9730ED003A31DF /* URLEncodedSerialization.swift in Sources */,
+				7FAC64AE1CDC7ADE00F1BB45 /* AbstractInputStream.m in Sources */,
 				7F85FB8E1C9D317300CEE132 /* NSURLSessionAdapter.swift in Sources */,
 				7F7E8F161C8AD4B1008A13A9 /* HTTPMethod.swift in Sources */,
 				7FA19A421C9CBF2A005D25AE /* ResponseError.swift in Sources */,
@@ -444,6 +451,7 @@
 				7FA19A3C1C98642F005D25AE /* MultipartFormDataParametersTests.swift in Sources */,
 				7F10D8F01CD5D10100722F66 /* SessionCallbackQueueTests.swift in Sources */,
 				7F85FB891C9CF7B000CEE132 /* FormURLEncodedDataParserTests.swift in Sources */,
+				7FAC64981CDC2B5C00F1BB45 /* NSData+NSInputStream.swift in Sources */,
 				7F85FBA11C9D637B00CEE132 /* TestSessionTask.swift in Sources */,
 				7FA19A3A1C98642F005D25AE /* FormURLEncodedBodyParametersTests.swift in Sources */,
 				7F85FB831C9CF25D00CEE132 /* JSONDataParserTests.swift in Sources */,
@@ -471,6 +479,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F123F1C1C9EA30026D415 /* APIKit.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -478,6 +491,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F123F1C1C9EA30026D415 /* APIKit.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Release;
 		};
