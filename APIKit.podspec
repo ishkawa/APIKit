@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
     s.tvos.deployment_target = "9.0"
   end
 
-  s.source_files = "Sources/**/*.swift"
+  s.source_files = "Sources/**/*.{swift,h,m}"
   s.source = {
       :git => "https://github.com/ishkawa/APIKit.git",
       :tag => "#{s.version}",
