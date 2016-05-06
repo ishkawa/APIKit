@@ -233,7 +233,7 @@ public extension MultipartFormDataBodyParameters {
         }
 
         override var hasBytesAvailable: Bool {
-            return partStreams.reduce(false) { $0 || $1.hasBytesAvailable }
+            return totalSentLength < totalLength
         }
 
         override func open() {
