@@ -31,6 +31,7 @@ public extension MultipartFormDataBodyParameters {
     /// Part represents single part of multipart/form-data.
     public struct Part {
         public enum Error: ErrorType {
+            case IllegalValue(Any)
             case IllegalFileURL(NSURL)
             case CannotGetFileSize(NSURL)
         }
@@ -40,6 +41,21 @@ public extension MultipartFormDataBodyParameters {
         public let mimeType: String?
         public let fileName: String?
         public let length: Int
+
+        /// Returns Part instance that has data presentation of passed value.
+        /// `value` will be converted via `String(_:)` and serialized via `String.dataUsingEncoding(_:)`.
+        /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.
+        public init(value: Any, name: String, mimeType: String? = nil, fileName: String? = nil, encoding: NSStringEncoding = NSUTF8StringEncoding) throws {
+            guard let data = String(value).dataUsingEncoding(encoding) else {
+                throw Error.IllegalValue(value)
+            }
+
+            self.inputStream = NSInputStream(data: data)
+            self.name = name
+            self.mimeType = mimeType
+            self.fileName = fileName
+            self.length = data.length
+        }
 
         /// Returns Part instance that has input stream of specifed data.
         /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.

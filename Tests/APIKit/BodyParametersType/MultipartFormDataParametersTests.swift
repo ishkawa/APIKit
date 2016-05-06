@@ -37,4 +37,58 @@ class MultipartFormDataParametersTests: XCTestCase {
             }
         }
     }
+
+    func testStringValue() {
+        let part = try! MultipartFormDataBodyParameters.Part(value: "abcdef", name: "foo")
+        let parameters = MultipartFormDataBodyParameters(parts: [part])
+
+        do {
+            guard case .InputStream(let inputStream) = try parameters.buildEntity() else {
+                XCTFail()
+                return
+            }
+
+            let data = try! NSData(inputStream: inputStream, capacity: 64)
+            let string = String(data: data, encoding:NSUTF8StringEncoding)!
+            XCTAssertEqual(string, "--\(parameters.boundary)\r\nContent-Disposition: form-data; name=\"foo\"\r\n\r\nabcdef\r\n--\(parameters.boundary)--\r\n")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testIntValue() {
+        let part = try! MultipartFormDataBodyParameters.Part(value: 123, name: "foo")
+        let parameters = MultipartFormDataBodyParameters(parts: [part])
+
+        do {
+            guard case .InputStream(let inputStream) = try parameters.buildEntity() else {
+                XCTFail()
+                return
+            }
+
+            let data = try! NSData(inputStream: inputStream, capacity: 64)
+            let string = String(data: data, encoding:NSUTF8StringEncoding)!
+            XCTAssertEqual(string, "--\(parameters.boundary)\r\nContent-Disposition: form-data; name=\"foo\"\r\n\r\n123\r\n--\(parameters.boundary)--\r\n")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testDoubleValue() {
+        let part = try! MultipartFormDataBodyParameters.Part(value: 3.14, name: "foo")
+        let parameters = MultipartFormDataBodyParameters(parts: [part])
+
+        do {
+            guard case .InputStream(let inputStream) = try parameters.buildEntity() else {
+                XCTFail()
+                return
+            }
+
+            let data = try! NSData(inputStream: inputStream, capacity: 64)
+            let string = String(data: data, encoding:NSUTF8StringEncoding)!
+            XCTAssertEqual(string, "--\(parameters.boundary)\r\nContent-Disposition: form-data; name=\"foo\"\r\n\r\n3.14\r\n--\(parameters.boundary)--\r\n")
+        } catch {
+            XCTFail()
+        }
+    }
 }
