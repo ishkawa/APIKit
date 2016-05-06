@@ -6,19 +6,23 @@ import Foundation
     import CoreServices
 #endif
 
+/// `FormURLEncodedBodyParameters` serializes array of `Part` for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParametersType {
-    private let inputStream: MultipartInputStream
+    public let parts: [Part]
+    public let boundary: String
 
     public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random())) {
-        self.inputStream = MultipartInputStream(parts: parts, boundary: boundary)
+        self.parts = parts
+        self.boundary = boundary
     }
 
     // MARK: BodyParametersType
     public var contentType: String {
-        return "multipart/form-data; boundary=\(inputStream.boundary)"
+        return "multipart/form-data; boundary=\(boundary)"
     }
 
     public func buildEntity() throws -> RequestBodyEntity {
+        let inputStream = MultipartInputStream(parts: parts, boundary: boundary)
         return .InputStream(inputStream)
     }
 }
