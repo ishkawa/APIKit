@@ -100,19 +100,29 @@ public extension RequestType {
         return object
     }
 
-    /// Builds `NSURLRequest` from properties of `self`.
+    /// Builds `NSURL` from properties of `self` including `baseURL`, `path` and `queryParameters`.
     /// - Throws: `RequestError`, `ErrorType`
-    public func buildURLRequest() throws -> NSURLRequest {
+    public func buildURL() throws -> NSURL {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
             throw RequestError.InvalidBaseURL(baseURL)
         }
 
-        let URLRequest = NSMutableURLRequest()
-
         if let queryParameters = queryParameters where !queryParameters.isEmpty {
             components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(queryParameters)
         }
+
+        guard let createdURL = components.URL else {
+            throw RequestError.InvalidURLComponents(components)
+        }
+
+        return createdURL
+    }
+
+    /// Builds `NSURLRequest` from properties of `self`.
+    /// - Throws: `RequestError`, `ErrorType`
+    public func buildURLRequest() throws -> NSURLRequest {
+        let URLRequest = NSMutableURLRequest()
 
         if let bodyParameters = bodyParameters {
             URLRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
@@ -126,7 +136,7 @@ public extension RequestType {
             }
         }
 
-        URLRequest.URL = components.URL
+        URLRequest.URL = try buildURL()
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
         
