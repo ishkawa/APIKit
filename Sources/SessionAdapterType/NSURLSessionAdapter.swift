@@ -27,17 +27,6 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
 
     public func createTaskWithRequest<Request : RequestType>(request: Request, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) throws -> SessionTaskType {
         let URLRequest = NSMutableURLRequest()
-
-        if let bodyParameters = request.bodyParameters {
-            switch try bodyParameters.buildEntity() {
-            case .Data(let data):
-                URLRequest.HTTPBody = data
-
-            case .InputStream(let inputStream):
-                URLRequest.HTTPBodyStream = inputStream
-            }
-        }
-
         URLRequest.URL = try request.buildURL()
         URLRequest.HTTPMethod = request.method.rawValue
 
