@@ -28,8 +28,6 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
         let URLRequest = NSMutableURLRequest()
 
         if let bodyParameters = request.bodyParameters {
-            URLRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
-
             switch try bodyParameters.buildEntity() {
             case .Data(let data):
                 URLRequest.HTTPBody = data
@@ -41,9 +39,8 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
 
         URLRequest.URL = try request.buildURL()
         URLRequest.HTTPMethod = request.method.rawValue
-        URLRequest.setValue(request.dataParser.contentType, forHTTPHeaderField: "Accept")
-        
-        request.HTTPHeaderFields.forEach { key, value in
+
+        request.headerFields.forEach { key, value in
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 

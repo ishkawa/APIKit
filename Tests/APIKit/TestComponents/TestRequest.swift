@@ -8,9 +8,8 @@ struct TestRequest: RequestType {
         }
 
         let request = TestRequest(baseURL: baseURL, path: path, method: method, parameters: parameters, HTTPHeaderFields: HTTPHeaderFields)
-        let URLRequest = try? request.buildURLRequest()
 
-        return URLRequest?.URL
+        return try? request.buildURL()
     }
 
     // MARK: RequestType
