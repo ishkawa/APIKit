@@ -55,18 +55,7 @@ public class Session {
     /// - returns: The new session task.
     public func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
-
-        let URLRequest: NSURLRequest
-        do {
-            URLRequest = try request.buildURLRequest()
-        } catch {
-            callbackQueue.execute {
-                handler(.Failure(.RequestError(error)))
-            }
-            return nil
-        }
-
-        let task = adapter.resumedTaskWithURLRequest(URLRequest) { data, URLResponse, error in
+        let adapterHandler = { (data: NSData?, URLResponse: NSURLResponse?, error: NSError?) -> Void in
             let result: Result<Request.Response, SessionTaskError>
 
             switch (data, URLResponse, error) {
@@ -89,7 +78,18 @@ public class Session {
             }
         }
 
+        let task: SessionTaskType
+        do {
+            task = try adapter.createTaskWithRequest(request, handler: adapterHandler)
+        } catch {
+            callbackQueue.execute {
+                handler(.Failure(.RequestError(error)))
+            }
+            return nil
+        }
+
         setRequest(request, forTask: task)
+        task.resume()
 
         return task
     }

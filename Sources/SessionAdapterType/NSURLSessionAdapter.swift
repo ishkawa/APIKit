@@ -24,13 +24,33 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
         self.URLSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
-    public func resumedTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, NSError?) -> Void) -> SessionTaskType {
+    public func createTaskWithRequest<Request : RequestType>(request: Request, handler: (NSData?, NSURLResponse?, NSError?) -> Void) throws -> SessionTaskType {
+        let URLRequest = NSMutableURLRequest()
+
+        if let bodyParameters = request.bodyParameters {
+            URLRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
+
+            switch try bodyParameters.buildEntity() {
+            case .Data(let data):
+                URLRequest.HTTPBody = data
+
+            case .InputStream(let inputStream):
+                URLRequest.HTTPBodyStream = inputStream
+            }
+        }
+
+        URLRequest.URL = try request.buildURL()
+        URLRequest.HTTPMethod = request.method.rawValue
+        URLRequest.setValue(request.dataParser.contentType, forHTTPHeaderField: "Accept")
+        
+        request.HTTPHeaderFields.forEach { key, value in
+            URLRequest.setValue(value, forHTTPHeaderField: key)
+        }
+
         let task = URLSession.dataTaskWithRequest(URLRequest, completionHandler: handler)
 
         setBuffer(NSMutableData(), forTask: task)
         setHandler(handler, forTask: task)
-
-        task.resume()
 
         return task
     }
