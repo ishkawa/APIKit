@@ -76,7 +76,7 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
 
     // MARK: Associated objects
     private func setBuffer(buffer: NSMutableData, forTask task: NSURLSessionTask) {
-        objc_setAssociatedObject(task, &dataTaskResponseBufferKey, NSMutableData(), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(task, &dataTaskResponseBufferKey, buffer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     private func bufferForTask(task: NSURLSessionTask) -> NSMutableData? {
