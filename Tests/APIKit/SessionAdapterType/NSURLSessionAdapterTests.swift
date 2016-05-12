@@ -28,6 +28,33 @@ class NSURLSessionAdapterTests: XCTestCase {
         super.tearDown()
     }
 
+    func testPOSTJSONRequest() {
+        let parameters: [AnyObject] = [
+            ["id": "1"],
+            ["id": "2"],
+            ["hello", "yellow"]
+        ]
+
+        let request = TestRequest(method: .POST, parameters: parameters)
+        XCTAssert(request.parameters?.count == 3)
+
+        let sessionTask = try? session.adapter.createTaskWithRequest(request, handler: { _ in })
+        let URLSessionTask = sessionTask.flatMap { $0 as? NSURLSessionTask }
+        let URLRequest = URLSessionTask?.currentRequest
+        XCTAssertEqual(URLRequest?.valueForHTTPHeaderField("Content-Type"), "application/json")
+        XCTAssert(URLSessionTask is NSURLSessionUploadTask)
+    }
+
+    func testPOSTInvalidJSONRequest() {
+        let request = TestRequest(method: .POST, parameters: "Not a JSON object")
+        do {
+            try session.adapter.createTaskWithRequest(request, handler: { _ in })
+            XCTFail()
+        } catch {
+
+        }
+    }
+
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
@@ -76,7 +103,7 @@ class NSURLSessionAdapterTests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .ConnectionError(let error):
+                case .ConnectionError(let error as NSError):
                     XCTAssertEqual(error.domain, NSURLErrorDomain)
 
                 default:
