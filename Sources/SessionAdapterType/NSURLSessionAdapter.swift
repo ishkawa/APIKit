@@ -5,6 +5,7 @@ extension NSURLSessionTask: SessionTaskType {
 }
 
 private var dataTaskResponseBufferKey = 0
+private var uploadTaskInputStreamKey = 0
 private var taskAssociatedObjectCompletionHandlerKey = 0
 
 /// `NSURLSessionAdapter` connects `NSURLSession` with `Session`.
@@ -14,7 +15,7 @@ private var taskAssociatedObjectCompletionHandlerKey = 0
 /// delegate methods that you want to implement. Since `NSURLSessionAdapter` also implements delegate methods
 /// `URLSession(_:task: didCompleteWithError:)` and `URLSession(_:dataTask:didReceiveData:)`, you have to call
 /// `super` in these methods if you implement them.
-public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDelegate {
+public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     /// The undelying `NSURLSession` instance.
     public var URLSession: NSURLSession!
     
@@ -44,7 +45,18 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
-        let task = URLSession.dataTaskWithRequest(URLRequest, completionHandler: handler)
+        let task: NSURLSessionTask
+        switch try request.bodyParameters?.buildEntity() {
+        case .Data(let data)?:
+            task = URLSession.uploadTaskWithRequest(URLRequest, fromData: data)
+
+        case .InputStream(let inputStream)?:
+            task = URLSession.uploadTaskWithStreamedRequest(URLRequest)
+            setInputStream(inputStream, forTask: task)
+
+        default:
+            task = URLSession.dataTaskWithRequest(URLRequest)
+        }
 
         setBuffer(NSMutableData(), forTask: task)
         setHandler(handler, forTask: task)
@@ -62,12 +74,21 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
         }
     }
 
+    // MARK: Associated objects
     private func setBuffer(buffer: NSMutableData, forTask task: NSURLSessionTask) {
         objc_setAssociatedObject(task, &dataTaskResponseBufferKey, NSMutableData(), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     private func bufferForTask(task: NSURLSessionTask) -> NSMutableData? {
         return objc_getAssociatedObject(task, &dataTaskResponseBufferKey) as? NSMutableData
+    }
+
+    private func setInputStream(inputStream: NSInputStream, forTask task: NSURLSessionTask) {
+        objc_setAssociatedObject(task, &uploadTaskInputStreamKey, inputStream, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
+    private func inputStreamForTask(task: NSURLSessionTask) -> NSInputStream? {
+        return objc_getAssociatedObject(task, &uploadTaskInputStreamKey) as? NSInputStream
     }
 
     private func setHandler(handler: (NSData?, NSURLResponse?, NSError?) -> Void, forTask task: NSURLSessionTask) {
@@ -81,6 +102,10 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
     // MARK: NSURLSessionTaskDelegate
     public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
         handlerForTask(task)?(bufferForTask(task), task.response, connectionError)
+    }
+
+    public func URLSession(session: NSURLSession, task: NSURLSessionTask, needNewBodyStream completionHandler: (NSInputStream?) -> Void) {
+        completionHandler(inputStreamForTask(task))
     }
 
     // MARK: NSURLSessionDataDelegate
