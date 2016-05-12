@@ -55,7 +55,7 @@ public class Session {
     /// - returns: The new session task.
     public func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
-        let adapterHandler = { (data: NSData?, URLResponse: NSURLResponse?, error: NSError?) -> Void in
+        let adapterHandler = { (data: NSData?, URLResponse: NSURLResponse?, error: ErrorType?) -> Void in
             let result: Result<Request.Response, SessionTaskError>
 
             switch (data, URLResponse, error) {

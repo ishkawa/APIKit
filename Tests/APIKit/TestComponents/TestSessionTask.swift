@@ -8,12 +8,12 @@ class TestSessionTask: SessionTaskType {
 
     var data: NSData?
     var URLResponse: NSURLResponse?
-    var error: NSError?
+    var error: ErrorType?
     var handler: (TestSessionTask, Bool) -> Void
 
     var responseTime = NSTimeInterval(0.05)
 
-    init(data: NSData?, URLResponse: NSURLResponse?, error: NSError?, handler: (TestSessionTask, Bool) -> Void) {
+    init(data: NSData?, URLResponse: NSURLResponse?, error: ErrorType?, handler: (TestSessionTask, Bool) -> Void) {
         self.data = data
         self.URLResponse = URLResponse
         self.error = error

@@ -4,17 +4,17 @@ import APIKit
 class TestSessionAdapter: SessionAdapterType {
     var data: NSData?
     var URLResponse: NSURLResponse?
-    var error: NSError?
+    var error: ErrorType?
 
     var tasks = [TestSessionTask]()
 
-    init(data: NSData? = NSData(), URLResponse: NSURLResponse? = NSHTTPURLResponse(URL: NSURL(), statusCode: 200, HTTPVersion: nil, headerFields: nil), error: NSError? = nil) {
+    init(data: NSData? = NSData(), URLResponse: NSURLResponse? = NSHTTPURLResponse(URL: NSURL(), statusCode: 200, HTTPVersion: nil, headerFields: nil), error: ErrorType? = nil) {
         self.data = data
         self.URLResponse = URLResponse
         self.error = error
     }
 
-    func createTaskWithRequest<Request : RequestType>(request: Request, handler: (NSData?, NSURLResponse?, NSError?) -> Void) throws -> SessionTaskType {
+    func createTaskWithRequest<Request : RequestType>(request: Request, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) throws -> SessionTaskType {
         let task = TestSessionTask(data: data, URLResponse: URLResponse, error: error) { [weak self] task, completed in
             if completed {
                 handler(task.data, task.URLResponse, task.error)
