@@ -34,8 +34,17 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
+        let bodyParameters = request.bodyParameters
+        if let bodyContentType = bodyParameters?.contentType where URLRequest.valueForHTTPHeaderField("Content-Type") == nil {
+            URLRequest.setValue(bodyContentType, forHTTPHeaderField: "Content-Type")
+        }
+
+        if let acceptContentType = request.dataParser.contentType where URLRequest.valueForHTTPHeaderField("Accept") == nil {
+            URLRequest.setValue(acceptContentType, forHTTPHeaderField: "Accept")
+        }
+
         let task: NSURLSessionTask
-        switch try request.bodyParameters?.buildEntity() {
+        switch try bodyParameters?.buildEntity() {
         case .Data(let data)?:
             task = URLSession.uploadTaskWithRequest(URLRequest, fromData: data)
 

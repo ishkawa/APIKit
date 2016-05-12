@@ -36,10 +36,8 @@ public protocol RequestType {
     /// will be computed from `parameters` using `JSONBodyParameters`.
     var bodyParameters: BodyParametersType? { get }
 
-    /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
-    /// fields provided by `dataParser` and `bodyParameters` will be added in `headerFields`.
-    /// If you define `Accept` and `Content-Type` in this property, the values in this property are preferred.
-    var additionalHeaderFields: [String: String] { get }
+    /// The HTTP header fields.
+    var headerFields: [String: String] { get }
 
     /// The parser object that states `Content-Type` to accept and parses response body.
     var dataParser: DataParserType { get }
@@ -76,22 +74,8 @@ public extension RequestType {
         return JSONBodyParameters(JSONObject: parameters)
     }
 
-    public var additionalHeaderFields: [String: String] {
-        return [:]
-    }
-
     public var headerFields: [String: String] {
-        var headerFields = additionalHeaderFields
-
-        if let bodyContentType = bodyParameters?.contentType where headerFields["ContentType"] == nil {
-            headerFields["Content-Type"] = bodyContentType
-        }
-
-        if let acceptContentType = dataParser.contentType where headerFields["Accept"] == nil {
-            headerFields["Accept"] = acceptContentType
-        }
-
-        return headerFields
+        return [:]
     }
 
     public var dataParser: DataParserType {
