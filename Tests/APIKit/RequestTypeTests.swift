@@ -60,351 +60,351 @@ class RequestTypeTests: XCTestCase {
     func testBuildURL() {
         // MARK: - baseURL = https://example.com
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: ""),
+            TestRequest(baseURL: "https://example.com", path: "").absoluteURL,
             NSURL(string: "https://example.com")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/"),
+            TestRequest(baseURL: "https://example.com", path: "/").absoluteURL,
             NSURL(string: "https://example.com/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com", path: "/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "foo"),
+            TestRequest(baseURL: "https://example.com", path: "foo").absoluteURL,
             NSURL(string: "https://example.com/foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com", path: "/foo", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/foo?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/"),
+            TestRequest(baseURL: "https://example.com", path: "/foo/").absoluteURL,
             NSURL(string: "https://example.com/foo/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com", path: "/foo/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/foo/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "foo/bar"),
+            TestRequest(baseURL: "https://example.com", path: "foo/bar").absoluteURL,
             NSURL(string: "https://example.com/foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/bar"),
+            TestRequest(baseURL: "https://example.com", path: "/foo/bar").absoluteURL,
             NSURL(string: "https://example.com/foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/bar", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com", path: "/foo/bar", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/bar/"),
+            TestRequest(baseURL: "https://example.com", path: "/foo/bar/").absoluteURL,
             NSURL(string: "https://example.com/foo/bar/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/bar/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com", path: "/foo/bar/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com", path: "/foo/bar//"),
+            TestRequest(baseURL: "https://example.com", path: "/foo/bar//").absoluteURL,
             NSURL(string: "https://example.com/foo/bar//")
         )
         
         // MARK: - baseURL = https://example.com/
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: ""),
+            TestRequest(baseURL: "https://example.com/", path: "").absoluteURL,
             NSURL(string: "https://example.com/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/"),
+            TestRequest(baseURL: "https://example.com/", path: "/").absoluteURL,
             NSURL(string: "https://example.com//")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/", path: "/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com//?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "foo"),
+            TestRequest(baseURL: "https://example.com/", path: "foo").absoluteURL,
             NSURL(string: "https://example.com/foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo"),
+            TestRequest(baseURL: "https://example.com/", path: "/foo").absoluteURL,
             NSURL(string: "https://example.com//foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/", path: "/foo", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com//foo?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo/"),
+            TestRequest(baseURL: "https://example.com/", path: "/foo/").absoluteURL,
             NSURL(string: "https://example.com//foo/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/", path: "/foo/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com//foo/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "foo/bar"),
+            TestRequest(baseURL: "https://example.com/", path: "foo/bar").absoluteURL,
             NSURL(string: "https://example.com/foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo/bar"),
+            TestRequest(baseURL: "https://example.com/", path: "/foo/bar").absoluteURL,
             NSURL(string: "https://example.com//foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo/bar", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/", path: "/foo/bar", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com//foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo/bar/"),
+            TestRequest(baseURL: "https://example.com/", path: "/foo/bar/").absoluteURL,
             NSURL(string: "https://example.com//foo/bar/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "/foo/bar/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/", path: "/foo/bar/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com//foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/", path: "foo//bar//"),
+            TestRequest(baseURL: "https://example.com/", path: "foo//bar//").absoluteURL,
             NSURL(string: "https://example.com/foo//bar//")
         )
         
         // MARK: - baseURL = https://example.com/api
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: ""),
+            TestRequest(baseURL: "https://example.com/api", path: "").absoluteURL,
             NSURL(string: "https://example.com/api")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/"),
+            TestRequest(baseURL: "https://example.com/api", path: "/").absoluteURL,
             NSURL(string: "https://example.com/api/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api", path: "/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "foo"),
+            TestRequest(baseURL: "https://example.com/api", path: "foo").absoluteURL,
             NSURL(string: "https://example.com/api/foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo"),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo").absoluteURL,
             NSURL(string: "https://example.com/api/foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api/foo?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo/"),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo/").absoluteURL,
             NSURL(string: "https://example.com/api/foo/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api/foo/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "foo/bar"),
+            TestRequest(baseURL: "https://example.com/api", path: "foo/bar").absoluteURL,
             NSURL(string: "https://example.com/api/foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo/bar"),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo/bar").absoluteURL,
             NSURL(string: "https://example.com/api/foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo/bar", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo/bar", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api/foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo/bar/"),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo/bar/").absoluteURL,
             NSURL(string: "https://example.com/api/foo/bar/")
         )
 
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "/foo/bar/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api", path: "/foo/bar/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api/foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api", path: "foo//bar//"),
+            TestRequest(baseURL: "https://example.com/api", path: "foo//bar//").absoluteURL,
             NSURL(string: "https://example.com/api/foo//bar//")
         )
         
         // MARK: - baseURL = https://example.com/api/
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: ""),
+            TestRequest(baseURL: "https://example.com/api/", path: "").absoluteURL,
             NSURL(string: "https://example.com/api/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/"),
+            TestRequest(baseURL: "https://example.com/api/", path: "/").absoluteURL,
             NSURL(string: "https://example.com/api//")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api/", path: "/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api//?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "foo"),
+            TestRequest(baseURL: "https://example.com/api/", path: "foo").absoluteURL,
             NSURL(string: "https://example.com/api/foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo"),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo").absoluteURL,
             NSURL(string: "https://example.com/api//foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api//foo?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo/"),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo/").absoluteURL,
             NSURL(string: "https://example.com/api//foo/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api//foo/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "foo/bar"),
+            TestRequest(baseURL: "https://example.com/api/", path: "foo/bar").absoluteURL,
             NSURL(string: "https://example.com/api/foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo/bar"),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo/bar").absoluteURL,
             NSURL(string: "https://example.com/api//foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo/bar", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo/bar", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api//foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo/bar/"),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo/bar/").absoluteURL,
             NSURL(string: "https://example.com/api//foo/bar/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "/foo/bar/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com/api/", path: "/foo/bar/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com/api//foo/bar/?p=1")
         )
 
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com/api/", path: "foo//bar//"),
+            TestRequest(baseURL: "https://example.com/api/", path: "foo//bar//").absoluteURL,
             NSURL(string: "https://example.com/api/foo//bar//")
         )
         
         //　MARK: - baseURL = https://example.com///
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: ""),
+            TestRequest(baseURL: "https://example.com///", path: "").absoluteURL,
             NSURL(string: "https://example.com///")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/"),
+            TestRequest(baseURL: "https://example.com///", path: "/").absoluteURL,
             NSURL(string: "https://example.com////")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com///", path: "/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com////?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "foo"),
+            TestRequest(baseURL: "https://example.com///", path: "foo").absoluteURL,
             NSURL(string: "https://example.com///foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo"),
+            TestRequest(baseURL: "https://example.com///", path: "/foo").absoluteURL,
             NSURL(string: "https://example.com////foo")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com///", path: "/foo", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com////foo?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo/"),
+            TestRequest(baseURL: "https://example.com///", path: "/foo/").absoluteURL,
             NSURL(string: "https://example.com////foo/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com///", path: "/foo/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com////foo/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "foo/bar"),
+            TestRequest(baseURL: "https://example.com///", path: "foo/bar").absoluteURL,
             NSURL(string: "https://example.com///foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo/bar"),
+            TestRequest(baseURL: "https://example.com///", path: "/foo/bar").absoluteURL,
             NSURL(string: "https://example.com////foo/bar")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo/bar", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com///", path: "/foo/bar", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com////foo/bar?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo/bar/"),
+            TestRequest(baseURL: "https://example.com///", path: "/foo/bar/").absoluteURL,
             NSURL(string: "https://example.com////foo/bar/")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "/foo/bar/", parameters: ["p": 1]),
+            TestRequest(baseURL: "https://example.com///", path: "/foo/bar/", parameters: ["p": 1]).absoluteURL,
             NSURL(string: "https://example.com////foo/bar/?p=1")
         )
         
         XCTAssertEqual(
-            TestRequest.URLOf(baseURL: "https://example.com///", path: "foo//bar//"),
+            TestRequest(baseURL: "https://example.com///", path: "foo//bar//").absoluteURL,
             NSURL(string: "https://example.com///foo//bar//")
         )
     }

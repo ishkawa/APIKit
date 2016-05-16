@@ -2,28 +2,19 @@ import Foundation
 import APIKit
 
 class TestSessionTask: SessionTaskType {
-    enum Error: ErrorType {
-        case Cancelled
-    }
+    
+    var handler: (NSData?, NSURLResponse?, ErrorType?) -> Void
+    var cancelled = false
 
-    var data: NSData?
-    var URLResponse: NSURLResponse?
-    var error: NSError?
-    var cancelHandler: (TestSessionTask) -> Void
-
-    init(data: NSData?, URLResponse: NSURLResponse?, error: NSError?, cancelHandler: (TestSessionTask) -> Void) {
-        self.data = data
-        self.URLResponse = URLResponse
-        self.error = error
-        self.cancelHandler = cancelHandler
+    init(handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) {
+        self.handler = handler
     }
 
     func resume() {
-        
+
     }
 
     func cancel() {
-        error = Error.Cancelled as NSError
-        cancelHandler(self)
+        cancelled = true
     }
 }
