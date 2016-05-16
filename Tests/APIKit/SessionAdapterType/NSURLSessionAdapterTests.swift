@@ -54,7 +54,7 @@ class NSURLSessionAdapterTests: XCTestCase {
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectationsWithTimeout(10.0, handler: nil)
     }
     
     func testConnectionError() {
@@ -87,6 +87,6 @@ class NSURLSessionAdapterTests: XCTestCase {
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectationsWithTimeout(10.0, handler: nil)
     }    
 }
