@@ -8,29 +8,18 @@ class TestSessionTask: SessionTaskType {
 
     var data: NSData?
     var URLResponse: NSURLResponse?
-    var error: ErrorType?
-    var handler: (TestSessionTask, Bool) -> Void
+    var error: NSError?
+    var cancelHandler: (TestSessionTask) -> Void
 
-    var responseTime = NSTimeInterval(0.05)
-
-    init(data: NSData?, URLResponse: NSURLResponse?, error: ErrorType?, handler: (TestSessionTask, Bool) -> Void) {
+    init(data: NSData?, URLResponse: NSURLResponse?, error: NSError?, cancelHandler: (TestSessionTask) -> Void) {
         self.data = data
         self.URLResponse = URLResponse
         self.error = error
-        self.handler = handler
-    }
-
-    func resume() {
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(responseTime * NSTimeInterval(NSEC_PER_SEC)))
-        let queue = dispatch_get_main_queue()
-
-        dispatch_after(time, queue) {
-            self.handler(self, true)
-        }
+        self.cancelHandler = cancelHandler
     }
 
     func cancel() {
         error = Error.Cancelled as NSError
-        handler(self, false)
+        cancelHandler(self)
     }
 }

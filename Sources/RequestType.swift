@@ -36,11 +36,18 @@ public protocol RequestType {
     /// will be computed from `parameters` using `JSONBodyParameters`.
     var bodyParameters: BodyParametersType? { get }
 
-    /// The HTTP header fields.
-    var headerFields: [String: String] { get }
+    /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
+    /// fields will be added by `dataParser` and `bodyParameters`. If you define `Accept` and `Content-Type`
+    /// in this property, the values in this property are preferred.
+    var HTTPHeaderFields: [String: String] { get }
 
     /// The parser object that states `Content-Type` to accept and parses response body.
     var dataParser: DataParserType { get }
+
+    /// Intercepts `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
+    /// thrown in this method, the result of `Session.sendRequest()` truns `.Failure(.RequestError(error))`.
+    /// - Throws: `ErrorType`
+    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
     /// Intercepts response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
@@ -74,7 +81,7 @@ public extension RequestType {
         return JSONBodyParameters(JSONObject: parameters)
     }
 
-    public var headerFields: [String: String] {
+    public var HTTPHeaderFields: [String: String] {
         return [:]
     }
 
@@ -93,23 +100,43 @@ public extension RequestType {
         return object
     }
 
-    /// Builds `NSURL` from properties of `self` including `baseURL`, `path` and `queryParameters`.
+    /// Builds `NSURLRequest` from properties of `self`.
     /// - Throws: `RequestError`, `ErrorType`
-    public func buildURL() throws -> NSURL {
+    public func buildURLRequest() throws -> NSURLRequest {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
             throw RequestError.InvalidBaseURL(baseURL)
         }
 
+        let URLRequest = NSMutableURLRequest()
+
         if let queryParameters = queryParameters where !queryParameters.isEmpty {
             components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(queryParameters)
         }
 
-        guard let createdURL = components.URL else {
-            throw RequestError.InvalidURLComponents(components)
+        if let bodyParameters = bodyParameters {
+            URLRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
+
+            switch try bodyParameters.buildEntity() {
+            case .Data(let data):
+                URLRequest.HTTPBody = data
+
+            case .InputStream(let inputStream):
+                URLRequest.HTTPBodyStream = inputStream
+            }
         }
 
-        return createdURL
+        URLRequest.URL = components.URL
+        URLRequest.HTTPMethod = method.rawValue
+        URLRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
+        
+        HTTPHeaderFields.forEach { key, value in
+            URLRequest.setValue(value, forHTTPHeaderField: key)
+        }
+
+        try interceptURLRequest(URLRequest)
+
+        return URLRequest
     }
 
     /// Builds `Response` from response `NSData`.

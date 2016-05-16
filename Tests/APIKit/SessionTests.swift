@@ -86,7 +86,7 @@ class SessionTests: XCTestCase {
         
         session.sendRequest(request) { result in
             if case .Failure(let error) = result,
-               case .ConnectionError(let connectionError as NSError) = error {
+               case .ConnectionError(let connectionError) = error {
                 XCTAssertEqual(connectionError.code, 0)
             } else {
                 XCTFail()
