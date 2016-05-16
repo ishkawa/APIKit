@@ -2,12 +2,12 @@ import Foundation
 import APIKit
 
 struct TestRequest: RequestType {
-    static func URLOf(baseURL baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], HTTPHeaderFields: [String: String] = [:]) -> NSURL? {
+    static func URLOf(baseURL baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], headerFields: [String: String] = [:]) -> NSURL? {
         guard let baseURL = NSURL(string: baseURL) else {
             return nil
         }
 
-        let request = TestRequest(baseURL: baseURL, path: path, method: method, parameters: parameters, HTTPHeaderFields: HTTPHeaderFields)
+        let request = TestRequest(baseURL: baseURL, path: path, method: method, parameters: parameters, headerFields: headerFields)
         let URLRequest = try? request.buildURLRequest()
 
         return URLRequest?.URL
@@ -16,19 +16,19 @@ struct TestRequest: RequestType {
     // MARK: RequestType
     typealias Response = AnyObject
 
-    init(baseURL: NSURL = NSURL(string: "https://example.com")!, path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], HTTPHeaderFields: [String: String] = [:]) {
+    init(baseURL: NSURL = NSURL(string: "https://example.com")!, path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], headerFields: [String: String] = [:]) {
         self.baseURL = baseURL
         self.path = path
         self.method = method
         self.parameters = parameters
-        self.HTTPHeaderFields = HTTPHeaderFields
+        self.headerFields = headerFields
     }
 
     let baseURL: NSURL
     let method: HTTPMethod
     let path: String
     let parameters: AnyObject?
-    let HTTPHeaderFields: [String: String]
+    let headerFields: [String: String]
 
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
         return object

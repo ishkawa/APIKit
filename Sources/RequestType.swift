@@ -39,7 +39,7 @@ public protocol RequestType {
     /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
     /// fields will be added by `dataParser` and `bodyParameters`. If you define `Accept` and `Content-Type`
     /// in this property, the values in this property are preferred.
-    var HTTPHeaderFields: [String: String] { get }
+    var headerFields: [String: String] { get }
 
     /// The parser object that states `Content-Type` to accept and parses response body.
     var dataParser: DataParserType { get }
@@ -81,7 +81,7 @@ public extension RequestType {
         return JSONBodyParameters(JSONObject: parameters)
     }
 
-    public var HTTPHeaderFields: [String: String] {
+    public var headerFields: [String: String] {
         return [:]
     }
 
@@ -130,7 +130,7 @@ public extension RequestType {
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
         
-        HTTPHeaderFields.forEach { key, value in
+        headerFields.forEach { key, value in
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 

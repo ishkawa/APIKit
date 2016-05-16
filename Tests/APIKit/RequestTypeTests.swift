@@ -20,8 +20,8 @@ class RequestTypeTests: XCTestCase {
         XCTAssertEqual(URLRequest?.URL?.query, "null")
     }
     
-    func testHTTPHeaderFields() {
-        let request = TestRequest(HTTPHeaderFields: ["Foo": "f", "Accept": "a", "Content-Type": "c"])
+    func testheaderFields() {
+        let request = TestRequest(headerFields: ["Foo": "f", "Accept": "a", "Content-Type": "c"])
         let URLReqeust = try? request.buildURLRequest()
         XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Foo"), "f")
         XCTAssertEqual(URLReqeust?.valueForHTTPHeaderField("Accept"), "a")
