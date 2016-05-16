@@ -2,38 +2,56 @@ import Foundation
 import APIKit
 
 class TestSessionAdapter: SessionAdapterType {
+    enum Error: ErrorType {
+        case Cancelled
+    }
+
     var data: NSData?
     var URLResponse: NSURLResponse?
-    var error: NSError?
+    var error: ErrorType?
 
-    var tasks = [TestSessionTask]()
-    var responseTime = NSTimeInterval(0.05)
+    private class Runner {
+        weak var adapter: TestSessionAdapter?
+
+        @objc func run() {
+            adapter?.executeAllTasks()
+        }
+    }
+
+    private var tasks = [TestSessionTask]()
+    private let runner: Runner
+    private let timer: NSTimer
 
     init(data: NSData? = NSData(), URLResponse: NSURLResponse? = NSHTTPURLResponse(URL: NSURL(), statusCode: 200, HTTPVersion: nil, headerFields: nil), error: NSError? = nil) {
         self.data = data
         self.URLResponse = URLResponse
         self.error = error
+
+        self.runner = Runner()
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.001,
+            target: runner,
+            selector: #selector(Runner.run),
+            userInfo: nil,
+            repeats: true)
+
+        self.runner.adapter = self
+    }
+
+    func executeAllTasks() {
+        for task in tasks {
+            if task.cancelled {
+                task.handler(nil, nil, Error.Cancelled)
+            } else {
+                task.handler(data, URLResponse, error)
+            }
+        }
+
+        tasks = []
     }
 
     func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType {
-        let task = TestSessionTask(data: data, URLResponse: URLResponse, error: error) { [weak self] task in
-            if let index = self?.tasks.indexOf({ $0 === task }) {
-                self?.tasks.removeAtIndex(index)
-            }
-        }
-
+        let task = TestSessionTask(handler: handler)
         tasks.append(task)
-
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(responseTime * NSTimeInterval(NSEC_PER_SEC)))
-        let queue = dispatch_get_main_queue()
-
-        dispatch_after(time, queue) { [weak self] in
-            handler(task.data, task.URLResponse, task.error)
-
-            if let index = self?.tasks.indexOf({ $0 === task }) {
-                self?.tasks.removeAtIndex(index)
-            }
-        }
 
         return task
     }
