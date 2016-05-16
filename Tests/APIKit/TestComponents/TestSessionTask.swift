@@ -18,6 +18,10 @@ class TestSessionTask: SessionTaskType {
         self.cancelHandler = cancelHandler
     }
 
+    func resume() {
+        
+    }
+
     func cancel() {
         error = Error.Cancelled as NSError
         cancelHandler(self)

@@ -66,7 +66,7 @@ public class Session {
             return nil
         }
 
-        let task = adapter.resumedTaskWithURLRequest(URLRequest) { data, URLResponse, error in
+        let task = adapter.createTaskWithURLRequest(URLRequest) { data, URLResponse, error in
             let result: Result<Request.Response, SessionTaskError>
 
             switch (data, URLResponse, error) {
@@ -90,6 +90,7 @@ public class Session {
         }
 
         setRequest(request, forTask: task)
+        task.resume()
 
         return task
     }

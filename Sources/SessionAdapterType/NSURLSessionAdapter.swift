@@ -24,7 +24,7 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
         self.URLSession = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
-    public func resumedTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, NSError?) -> Void) -> SessionTaskType {
+    public func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, NSError?) -> Void) -> SessionTaskType {
         let task = URLSession.dataTaskWithRequest(URLRequest, completionHandler: handler)
 
         setBuffer(NSMutableData(), forTask: task)
