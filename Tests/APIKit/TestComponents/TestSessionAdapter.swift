@@ -15,7 +15,7 @@ class TestSessionAdapter: SessionAdapterType {
         self.error = error
     }
 
-    func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, NSError?) -> Void) -> SessionTaskType {
+    func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType {
         let task = TestSessionTask(data: data, URLResponse: URLResponse, error: error) { [weak self] task in
             if let index = self?.tasks.indexOf({ $0 === task }) {
                 self?.tasks.removeAtIndex(index)

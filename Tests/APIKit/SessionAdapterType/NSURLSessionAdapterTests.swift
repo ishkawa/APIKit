@@ -76,7 +76,7 @@ class NSURLSessionAdapterTests: XCTestCase {
                 
             case .Failure(let error):
                 switch error {
-                case .ConnectionError(let error):
+                case .ConnectionError(let error as NSError):
                     XCTAssertEqual(error.domain, NSURLErrorDomain)
 
                 default:
