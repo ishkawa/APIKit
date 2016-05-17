@@ -29,12 +29,14 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
     }
 
     public func buildEntity() throws -> RequestBodyEntity {
+        let inputStream = MultipartInputStream(parts: parts, boundary: boundary)
+
         switch entityType {
         case .InputStream:
-            return .InputStream(MultipartInputStream(parts: parts, boundary: boundary))
+            return .InputStream(inputStream)
 
         case .Data:
-            fatalError("Not implemented yet.")
+            return .Data(try NSData(inputStream: inputStream))
         }
     }
 }

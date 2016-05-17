@@ -6,7 +6,7 @@ extension NSData {
         case UnreadableStream(NSInputStream)
     }
 
-    convenience init(inputStream: NSInputStream, capacity: Int) throws {
+    convenience init(inputStream: NSInputStream, capacity: Int = Int(UInt16.max)) throws {
         guard let data = NSMutableData(capacity: capacity) else {
             throw InputStreamError.InvalidDataCapacity(capacity)
         }
