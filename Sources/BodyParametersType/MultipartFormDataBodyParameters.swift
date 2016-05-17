@@ -8,12 +8,23 @@ import Foundation
 
 /// `FormURLEncodedBodyParameters` serializes array of `Part` for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParametersType {
+    /// `EntityType` represents wheather the entity is expressed as `NSData` or `NSInputStream`.
+    public enum EntityType {
+        /// Expresses the entity as `NSData`, which has faster upload speed and lager memory usage.
+        case Data
+
+        /// Expresses the entity as `NSInputStream`, which has smaller memory usage and slower upload speed.
+        case InputStream
+    }
+
     public let parts: [Part]
     public let boundary: String
+    public let entityType: EntityType
 
-    public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random())) {
+    public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random()), entityType: EntityType = .Data) {
         self.parts = parts
         self.boundary = boundary
+        self.entityType = entityType
     }
 
     // MARK: BodyParametersType
@@ -23,7 +34,14 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
 
     public func buildEntity() throws -> RequestBodyEntity {
         let inputStream = MultipartInputStream(parts: parts, boundary: boundary)
-        return .InputStream(inputStream)
+
+        switch entityType {
+        case .InputStream:
+            return .InputStream(inputStream)
+
+        case .Data:
+            return .Data(try NSData(inputStream: inputStream))
+        }
     }
 }
 
