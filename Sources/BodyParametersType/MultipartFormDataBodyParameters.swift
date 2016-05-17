@@ -8,12 +8,19 @@ import Foundation
 
 /// `FormURLEncodedBodyParameters` serializes array of `Part` for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParametersType {
+    public enum EntityType {
+        case InputStream
+        case Data
+    }
+
     public let parts: [Part]
     public let boundary: String
+    public let entityType: EntityType
 
-    public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random())) {
+    public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random()), entityType: EntityType = .InputStream) {
         self.parts = parts
         self.boundary = boundary
+        self.entityType = entityType
     }
 
     // MARK: BodyParametersType
@@ -22,8 +29,13 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
     }
 
     public func buildEntity() throws -> RequestBodyEntity {
-        let inputStream = MultipartInputStream(parts: parts, boundary: boundary)
-        return .InputStream(inputStream)
+        switch entityType {
+        case .InputStream:
+            return .InputStream(MultipartInputStream(parts: parts, boundary: boundary))
+
+        case .Data:
+            fatalError("Not implemented yet.")
+        }
     }
 }
 
