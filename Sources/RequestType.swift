@@ -128,12 +128,10 @@ public extension RequestType {
         }
 
         do {
-            try configureURLRequest(URLRequest)
+            return .Success(try configureURLRequest(URLRequest))
         } catch {
             return .Failure(.ConfigurationError(error))
         }
-        
-        return .Success(URLRequest)
     }
 
     // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
