@@ -408,4 +408,13 @@ class RequestTypeTests: XCTestCase {
             NSURL(string: "https://example.com///foo//bar//")
         )
     }
+
+    func testInterceptURLRequest() {
+        let URL = NSURL(string: "https://example.com/customize")!
+        let request = TestRequest() { _ in
+            return NSMutableURLRequest(URL: URL)
+        }
+
+        XCTAssertEqual((try? request.buildURLRequest())?.URL, URL)
+    }
 }
