@@ -134,9 +134,7 @@ public extension RequestType {
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
-        try interceptURLRequest(URLRequest)
-
-        return URLRequest
+        return (try interceptURLRequest(URLRequest))
     }
 
     /// Builds `Response` from response `NSData`.
