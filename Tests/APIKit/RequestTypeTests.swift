@@ -83,7 +83,7 @@ class RequestTypeTests: XCTestCase {
     struct ParameterizedRequest: RequestType {
         typealias Response = Void
         
-        init?(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: [String: AnyObject] = [:], HTTPHeaderFields: [String: String] = [:]) {
+        init?(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: [String: AnyObject] = [:], HTTPHeaderFields: [String: String] = [:], customizeURLRequest: NSMutableURLRequest throws -> NSMutableURLRequest = { $0 }) {
             guard let baseURL = NSURL(string: baseURL) else {
                 return nil
             }
@@ -93,6 +93,7 @@ class RequestTypeTests: XCTestCase {
             self.method = method
             self.parameters = parameters
             self.HTTPHeaderFields = HTTPHeaderFields
+            self.customizeURLRequest = customizeURLRequest
         }
         
         let baseURL: NSURL
@@ -100,6 +101,12 @@ class RequestTypeTests: XCTestCase {
         let path: String
         let parameters: [String: AnyObject]
         let HTTPHeaderFields: [String: String]
+
+        let customizeURLRequest: NSMutableURLRequest throws -> NSMutableURLRequest
+
+        func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
+            return try customizeURLRequest(URLRequest)
+        }
         
         func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
             abort()
@@ -543,5 +550,14 @@ class RequestTypeTests: XCTestCase {
             expectation.fulfill()
         }
         waitForExpectationsWithTimeout(1.0, handler: nil)
+    }
+
+    func testConfigureURLRequest() {
+        let URL = NSURL(string: "https://example.com/customize")!
+        let request = ParameterizedRequest() { _ in
+            return NSMutableURLRequest(URL: URL)
+        }
+
+        XCTAssertEqual(request?.buildURLRequest().value?.URL, URL)
     }
 }
