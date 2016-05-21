@@ -81,9 +81,9 @@ struct RateLimit {
 
 ## Sending request
 
-`Session.sendRequest()` is a method to send a request that conforms to `RequestType`. The result of the request is expressed as `Result<Request.Response, SessionTaskError>`. `Result<T, Error>` is from [antitypical/Result](https://github.com/antitypical/Result), which is generic enumeration with 2 cases `.Success` and `.Failure`. `Request` is a type parameter of `Session.sendRequest()` which conforms to `RequestType`.
+`Session.sendRequest(_:handler:)` is a method to send a request that conforms to `RequestType`. The result of the request is expressed as `Result<Request.Response, SessionTaskError>`. `Result<T, Error>` is from [antitypical/Result](https://github.com/antitypical/Result), which is generic enumeration with 2 cases `.Success` and `.Failure`. `Request` is a type parameter of `Session.sendRequest(_:handler:)` which conforms to `RequestType`.
 
-For example, when `Session.sendRequest()` receives `RateLimitRequest` as a type parameter `Request`, the result type will be `Result<RateLimit, SessionTaskError>`.
+For example, when `Session.sendRequest(_:handler:)` receives `RateLimitRequest` as a type parameter `Request`, the result type will be `Result<RateLimit, SessionTaskError>`.
 
 ```swift
 let request = RateLimitRequest()

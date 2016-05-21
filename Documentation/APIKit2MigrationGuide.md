@@ -11,7 +11,7 @@ APIKit 2.0 introduces several breaking changes to add functionality and to impro
 - [**Deleted**] `APIError`
 - [**Added**] `SessionTaskError`
 
-Errors cases of `Session.sendRequest()` is reduced to 3 cases listed below:
+Errors cases of `Session.sendRequest(_:handler:)` is reduced to 3 cases listed below:
 
 ```swift
 public enum SessionTaskError: ErrorType {
@@ -26,7 +26,7 @@ public enum SessionTaskError: ErrorType {
 }
 ```
 
-These error cases describes *where* the error occurred, not *what* is the error. You can throw any kind of error while building `NSURLRequest` and converting `NSData` to `Response`. `Session` catches the error you threw and wrap it into one of the cases define in `SessionTaskError`. For example, if you throw `SomeError` in `responseFromObject()`, the closure of `Session.sendRequest()` receives `.Failure(.ResponseError(SomeError))`.
+These error cases describes *where* the error occurred, not *what* is the error. You can throw any kind of error while building `NSURLRequest` and converting `NSData` to `Response`. `Session` catches the error you threw and wrap it into one of the cases defined in `SessionTaskError`. For example, if you throw `SomeError` in `responseFromObject(_:URLResponse:)`, the closure of `Session.sendRequest(_:handler:)` receives `.Failure(.ResponseError(SomeError))`.
 
 ## RequestType
 
@@ -89,6 +89,7 @@ Related types:
 - [**Added**] `protocol DataParserType`
 - [**Added**] `class JSONDataParser`
 - [**Added**] `class FormURLEncodedDataParser`
+- [**Added**] `class StringDataParser`
 
 ### Configuring NSURLRequest
 
@@ -97,8 +98,9 @@ Related types:
 - [**Deleted**] `func configureURLRequest(URLRequest: NSMutableURLRequest) -> NSMutableURLRequest`
 - [**Added**] `func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest`
 
-## NSURLSessionDelegate
+## NSURLSession
 
 - [**Deleted**] `class URLSessionDelegate`
+- [**Added**] `protocol SessionTaskType`
 - [**Added**] `protocol SessionAdapterType`
-- [**Added**] `class NSURLSessionAdapter: SessionAdapterType`
+- [**Added**] `class NSURLSessionAdapter`
