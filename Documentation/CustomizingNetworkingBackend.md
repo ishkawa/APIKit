@@ -14,12 +14,13 @@ Demo implementation of Alamofire adapter is available [here](https://github.com/
 
 ```swift
 public protocol SessionAdapterType {
-    func resumedTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, NSError?) -> Void) -> SessionTaskType
-    func getTasksWithHandler(handler: [SessionTaskType] -> Void)
+    public func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType
+    public func getTasksWithHandler(handler: [SessionTaskType] -> Void)
 }
 
-public protocol SessionTaskType: class {
-    func cancel()
+public protocol SessionTaskType : class {
+    public func resume()
+    public func cancel()
 }
 ```
 
@@ -45,8 +46,12 @@ Once it is initialized with a session adapter, it sends `NSURLRequest` and recei
 ```swift
 func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> SessionTaskType? {
     let URLRequest: NSURLRequest = ...
-    let task = adapter.resumedTaskWithURLRequest(URLRequest) { data, URLResponse, error in
+    let task = adapter.createTaskWithURLRequest(URLRequest) { data, URLResponse, error in
         ...
     }
+
+    task.resume()
+
+    return task
 }
 ```

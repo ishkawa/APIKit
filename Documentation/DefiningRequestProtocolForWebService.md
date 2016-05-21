@@ -24,7 +24,7 @@ extension GitHubRequestType {
 
 ### JSON Mapping
 
-There are several JSON mapping library such as [Himotoki](https://github.com/ikesyo/Himotoki), [Argo](https://github.com/thoughtbot/Argo) and [Unbox](https://github.com/JohnSundell/Unbox). These libraries provide protocol that define interface to decode `AnyObject` into JSON model type. If you adopt one of them, you can give default implementation to `responseFromObject()`. Here is an example of default implementation with Himotoki 2:
+There are several JSON mapping library such as [Himotoki](https://github.com/ikesyo/Himotoki), [Argo](https://github.com/thoughtbot/Argo) and [Unbox](https://github.com/JohnSundell/Unbox). These libraries provide protocol that define interface to decode `AnyObject` into JSON model type. If you adopt one of them, you can give default implementation to `responseFromObject(_:URLResponse:)`. Here is an example of default implementation with Himotoki:
 
 ```swift
 import Himotoki
@@ -38,11 +38,13 @@ extension GitHubRequestType where Response: Decodable {
 
 ### Defining request types
 
-Since `GitHubRequestType` has default implementations of `baseURL` and `responseFromObject()`, all you have to implement to conform to `GitHubRequestType` are 3 components, `Response`, `method` and `path`.
+Since `GitHubRequestType` has default implementations of `baseURL` and `responseFromObject(_:URLResponse:)`, all you have to implement to conform to `GitHubRequestType` are 3 components, `Response`, `method` and `path`.
 
 ```swift
+import Himotoki
+
 final class GitHubAPI {
-    struct RateLimitRequest {
+    struct RateLimitRequest: GitHubRequestType {
         typealias Response = RateLimit
 
         var method: HTTPMethod {
@@ -73,13 +75,35 @@ final class GitHubAPI {
         }
     }
 }
+
+struct RateLimit: Decodable {
+    let limit: Int
+    let remaining: Int
+
+    static func decode(e: Extractor) throws -> RateLimit {
+        return try RateLimit(
+            limit: e.value(["rate", "limit"]),
+            remaining: e.value(["rate", "remaining"]))
+    }
+}
+
+struct SearchResponse<Item: Decodable>: Decodable {
+    let items: [Item]
+    let totalCount: Int
+
+    static func decode(e: Extractor) throws -> SearchResponse {
+        return try SearchResponse(
+            items: e.array("items"),
+            totalCount: e.value("total_count"))
+    }
+}
 ```
 
 It is useful for code completion to nest request types in a utility class like `GitHubAPI` above.
 
 ## Throwing custom errors web API returns
 
-Most web APIs define error response to notify what happened on the server. For example, GitHub API defines errors [like this](https://developer.github.com/v3/#client-errors). `interceptObject()` in `RequestType` gives us a chance to determine if the response is an error. If the response is an error, you can create custom error object from the response object and throw the error in `interceptObject()`.
+Most web APIs define error response to notify what happened on the server. For example, GitHub API defines errors [like this](https://developer.github.com/v3/#client-errors). `interceptObject(_:URLResponse:)` in `RequestType` gives us a chance to determine if the response is an error. If the response is an error, you can create custom error object from the response object and throw the error in `interceptObject(_:URLResponse:)`.
 
 Here is an example of handling [GitHub API errors](https://developer.github.com/v3/#client-errors):
 
@@ -104,7 +128,7 @@ extension GitHubRequestType {
 }
 ```
 
-The custom error you throw in `interceptObject()` can be retrieved from call-site as `.Failure(.ResponseError(GitHubError))`.
+The custom error you throw in `interceptObject(_:URLResponse:)` can be retrieved from call-site as `.Failure(.ResponseError(GitHubError))`.
 
 ```swift
 let request = SomeGitHubRequest()
@@ -125,7 +149,7 @@ func printSessionTaskError(error: SessionTaskError) {
         print(error.message) // Prints message from GitHub API
 
     case .ConnectionError(let error):
-        print("Connection error: \(error.localizedDescription)")
+        print("Connection error: \(error)")
 
     default:
         print("System error :bow:")

@@ -33,7 +33,7 @@ Session.sendRequest(request) { result in
 
 - `typealias Response`
 - `var baseURL: NSURL`
-- `var method: Method`
+- `var method: HTTPMethod`
 - `var path: String`
 - `func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response`
 
@@ -53,16 +53,28 @@ struct RateLimitRequest: GitHubRequestType {
         return "/rate_limit"
     }
 
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response? {
-        guard let dictionary = object as? [String: AnyObject] else {
-            return nil
-        }
-
-        guard let rateLimit = RateLimit(dictionary: dictionary) else {
-            return nil
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+        guard let dictionary = object as? [String: AnyObject],
+              let rateLimit = RateLimit(dictionary: dictionary) else {
+            throw ResponseError.UnexpectedObject(object)
         }
 
         return rateLimit
+    }
+}
+
+struct RateLimit {
+    let limit: Int
+    let remaining: Int
+
+    init?(dictionary: [String: AnyObject]) {
+        guard let limit = dictionary["rate"]?["limit"] as? Int,
+              let remaining = dictionary["rate"]?["limit"] as? Int else {
+            return nil
+        }
+
+        self.limit = limit
+        self.remaining = remaining
     }
 }
 ```
