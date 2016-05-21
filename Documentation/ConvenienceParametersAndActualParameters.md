@@ -2,6 +2,9 @@
 
 To satisfy both ease and accuracy, `RequestType` has 2 kind of parameters properties, convenience property and actual properties. If you implement convenience parameters only, actual parameters are computed by default implementation of `RequestType`.
 
+1. [Convenience parameters](#convenience-parameters)
+2. [Actual parameters](#actual-parameters)
+
 ## Convenience parameters
 
 Most documentations of web APIs express parameters in dictionary-like notation:

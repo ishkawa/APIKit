@@ -4,6 +4,9 @@ Most web APIs have common configurations such as base URL, authorization header 
 
 We define `GitHubRequestType` to give common configuration for example.
 
+1. [Giving default implementation to RequestType components](#giving-default-implementation-to-requesttype-components)
+2. [Throwing custom errors web API returns](#throwing-custom-errors-web-api-returns)
+
 ## Giving default implementation to RequestType components
 
 ### Base URL
