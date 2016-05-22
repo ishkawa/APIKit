@@ -3,17 +3,17 @@ import Result
 
 private var taskRequestKey = 0
 
-/// `Session` provides interface to manage HTTP/HTTPS requests.
+/// `Session` manages tasks for HTTP/HTTPS requests.
 public class Session {
-    /// The adapter that connects lower level backend with Session interface.
+    /// The adapter that connects `Session` instance and lower level backend.
     public let adapter: SessionAdapterType
-    
-    /// Default callback queue for `sendRequest(_:handler:)`.
+
+    /// The default callback queue for `sendRequest(_:handler:)`.
     public let callbackQueue: CallbackQueue
 
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
-    /// - parameter callbackQueue: Default callback queue for `sendRequest(_:handler:)`.
+    /// - parameter callbackQueue: The default callback queue for `sendRequest(_:handler:)`.
     public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .Main) {
         self.adapter = adapter
         self.callbackQueue = callbackQueue
@@ -45,10 +45,9 @@ public class Session {
     }
 
     /// Sends a request and receives the result as the argument of `handler` closure. This method takes
-    /// type parameter `Request` that conforms to `RequestType` protocol. The result of passed request is
+    /// a type parameter `Request` that conforms to `RequestType` protocol. The result of passed request is
     /// expressed as `Result<Request.Response, SessionTaskError>`. Since the response type
-    /// `Request.Response` is inferred from `Request` type parameter,  type of response changes
-    /// depending on the request type.
+    /// `Request.Response` is inferred from `Request` type parameter, the it changes depending on the request type.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.

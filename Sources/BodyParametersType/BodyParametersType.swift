@@ -11,7 +11,7 @@ public enum RequestBodyEntity {
 
 /// `BodyParametersType` provides interface to parse HTTP response body and to state `Content-Type` to accept.
 public protocol BodyParametersType {
-    /// `Content-Type` to accept. The value for this property will be set to `Accept` HTTP header field.
+    /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     var contentType: String { get }
 
     /// Builds `RequestBodyEntity`.

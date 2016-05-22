@@ -28,10 +28,13 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
     }
 
     // MARK: BodyParametersType
+
+    /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     public var contentType: String {
         return "multipart/form-data; boundary=\(boundary)"
     }
 
+    /// Builds `RequestBodyEntity.Data` that represents `form`.
     public func buildEntity() throws -> RequestBodyEntity {
         let inputStream = MultipartInputStream(parts: parts, boundary: boundary)
 

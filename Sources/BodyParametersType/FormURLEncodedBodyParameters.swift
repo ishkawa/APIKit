@@ -4,7 +4,7 @@ import Foundation
 public struct FormURLEncodedBodyParameters: BodyParametersType {
     /// The form object to be serialized.
     public let form: [String: AnyObject]
-    
+
     /// The string encoding of the serialized form.
     public let encoding: NSStringEncoding
 
@@ -14,7 +14,9 @@ public struct FormURLEncodedBodyParameters: BodyParametersType {
         self.encoding = encoding
     }
 
-    // MARK: BodyParametersType
+    // MARK: - BodyParametersType
+
+    /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     public var contentType: String {
         return "application/x-www-form-urlencoded"
     }

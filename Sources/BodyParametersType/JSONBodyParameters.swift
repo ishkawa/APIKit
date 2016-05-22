@@ -14,7 +14,9 @@ public struct JSONBodyParameters: BodyParametersType {
         self.writingOptions = writingOptions
     }
 
-    // MARK: BodyParametersType
+    // MARK: - BodyParametersType
+
+    /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     public var contentType: String {
         return "application/json"
     }

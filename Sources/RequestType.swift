@@ -5,11 +5,11 @@ import Result
 /// Following 5 items must be implemented.
 /// - `typealias Response`
 /// - `var baseURL: NSURL`
-/// - `var method: Method`
+/// - `var method: HTTPMethod`
 /// - `var path: String`
 /// - `func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response`
 public protocol RequestType {
-    /// The response type associated with this request.
+    /// The response type associated with the request type.
     associatedtype Response
 
     /// The base URL.
@@ -23,17 +23,16 @@ public protocol RequestType {
 
     /// The convenience property for `queryParameters` and `bodyParameters`. If the implementation of
     /// `queryParameters` and `bodyParameters` are not provided, the values for them will be computed
-    /// from this property depends on `method`.
+    /// from this property depending on `method`.
     var parameters: AnyObject? { get }
 
-    /// The parameters for the URL query. The values of this property will be escaped using `URLEncodedSerializetion`.
+    /// The actual parameters for the URL query. The values of this property will be escaped using `URLEncodedSerializetion`.
     /// If this property is not implemented and `method.prefersQueryParameter` is `true`, the value of this property
     /// will be computed from `parameters`.
     var queryParameters: [String: AnyObject]? { get }
 
-    /// The parameters for HTTP body. The values of this property will be escaped using `URLEncodedSerializetion`.
-    /// If this property is not implemented and `method.prefersQueryParameter` is `false`, the value of this property
-    /// will be computed from `parameters` using `JSONBodyParameters`.
+    /// The actual parameters for the HTTP body. If this property is not implemented and `method.prefersQueryParameter` is `false`,
+    /// the value of this property will be computed from `parameters` using `JSONBodyParameters`.
     var bodyParameters: BodyParametersType? { get }
 
     /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
@@ -51,6 +50,8 @@ public protocol RequestType {
 
     /// Intercepts response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
+    /// The default implementation of this method is provided to throw `RequestError.UnacceptableStatusCode`
+    /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `ErrorType`
     func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
 
@@ -129,7 +130,7 @@ public extension RequestType {
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
         URLRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
-        
+
         headerFields.forEach { key, value in
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
