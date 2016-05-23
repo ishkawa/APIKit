@@ -1,163 +1,148 @@
 import Foundation
 import Result
 
-/// RequestType protocol represents a request for Web API.
+/// `RequestType` protocol represents a request for Web API.
 /// Following 5 items must be implemented.
-/// - typealias Response
-/// - var baseURL: NSURL
-/// - var method: Method
-/// - var path: String
-/// - func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
+/// - `typealias Response`
+/// - `var baseURL: NSURL`
+/// - `var method: HTTPMethod`
+/// - `var path: String`
+/// - `func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response`
 public protocol RequestType {
-    /// Type represents a model object
+    /// The response type associated with the request type.
     associatedtype Response
 
-    /// Configurations of request
+    /// The base URL.
     var baseURL: NSURL { get }
+
+    /// The HTTP request method.
     var method: HTTPMethod { get }
+
+    /// The path URL component.
     var path: String { get }
 
-    /// A parameter dictionary for the request. You can pass `NSNull()` as a
-    /// value for nullable keys, those should be existed in the encoded query or
-    /// the request body.
-    var parameters: [String: AnyObject] { get }
-    var objectParameters: AnyObject { get }
-    
-    /// Additional HTTP header fields. RequestType will add `Accept` and `Content-Type` automatically.
-    /// You can override values for those fields here.
-    var HTTPHeaderFields: [String: String] { get }
+    /// The convenience property for `queryParameters` and `bodyParameters`. If the implementation of
+    /// `queryParameters` and `bodyParameters` are not provided, the values for them will be computed
+    /// from this property depending on `method`.
+    var parameters: AnyObject? { get }
 
-    /// You can add any configurations here
-    ///
-    /// - Throws: ErrorType
-    func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
+    /// The actual parameters for the URL query. The values of this property will be escaped using `URLEncodedSerializetion`.
+    /// If this property is not implemented and `method.prefersQueryParameter` is `true`, the value of this property
+    /// will be computed from `parameters`.
+    var queryParameters: [String: AnyObject]? { get }
 
-    /// Set of status code that indicates success.
-    /// `responseFromObject(_:URLResponse:)` will be called if this contains NSHTTPURLResponse.statusCode.
-    /// Otherwise, `errorFromObject(_:URLResponse:)` will be called.
-    var acceptableStatusCodes: Set<Int> { get }
+    /// The actual parameters for the HTTP body. If this property is not implemented and `method.prefersQueryParameter` is `false`,
+    /// the value of this property will be computed from `parameters` using `JSONBodyParameters`.
+    var bodyParameters: BodyParametersType? { get }
 
-    /// An object that builds body of HTTP request.
-    var requestBodyBuilder: RequestBodyBuilder { get }
+    /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
+    /// fields will be added by `dataParser` and `bodyParameters`. If you define `Accept` and `Content-Type`
+    /// in this property, the values in this property are preferred.
+    var headerFields: [String: String] { get }
 
-    /// An object that parses body of HTTP response.
-    var responseBodyParser: ResponseBodyParser { get }
+    /// The parser object that states `Content-Type` to accept and parses response body.
+    var dataParser: DataParserType { get }
 
-    /// Build `Response` instance from raw response object.
-    /// This method will be called if `acceptableStatusCode` contains status code of NSHTTPURLResponse.
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> Response?
+    /// Intercepts `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
+    /// thrown in this method, the result of `Session.sendRequest()` truns `.Failure(.RequestError(error))`.
+    /// - Throws: `ErrorType`
+    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
-    /// Build `ErrorType` instance from raw response object.
-    /// This method will be called if `acceptableStatusCode` does not contain status code of NSHTTPURLResponse.
-    func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType?
+    /// Intercepts response `AnyObject` and `NSHTTPURLResponse`. If an error is thrown in this method,
+    /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
+    /// The default implementation of this method is provided to throw `RequestError.UnacceptableStatusCode`
+    /// if the HTTP status code is not in `200..<300`.
+    /// - Throws: `ErrorType`
+    func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject
+
+    /// Build `Response` instance from raw response object. This method is called after
+    /// `interceptObject(:URLResponse:)` if it does not throw any error.
+    /// - Throws: `ErrorType`
+    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response
 }
 
-/// Default implementation of RequestType protocol
 public extension RequestType {
-    public var objectParameters: AnyObject {
-        return []
+    public var parameters: AnyObject? {
+        return nil
     }
 
-    public var parameters: [String: AnyObject] {
+    public var queryParameters: [String: AnyObject]? {
+        guard let parameters = parameters as? [String: AnyObject] where method.prefersQueryParameters else {
+            return nil
+        }
+
+        return parameters
+    }
+
+    public var bodyParameters: BodyParametersType? {
+        guard let parameters = parameters where !method.prefersQueryParameters else {
+            return nil
+        }
+
+        return JSONBodyParameters(JSONObject: parameters)
+    }
+
+    public var headerFields: [String: String] {
         return [:]
     }
 
-    public var HTTPHeaderFields: [String: String] {
-        return [:]
-    }
-    
-    public var acceptableStatusCodes: Set<Int> {
-        return Set(200..<300)
+    public var dataParser: DataParserType {
+        return JSONDataParser(readingOptions: [])
     }
 
-    public var requestBodyBuilder: RequestBodyBuilder {
-        return .JSON(writingOptions: [])
-    }
-
-    public var responseBodyParser: ResponseBodyParser {
-        return .JSON(readingOptions: [])
-    }
-
-    public func configureURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
+    public func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
         return URLRequest
     }
 
-    public func errorFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) -> ErrorType? {
-        return NSError(domain: "APIKitErrorDomain", code: 0, userInfo: ["object":object, "URLResponse": URLResponse])
+    public func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
+        guard (200..<300).contains(URLResponse.statusCode) else {
+            throw ResponseError.UnacceptableStatusCode(URLResponse.statusCode)
+        }
+        return object
     }
 
-    // Use Result here because `throws` loses type info of an error.
-    // This method is not overridable. If you need to add customization, override configureURLRequest.
-    public func buildURLRequest() -> Result<NSURLRequest, APIError> {
+    /// Builds `NSURLRequest` from properties of `self`.
+    /// - Throws: `RequestError`, `ErrorType`
+    public func buildURLRequest() throws -> NSURLRequest {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
         guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
-            return .Failure(.InvalidBaseURL(baseURL))
+            throw RequestError.InvalidBaseURL(baseURL)
         }
 
         let URLRequest = NSMutableURLRequest()
-        let parameters = self.parameters
 
-        switch method {
-        case .GET, .HEAD, .DELETE:
-            if parameters.count > 0 {
-                components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(parameters)
-            }
+        if let queryParameters = queryParameters where !queryParameters.isEmpty {
+            components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(queryParameters)
+        }
 
-        default:
-            do {
-                if parameters.count > 0 {
-                    let (contentTypeHeader, body) = try requestBodyBuilder.buildBodyFromObject(parameters)
-                    URLRequest.HTTPBody = body
-                    URLRequest.setValue(contentTypeHeader, forHTTPHeaderField: "Content-Type")
-                } else if let count = objectParameters.count where count > 0 {
-                    let (contentTypeHeader, body) = try requestBodyBuilder.buildBodyFromObject(objectParameters)
-                    URLRequest.HTTPBody = body
-                    URLRequest.setValue(contentTypeHeader, forHTTPHeaderField: "Content-Type")
-                }
-            } catch {
-                return .Failure(.RequestBodySerializationError(error))
+        if let bodyParameters = bodyParameters {
+            URLRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
+
+            switch try bodyParameters.buildEntity() {
+            case .Data(let data):
+                URLRequest.HTTPBody = data
+
+            case .InputStream(let inputStream):
+                URLRequest.HTTPBodyStream = inputStream
             }
         }
 
         URLRequest.URL = components.URL
         URLRequest.HTTPMethod = method.rawValue
-        URLRequest.setValue(responseBodyParser.acceptHeader, forHTTPHeaderField: "Accept")
-        
-        HTTPHeaderFields.forEach { key, value in
+        URLRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
+
+        headerFields.forEach { key, value in
             URLRequest.setValue(value, forHTTPHeaderField: key)
         }
 
-        do {
-            return .Success(try configureURLRequest(URLRequest))
-        } catch {
-            return .Failure(.ConfigurationError(error))
-        }
+        return (try interceptURLRequest(URLRequest))
     }
 
-    // Use Result here because `throws` loses type info of an error (in Swift 2 beta 2)
-    public func parseData(data: NSData, URLResponse: NSURLResponse?) -> Result<Self.Response, APIError> {
-        guard let HTTPURLResponse = URLResponse as? NSHTTPURLResponse else {
-            return .Failure(.NotHTTPURLResponse(URLResponse))
-        }
-
-        let object: AnyObject
-        do {
-            object = try responseBodyParser.parseData(data)
-        } catch {
-            return .Failure(.ResponseBodyDeserializationError(error))
-        }
-
-        if !acceptableStatusCodes.contains(HTTPURLResponse.statusCode) {
-            guard let error = errorFromObject(object, URLResponse: HTTPURLResponse) else {
-                return .Failure(.InvalidResponseStructure(object))
-            }
-            return .Failure(.UnacceptableStatusCode(HTTPURLResponse.statusCode, error))
-        }
-
-        guard let response = responseFromObject(object, URLResponse: HTTPURLResponse) else {
-            return .Failure(.InvalidResponseStructure(object))
-        }
-
-        return .Success(response)
+    /// Builds `Response` from response `NSData`.
+    /// - Throws: `ResponseError`, `ErrorType`
+    public func parseData(data: NSData, URLResponse: NSHTTPURLResponse) throws -> Response {
+        let parsedObject = try dataParser.parseData(data)
+        let passedObject = try interceptObject(parsedObject, URLResponse: URLResponse)
+        return try responseFromObject(passedObject, URLResponse: URLResponse)
     }
 }

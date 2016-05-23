@@ -1,197 +1,122 @@
 import Foundation
 import Result
 
+private var taskRequestKey = 0
+
+/// `Session` manages tasks for HTTP/HTTPS requests.
 public class Session {
-    public let URLSession: NSURLSession
-    
-    public init(URLSession: NSURLSession) {
-        self.URLSession = URLSession
+    /// The adapter that connects `Session` instance and lower level backend.
+    public let adapter: SessionAdapterType
+
+    /// The default callback queue for `sendRequest(_:handler:)`.
+    public let callbackQueue: CallbackQueue
+
+    /// Returns `Session` instance that is initialized with `adapter`.
+    /// - parameter adapter: The adapter that connects lower level backend with Session interface.
+    /// - parameter callbackQueue: The default callback queue for `sendRequest(_:handler:)`.
+    public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .Main) {
+        self.adapter = adapter
+        self.callbackQueue = callbackQueue
     }
 
-    // send request and build response object
-    public func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        switch request.buildURLRequest() {
-        case .Failure(let error):
-            dispatch_async(dispatch_get_main_queue()) {
-                handler(.Failure(error))
-            }
-            return nil
-
-        case .Success(let URLRequest):
-            let dataTask = URLSession.dataTaskWithRequest(URLRequest)
-            dataTask.request = Box(request)
-            dataTask.completionHandler = { data, URLResponse, connectionError in
-                let sessionResult: Result<(NSData, NSURLResponse?), APIError>
-                if let error = connectionError {
-                    sessionResult = .Failure(.ConnectionError(error))
-                } else {
-                    sessionResult = .Success((data, URLResponse))
-                }
-
-                let result: Result<T.Response, APIError> = sessionResult.flatMap { data, URLResponse in
-                    request.parseData(data, URLResponse: URLResponse)
-                }
-
-                dispatch_async(dispatch_get_main_queue()) {
-                    handler(result)
-                }
-            }
-            
-            dataTask.resume()
-            
-            return dataTask
-        }
-    }
-    
-    public func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
-        URLSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
-            let allTasks = dataTasks as [NSURLSessionTask]
-                + uploadTasks as [NSURLSessionTask]
-                + downloadTasks as [NSURLSessionTask]
-
-            allTasks.filter { task in
-                let request: T?
-                switch task {
-                case let x as NSURLSessionDataTask:
-                    request = x.request?.value as? T
-
-                case let x as NSURLSessionDownloadTask:
-                    request = x.request?.value as? T
-                    
-                default:
-                    request = nil
-                }
-                
-                if let request = request {
-                    return test(request)
-                } else {
-                    return false
-                }
-            }.forEach { $0.cancel() }
-        }
-    }
-    
     // Shared session for class methods
-    private static let privateSharedSession = Session(URLSession: NSURLSession(
-        configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-        delegate: URLSessionDelegate(),
-        delegateQueue: nil
-    ))
+    private static let privateSharedSession: Session = {
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let adapter = NSURLSessionAdapter(configuration: configuration)
+        return Session(adapter: adapter)
+    }()
 
+    /// The shared `Session` instance for class methods, `Session.sendRequest(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
     public class var sharedSession: Session {
         return privateSharedSession
     }
 
-    public class func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        return sharedSession.sendRequest(request, handler: handler)
+    /// Calls `sendRequest(_:handler:)` of `sharedSession`.
+    /// - parameter request: The request to be sent.
+    /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
+    /// - parameter handler: The closure that receives result of the request.
+    /// - returns: The new session task.
+    public class func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+        return sharedSession.sendRequest(request, callbackQueue: callbackQueue, handler: handler)
     }
-    
-    public class func cancelRequest<T: RequestType>(requestType: T.Type, passingTest test: T -> Bool = { r in true }) {
+
+    /// Calls `cancelRequest(_:passingTest:)` of `sharedSession`.
+    public class func cancelRequest<Request: RequestType>(requestType: Request.Type, passingTest test: Request -> Bool = { r in true }) {
         sharedSession.cancelRequest(requestType, passingTest: test)
     }
-}
 
-@available(*, unavailable, renamed="Session")
-public typealias API = Session
+    /// Sends a request and receives the result as the argument of `handler` closure. This method takes
+    /// a type parameter `Request` that conforms to `RequestType` protocol. The result of passed request is
+    /// expressed as `Result<Request.Response, SessionTaskError>`. Since the response type
+    /// `Request.Response` is inferred from `Request` type parameter, the it changes depending on the request type.
+    /// - parameter request: The request to be sent.
+    /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
+    /// - parameter handler: The closure that receives result of the request.
+    /// - returns: The new session task.
+    public func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = {r in}) -> SessionTaskType? {
+        let callbackQueue = callbackQueue ?? self.callbackQueue
 
-extension Session {
-    @available(*, unavailable, message="Use separated Session instance instead.")
-    public static func sendRequest<T: RequestType>(request: T, URLSession: NSURLSession, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> NSURLSessionDataTask? {
-        abort()
-    }
-    
-    @available(*, unavailable, message="Use separated Session instance instead.")
-    public static func cancelRequest<T: RequestType>(requestType: T.Type, URLSession: NSURLSession, passingTest test: T -> Bool = { r in true }) {
-        abort()
-    }
-}
-
-// MARK: - default implementation of URLSessionDelegate
-public class URLSessionDelegate: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
-    // MARK: NSURLSessionTaskDelegate
-    public func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
-        if let dataTask = task as? NSURLSessionDataTask {
-            dataTask.completionHandler?(dataTask.responseBuffer, dataTask.response, connectionError)
+        let URLRequest: NSURLRequest
+        do {
+            URLRequest = try request.buildURLRequest()
+        } catch {
+            callbackQueue.execute {
+                handler(.Failure(.RequestError(error)))
+            }
+            return nil
         }
-    }
 
-    // MARK: NSURLSessionDataDelegate
-    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
-        dataTask.responseBuffer.appendData(data)
-    }
-    
-    public func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didBecomeDownloadTask downloadTask: NSURLSessionDownloadTask) {
-        downloadTask.request = dataTask.request
-    }
-}
+        let task = adapter.createTaskWithURLRequest(URLRequest) { data, URLResponse, error in
+            let result: Result<Request.Response, SessionTaskError>
 
-// Box<T> is still necessary internally to store struct into associated object
-private final class Box<T> {
-    let value: T
-    init(_ value: T) {
-        self.value = value
-    }
-}
+            switch (data, URLResponse, error) {
+            case (_, _, let error?):
+                result = .Failure(.ConnectionError(error))
 
-// MARK: - NSURLSessionTask extensions
-private var taskRequestKey = 0
-private var dataTaskResponseBufferKey = 0
-private var dataTaskCompletionHandlerKey = 0
+            case (let data?, let URLResponse as NSHTTPURLResponse, _):
+                do {
+                    result = .Success(try request.parseData(data, URLResponse: URLResponse))
+                } catch {
+                    result = .Failure(.ResponseError(error))
+                }
 
-private extension NSURLSessionDataTask {
-    // `var request: RequestType?` is not available in Swift 2.0
-    // ("protocol can only be used as a generic constraint")
-    private var request: Box<Any>? {
-        get {
-            return objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>
-        }
-        
-        set {
-            if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            default:
+                result = .Failure(.ResponseError(ResponseError.NonHTTPURLResponse(URLResponse)))
+            }
+
+            callbackQueue.execute {
+                handler(result)
             }
         }
-    }
-    
-    private var responseBuffer: NSMutableData {
-        if let responseBuffer = objc_getAssociatedObject(self, &dataTaskResponseBufferKey) as? NSMutableData {
-            return responseBuffer
-        } else {
-            let responseBuffer = NSMutableData()
-            objc_setAssociatedObject(self, &dataTaskResponseBufferKey, responseBuffer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            return responseBuffer
-        }
-    }
-    
-    private var completionHandler: ((NSData, NSURLResponse?, NSError?) -> Void)? {
-        get {
-            return (objc_getAssociatedObject(self, &dataTaskCompletionHandlerKey) as? Box<(NSData, NSURLResponse?, NSError?) -> Void>)?.value
-        }
-        
-        set {
-            if let value = newValue  {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, Box(value), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            } else {
-                objc_setAssociatedObject(self, &dataTaskCompletionHandlerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            }
-        }
-    }
-}
 
-private extension NSURLSessionDownloadTask {
-    private var request: Box<Any>? {
-        get {
-            return objc_getAssociatedObject(self, &taskRequestKey) as? Box<Any>
+        setRequest(request, forTask: task)
+        task.resume()
+
+        return task
+    }
+
+    /// Cancels requests that passes the test.
+    /// - parameter requestType: The request type to cancel.
+    /// - parameter test: The test closure that determines if a request should be cancelled or not.
+    public func cancelRequest<Request: RequestType>(requestType: Request.Type, passingTest test: Request -> Bool = { r in true }) {
+        adapter.getTasksWithHandler { [weak self] tasks in
+            return tasks
+                .filter { task in
+                    if let request = self?.requestForTask(task) as Request? {
+                        return test(request)
+                    } else {
+                        return false
+                    }
+                }
+                .forEach { $0.cancel() }
         }
-        
-        set {
-            if let value = newValue {
-                objc_setAssociatedObject(self, &taskRequestKey, value, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            } else {
-                objc_setAssociatedObject(self, &taskRequestKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            }
-        }
+    }
+
+    private func setRequest<Request: RequestType>(request: Request, forTask task: SessionTaskType) {
+        objc_setAssociatedObject(task, &taskRequestKey, Box(request), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
+    private func requestForTask<Request: RequestType>(task: SessionTaskType) -> Request? {
+        return (objc_getAssociatedObject(task, &taskRequestKey) as? Box<Request>)?.value
     }
 }
