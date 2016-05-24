@@ -14,7 +14,7 @@ private var taskAssociatedObjectCompletionHandlerKey = 0
 /// delegate methods that you want to implement. Since `NSURLSessionAdapter` also implements delegate methods
 /// `URLSession(_:task: didCompleteWithError:)` and `URLSession(_:dataTask:didReceiveData:)`, you have to call
 /// `super` in these methods if you implement them.
-public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDelegate {
+public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate {
     /// The undelying `NSURLSession` instance.
     public var URLSession: NSURLSession!
 
