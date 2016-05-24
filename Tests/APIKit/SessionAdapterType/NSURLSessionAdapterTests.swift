@@ -79,5 +79,33 @@ class NSURLSessionAdapterTests: XCTestCase {
         }
         
         waitForExpectationsWithTimeout(10.0, handler: nil)
-    }    
+    }
+
+    func testCancel() {
+        let data = try! NSJSONSerialization.dataWithJSONObject([:], options: [])
+        
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return true
+        }, withStubResponse: { request in
+            return OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        })
+        
+        let expectation = expectationWithDescription("wait for response")
+        let request = TestRequest()
+        let task = session.sendRequest(request) { result in
+            guard case .Failure(let error) = result,
+                  case .ConnectionError(let connectionError as NSError) = error else {
+                XCTFail()
+                return
+            }
+
+            XCTAssertEqual(connectionError.code, NSURLErrorCancelled)
+
+            expectation.fulfill()
+        }
+
+        task?.cancel()
+
+        waitForExpectationsWithTimeout(10.0, handler: nil)
+    }
 }
