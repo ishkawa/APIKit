@@ -20,6 +20,9 @@ script:
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator | xcpretty -c
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator | xcpretty -c
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 before_deploy:
   - ./script/import-certificates
   - carthage build --no-skip-current
