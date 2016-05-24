@@ -3,15 +3,6 @@ import APIKit
 import XCTest
 import OHHTTPStubs
 
-protocol MockSessionRequestType: RequestType {
-}
-
-extension MockSessionRequestType {
-    var baseURL: NSURL {
-        return NSURL(string: "https://api.github.com")!
-    }
-}
-
 class NSURLSessionAdapterTests: XCTestCase {
     var session: Session!
 
