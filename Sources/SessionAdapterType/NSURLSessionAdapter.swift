@@ -26,7 +26,7 @@ public class NSURLSessionAdapter: NSObject, SessionAdapterType, NSURLSessionDele
 
     /// Creates `NSURLSessionDataTask` instance using `dataTaskWithRequest(_:completionHandler:)`.
     public func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType {
-        let task = URLSession.dataTaskWithRequest(URLRequest, completionHandler: handler)
+        let task = URLSession.dataTaskWithRequest(URLRequest)
 
         setBuffer(NSMutableData(), forTask: task)
         setHandler(handler, forTask: task)
