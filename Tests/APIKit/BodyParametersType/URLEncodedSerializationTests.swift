@@ -29,6 +29,25 @@ class URLEncodedSerializationTests: XCTestCase {
         }
     }
 
+    func testInvalidString() {
+        var bytes = [UInt8]([0xed, 0xa0, 0x80]) // U+D800 (high surrogate)
+        let data = NSData(bytes: &bytes, length: bytes.count)
+
+        do {
+            try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
+            XCTFail()
+        } catch {
+            guard let error = error as? URLEncodedSerialization.Error,
+                  case .CannotGetStringFromData(let invalidData, let encoding) = error else {
+                XCTFail()
+                return
+            }
+
+            XCTAssertEqual(data, invalidData)
+            XCTAssertEqual(encoding, NSUTF8StringEncoding)
+        }
+    }
+
     // MARK: AnyObject -> NSData
     func testDataFromObject() {
         let object = ["hey": "yo"] as AnyObject

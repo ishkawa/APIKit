@@ -23,4 +23,23 @@ class FormURLEncodedDataParserTests: XCTestCase {
             XCTFail()
         }
     }
+
+    func testInvalidString() {
+        var bytes = [UInt8]([0xed, 0xa0, 0x80]) // U+D800 (high surrogate)
+        let data = NSData(bytes: &bytes, length: bytes.count)
+        let parser = FormURLEncodedDataParser(encoding: NSUTF8StringEncoding)
+
+        do {
+            try parser.parseData(data)
+            XCTFail()
+        } catch {
+            guard let error = error as? FormURLEncodedDataParser.Error,
+                  case .CannotGetStringFromData(let invalidData) = error else {
+                XCTFail()
+                return
+            }
+
+            XCTAssertEqual(data, invalidData)
+        }
+    }
 }
