@@ -92,7 +92,7 @@ class NSURLSessionAdapterTests: XCTestCase {
         
         let expectation = expectationWithDescription("wait for response")
         let request = TestRequest()
-        let task = session.sendRequest(request) { result in
+        session.sendRequest(request) { result in
             guard case .Failure(let error) = result,
                   case .ConnectionError(let connectionError as NSError) = error else {
                 XCTFail()
@@ -104,7 +104,7 @@ class NSURLSessionAdapterTests: XCTestCase {
             expectation.fulfill()
         }
 
-        task?.cancel()
+        session.cancelRequest(TestRequest.self)
 
         waitForExpectationsWithTimeout(10.0, handler: nil)
     }
