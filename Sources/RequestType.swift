@@ -44,7 +44,7 @@ public protocol RequestType {
     var dataParser: DataParserType { get }
 
     /// Intercepts `NSURLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
-    /// thrown in this method, the result of `Session.sendRequest()` throws `.Failure(.RequestError(error))`.
+    /// thrown in this method, the result of `Session.sendRequest()` turns `.Failure(.RequestError(error))`.
     /// - Throws: `ErrorType`
     func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest
 
