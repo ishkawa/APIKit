@@ -26,7 +26,7 @@ public protocol RequestType {
     /// from this property depending on `method`.
     var parameters: AnyObject? { get }
 
-    /// The actual parameters for the URL query. The values of this property will be escaped using `URLEncodedSerializetion`.
+    /// The actual parameters for the URL query. The values of this property will be escaped using `URLEncodedSerialization`.
     /// If this property is not implemented and `method.prefersQueryParameter` is `true`, the value of this property
     /// will be computed from `parameters`.
     var queryParameters: [String: AnyObject]? { get }
