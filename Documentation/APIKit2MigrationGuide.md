@@ -78,6 +78,11 @@ APIKit provides 3 parameters types that conform to `BodyParametersType`:
 - [**Added**] `class FormURLEncodedBodyParameters`
 - [**Added**] `class MultipartFormDataBodyParameters`
 
+### HTTP Headers
+
+- [**Deleted**] `var HTTPHeaderFields: [String: String]`
+- [**Added**] `var headerFields: [String: String]`
+
 ### Data parsers
 
 - [**Deleted**] `var responseBodyParser: ResponseBodyParser`
