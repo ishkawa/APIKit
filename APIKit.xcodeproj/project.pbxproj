@@ -393,8 +393,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Yosuke Ishikawa";
+				TargetAttributes = {
+					141F12161C1C9ABE0026D415 = {
+						LastSwiftMigration = 0800;
+					};
+					141F12281C1C9AC70026D415 = {
+						LastSwiftMigration = 0800;
+					};
+				};
 			};
 			buildConfigurationList = 7F45FCD71A94D02C006863BB /* Build configuration list for PBXProject "APIKit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -515,6 +523,7 @@
 				DEFINES_MODULE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
@@ -529,6 +538,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12401C1C9EA30026D415 /* Tests.xcconfig */;
 			buildSettings = {
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
@@ -537,7 +547,9 @@
 			baseConfigurationReference = 141F12101C1C96820026D415 /* Debug.xcconfig */;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -545,6 +557,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12111C1C96820026D415 /* Release.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
