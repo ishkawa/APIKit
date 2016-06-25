@@ -105,9 +105,15 @@ public extension RequestType {
     /// - Throws: `RequestError`, `ErrorType`
     public func buildURLRequest() throws -> NSURLRequest {
         let URL = path.isEmpty ? baseURL : baseURL.URLByAppendingPathComponent(path)
-        guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
-            throw RequestError.InvalidBaseURL(baseURL)
-        }
+        #if swift(>=2.3)
+            guard let unwrapped = URL, components = NSURLComponents(URL: unwrapped, resolvingAgainstBaseURL: true) else {
+                throw RequestError.InvalidBaseURL(baseURL)
+            }
+        #else
+            guard let components = NSURLComponents(URL: URL, resolvingAgainstBaseURL: true) else {
+                throw RequestError.InvalidBaseURL(baseURL)
+            }
+        #endif
 
         let URLRequest = NSMutableURLRequest()
 
