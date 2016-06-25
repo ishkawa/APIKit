@@ -28,8 +28,11 @@ Session.sendRequest(request) { result in
 
 ## Requirements
 
-- Swift 2.2+
-- iOS 8.0+ / Mac OS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+- Swift 2.2, 2.3
+- iOS 8.0 or later
+- Mac OS 10.10 or later
+- watchOS 2.0 or later
+- tvOS 9.0 or later
 
 ## Installation
 
