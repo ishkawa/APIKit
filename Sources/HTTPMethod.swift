@@ -13,7 +13,7 @@ public enum HTTPMethod: String {
     case CONNECT
 
     /// Indicates if the query parameters are suitable for parameters.
-    var prefersQueryParameters: Bool {
+    public var prefersQueryParameters: Bool {
         switch self {
         case .GET, .HEAD, .DELETE:
             return true
