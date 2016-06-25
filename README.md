@@ -38,13 +38,13 @@ Session.sendRequest(request) { result in
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit" ~> 2.0.0` to your Cartfile.
+- Insert `github "ishkawa/APIKit" ~> 2.0` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `pod 'APIKit', '~> 2.0.0'` to your Podfile.
+- Insert `pod 'APIKit', '~> 2.0'` to your Podfile.
 - Run `pod install`.
 
 ## Documentation
