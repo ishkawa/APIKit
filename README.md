@@ -28,20 +28,23 @@ Session.sendRequest(request) { result in
 
 ## Requirements
 
-- Swift 2.2+
-- iOS 8.0+ / Mac OS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+- Swift 2.2, 2.3
+- iOS 8.0 or later
+- Mac OS 10.10 or later
+- watchOS 2.0 or later
+- tvOS 9.0 or later
 
 ## Installation
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit" ~> 2.0.0` to your Cartfile.
+- Insert `github "ishkawa/APIKit" ~> 2.0` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `pod 'APIKit', '~> 2.0.0'` to your Podfile.
+- Insert `pod 'APIKit', '~> 2.0'` to your Podfile.
 - Run `pod install`.
 
 ## Documentation
