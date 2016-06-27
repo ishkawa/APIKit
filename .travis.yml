@@ -7,7 +7,6 @@ env:
     - secure: kg5TFTNojZ9VOYHApONRUXSbwu+erLs3WSNNX/CKbkO8eQnBo+1koXHnEtOTQ641YRAVpFLX4QK7pbRfmWWWzR6ntNgXmvE4IUa1ggsUlcorApLq+cQin1Tp1es0/Ul0nYLJN8WXbcObKSLy8FOmHkrMWYuffMtH9e7qEL01ei0=
 
 install:
-  - ./script/import-certificates
   - carthage bootstrap --use-submodules --no-build
   - pod repo update --silent
 

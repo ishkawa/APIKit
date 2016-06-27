@@ -1,11 +1,11 @@
 import Foundation
 
-extension NSData {
-    enum InputStreamError: ErrorType {
-        case InvalidDataCapacity(Int)
-        case UnreadableStream(NSInputStream)
-    }
+enum InputStreamError: ErrorType {
+    case InvalidDataCapacity(Int)
+    case UnreadableStream(NSInputStream)
+}
 
+extension NSData {
     convenience init(inputStream: NSInputStream, capacity: Int = Int(UInt16.max)) throws {
         guard let data = NSMutableData(capacity: capacity) else {
             throw InputStreamError.InvalidDataCapacity(capacity)
