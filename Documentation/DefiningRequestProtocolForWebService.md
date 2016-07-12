@@ -112,7 +112,7 @@ Here is an example of handling [GitHub API errors](https://developer.github.com/
 
 ```swift
 // https://developer.github.com/v3/#client-errors
-struct GitHubError {
+struct GitHubError: ErrorType {
     let message: String
 
     init(object: AnyObject) {
@@ -123,7 +123,7 @@ struct GitHubError {
 extension GitHubRequestType {
     func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
         guard (200..<300).contains(URLResponse.statusCode) else {
-            throw GitHubError(object: AnyObject)
+            throw GitHubError(object: object)
         }
 
         return object
@@ -147,7 +147,7 @@ Session.sendRequest(request) { result in
 }
 
 func printSessionTaskError(error: SessionTaskError) {
-    switch sessionTaskError {
+    switch error {
     case .ResponseError(let error as GitHubError):
         print(error.message) // Prints message from GitHub API
 
