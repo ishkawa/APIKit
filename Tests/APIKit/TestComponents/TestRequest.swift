@@ -2,7 +2,7 @@ import Foundation
 import APIKit
 
 struct TestRequest: RequestType {
-    var absoluteURL: URL? {
+    var absoluteUrl: URL? {
         let urlRequest = try? buildURLRequest()
         return urlRequest?.url
     }
