@@ -31,7 +31,7 @@
 		7F85FB831C9CF25D00CEE132 /* JSONDataParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB821C9CF25D00CEE132 /* JSONDataParserTests.swift */; };
 		7F85FB871C9CF47300CEE132 /* FormURLEncodedDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB861C9CF47300CEE132 /* FormURLEncodedDataParser.swift */; };
 		7F85FB891C9CF7B000CEE132 /* FormURLEncodedDataParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB881C9CF7B000CEE132 /* FormURLEncodedDataParserTests.swift */; };
-		7F85FB8E1C9D317300CEE132 /* NSURLSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB8C1C9D317300CEE132 /* NSURLSessionAdapter.swift */; };
+		7F85FB8E1C9D317300CEE132 /* URLSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB8C1C9D317300CEE132 /* URLSessionAdapter.swift */; };
 		7F85FB8F1C9D317300CEE132 /* SessionAdapterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB8D1C9D317300CEE132 /* SessionAdapterType.swift */; };
 		7F85FB921C9D336D00CEE132 /* NSURLSessionAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB911C9D336D00CEE132 /* NSURLSessionAdapterTests.swift */; };
 		7F85FB9A1C9D3DA700CEE132 /* TestRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85FB981C9D3DA700CEE132 /* TestRequest.swift */; };
@@ -106,7 +106,7 @@
 		7F85FB821C9CF25D00CEE132 /* JSONDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONDataParserTests.swift; sourceTree = "<group>"; };
 		7F85FB861C9CF47300CEE132 /* FormURLEncodedDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormURLEncodedDataParser.swift; sourceTree = "<group>"; };
 		7F85FB881C9CF7B000CEE132 /* FormURLEncodedDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormURLEncodedDataParserTests.swift; sourceTree = "<group>"; };
-		7F85FB8C1C9D317300CEE132 /* NSURLSessionAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLSessionAdapter.swift; sourceTree = "<group>"; };
+		7F85FB8C1C9D317300CEE132 /* URLSessionAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionAdapter.swift; sourceTree = "<group>"; };
 		7F85FB8D1C9D317300CEE132 /* SessionAdapterType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionAdapterType.swift; sourceTree = "<group>"; };
 		7F85FB911C9D336D00CEE132 /* NSURLSessionAdapterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLSessionAdapterTests.swift; sourceTree = "<group>"; };
 		7F85FB981C9D3DA700CEE132 /* TestRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestRequest.swift; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				7F85FB8D1C9D317300CEE132 /* SessionAdapterType.swift */,
-				7F85FB8C1C9D317300CEE132 /* NSURLSessionAdapter.swift */,
+				7F85FB8C1C9D317300CEE132 /* URLSessionAdapter.swift */,
 			);
 			path = SessionAdapterType;
 			sourceTree = "<group>";
@@ -464,7 +464,7 @@
 				7F85FB801C9CF12600CEE132 /* JSONDataParser.swift in Sources */,
 				7F18BD1A1C9730ED003A31DF /* URLEncodedSerialization.swift in Sources */,
 				7FAC64AE1CDC7ADE00F1BB45 /* AbstractInputStream.m in Sources */,
-				7F85FB8E1C9D317300CEE132 /* NSURLSessionAdapter.swift in Sources */,
+				7F85FB8E1C9D317300CEE132 /* URLSessionAdapter.swift in Sources */,
 				7F7E8F161C8AD4B1008A13A9 /* HTTPMethod.swift in Sources */,
 				7FA19A421C9CBF2A005D25AE /* ResponseError.swift in Sources */,
 			);
@@ -549,7 +549,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -558,7 +558,7 @@
 			baseConfigurationReference = 141F12111C1C96820026D415 /* Release.xcconfig */;
 			buildSettings = {
 				GCC_NO_COMMON_BLOCKS = YES;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

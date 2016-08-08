@@ -3,10 +3,10 @@ import Foundation
 /// `JSONDataParser` response JSON data.
 public class JSONDataParser: DataParserType {
     /// Options for reading the JSON data and creating the objects.
-    public let readingOptions: NSJSONReadingOptions
+    public let readingOptions: JSONSerialization.ReadingOptions
 
     /// Returns `JSONDataParser` with the reading options.
-    public init(readingOptions: NSJSONReadingOptions) {
+    public init(readingOptions: JSONSerialization.ReadingOptions) {
         self.readingOptions = readingOptions
     }
 
@@ -18,12 +18,12 @@ public class JSONDataParser: DataParserType {
     }
 
     /// Return `AnyObject` that expresses structure of JSON response.
-    /// - Throws: `NSError` when `NSJSONSerialization` fails to deserialize `NSData` into `AnyObject`.
-    public func parseData(data: NSData) throws -> AnyObject {
-        guard data.length > 0 else {
+    /// - Throws: `NSError` when `JSONSerialization` fails to deserialize `Data` into `AnyObject`.
+    public func parseData(_ data: Data) throws -> AnyObject {
+        guard data.count > 0 else {
             return [:]
         }
 
-        return try NSJSONSerialization.JSONObjectWithData(data, options: readingOptions)
+        return try JSONSerialization.jsonObject(with: data, options: readingOptions)
     }
 }

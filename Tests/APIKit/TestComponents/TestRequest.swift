@@ -26,7 +26,7 @@ struct TestRequest: RequestType {
     let headerFields: [String: String]
     let interceptURLRequest: NSMutableURLRequest throws -> NSMutableURLRequest
 
-    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
+    func interceptURLRequest(_ URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
         return try interceptURLRequest(URLRequest)
     }
 

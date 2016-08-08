@@ -9,15 +9,15 @@ public enum CallbackQueue {
     case SessionQueue
 
     /// Dispatches callback closure on associated operation queue.
-    case OperationQueue(NSOperationQueue)
+    case OperationQueue(OperationQueue)
 
     /// Dispatches callback closure on associated dispatch queue.
-    case DispatchQueue(dispatch_queue_t)
+    case DispatchQueue(Foundation.DispatchQueue)
 
     internal func execute(closure: () -> Void) {
         switch self {
         case .Main:
-            dispatch_async(dispatch_get_main_queue()) {
+            Foundation.DispatchQueue.main.async {
                 closure()
             }
 
@@ -25,12 +25,12 @@ public enum CallbackQueue {
             closure()
 
         case .OperationQueue(let operationQueue):
-            operationQueue.addOperationWithBlock {
+            operationQueue.addOperation {
                 closure()
             }
 
         case .DispatchQueue(let dispatchQueue):
-            dispatch_async(dispatchQueue) {
+            dispatchQueue.async {
                 closure()
             }
         }

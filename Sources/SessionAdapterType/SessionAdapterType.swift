@@ -7,12 +7,12 @@ public protocol SessionTaskType: class {
 }
 
 /// `SessionAdapterType` protocol provides interface to connect lower level networking backend with `Session`.
-/// APIKit provides `NSURLSessionAdapter`, which conforms to `SessionAdapterType`, to connect `NSURLSession`
+/// APIKit provides `URLSessionAdapter`, which conforms to `SessionAdapterType`, to connect `URLSession`
 /// with `Session`.
 public protocol SessionAdapterType {
     /// Returns instance that conforms to `SessionTaskType`. `handler` must be called after success or failure.
-    func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType
+    func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: (NSData?, URLResponse?, Error?) -> Void) -> SessionTaskType
 
     /// Collects tasks from backend networking stack. `handler` must be called after collecting.
-    func getTasksWithHandler(handler: [SessionTaskType] -> Void)
+    func getTasksWithHandler(handler: ([SessionTaskType]) -> Void)
 }

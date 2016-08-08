@@ -1,18 +1,16 @@
 import Foundation
 
-enum InputStreamError: ErrorType {
+enum InputStreamError: Error {
     case InvalidDataCapacity(Int)
-    case UnreadableStream(NSInputStream)
+    case UnreadableStream(InputStream)
 }
 
-extension NSData {
-    convenience init(inputStream: NSInputStream, capacity: Int = Int(UInt16.max)) throws {
-        guard let data = NSMutableData(capacity: capacity) else {
-            throw InputStreamError.InvalidDataCapacity(capacity)
-        }
+extension Data {
+    init(inputStream: InputStream, capacity: Int = Int(UInt16.max)) throws {
+        var data = Data(capacity: capacity)
 
-        let bufferSize = min(Int(UInt16.max), capacity)
-        let buffer = UnsafeMutablePointer<UInt8>.alloc(bufferSize)
+        let bufferSize = _min(Int(UInt16.max), capacity)
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
 
         var readSize: Int
 
@@ -21,7 +19,7 @@ extension NSData {
 
             switch readSize {
             case let x where x > 0:
-                data.appendBytes(buffer, length: readSize)
+                data.append(buffer, count: readSize)
 
             case let x where x < 0:
                 throw InputStreamError.UnreadableStream(inputStream)
@@ -31,8 +29,12 @@ extension NSData {
             }
         } while readSize > 0
 
-        buffer.dealloc(bufferSize)
+        buffer.deallocate(capacity: bufferSize)
 
-        self.init(data: data)
+        self.init(data)
     }
+}
+
+private func _min(_ x: Int, _ y: Int) -> Int {
+    return y < x ? y : x
 }

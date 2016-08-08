@@ -6,10 +6,10 @@ public struct FormURLEncodedBodyParameters: BodyParametersType {
     public let form: [String: AnyObject]
 
     /// The string encoding of the serialized form.
-    public let encoding: NSStringEncoding
+    public let encoding: String.Encoding
 
     /// Returns `FormURLEncodedBodyParameters` that is initialized with form object and encoding.
-    public init(formObject: [String: AnyObject], encoding: NSStringEncoding = NSUTF8StringEncoding) {
+    public init(formObject: [String: AnyObject], encoding: String.Encoding = .utf8) {
         self.form = formObject
         self.encoding = encoding
     }

@@ -8,12 +8,12 @@ import Foundation
 
 /// `FormURLEncodedBodyParameters` serializes array of `Part` for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParametersType {
-    /// `EntityType` represents wheather the entity is expressed as `NSData` or `NSInputStream`.
+    /// `EntityType` represents wheather the entity is expressed as `Data` or `InputStream`.
     public enum EntityType {
-        /// Expresses the entity as `NSData`, which has faster upload speed and lager memory usage.
+        /// Expresses the entity as `Data`, which has faster upload speed and lager memory usage.
         case Data
 
-        /// Expresses the entity as `NSInputStream`, which has smaller memory usage and slower upload speed.
+        /// Expresses the entity as `InputStream`, which has smaller memory usage and slower upload speed.
         case InputStream
     }
 
@@ -43,7 +43,7 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
             return .InputStream(inputStream)
 
         case .Data:
-            return .Data(try NSData(inputStream: inputStream))
+            return .Data(try Data(inputStream: inputStream))
         }
     }
 }
@@ -51,13 +51,13 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
 public extension MultipartFormDataBodyParameters {
     /// Part represents single part of multipart/form-data.
     public struct Part {
-        public enum Error: ErrorType {
+        public enum Error: Swift.Error {
             case IllegalValue(Any)
-            case IllegalFileURL(NSURL)
-            case CannotGetFileSize(NSURL)
+            case IllegalFileURL(URL)
+            case CannotGetFileSize(URL)
         }
 
-        public let inputStream: NSInputStream
+        public let inputStream: InputStream
         public let name: String
         public let mimeType: String?
         public let fileName: String?
@@ -66,46 +66,45 @@ public extension MultipartFormDataBodyParameters {
         /// Returns Part instance that has data presentation of passed value.
         /// `value` will be converted via `String(_:)` and serialized via `String.dataUsingEncoding(_:)`.
         /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.
-        public init(value: Any, name: String, mimeType: String? = nil, fileName: String? = nil, encoding: NSStringEncoding = NSUTF8StringEncoding) throws {
-            guard let data = String(value).dataUsingEncoding(encoding) else {
+        public init(value: Any, name: String, mimeType: String? = nil, fileName: String? = nil, encoding: String.Encoding = .utf8) throws {
+            guard let data = String(value).data(using: encoding) else {
                 throw Error.IllegalValue(value)
             }
 
-            self.inputStream = NSInputStream(data: data)
+            self.inputStream = InputStream(data: data)
             self.name = name
             self.mimeType = mimeType
             self.fileName = fileName
-            self.length = data.length
+            self.length = data.count
         }
 
         /// Returns Part instance that has input stream of specifed data.
         /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.
-        public init(data: NSData, name: String, mimeType: String? = nil, fileName: String? = nil) {
-            self.inputStream = NSInputStream(data: data)
+        public init(data: Data, name: String, mimeType: String? = nil, fileName: String? = nil) {
+            self.inputStream = InputStream(data: data)
             self.name = name
             self.mimeType = mimeType
             self.fileName = fileName
-            self.length = data.length
+            self.length = data.count
         }
 
         /// Returns Part instance that has input stream of specifed file URL.
         /// If `mimeType` or `fileName` are `nil`, values for the fields will be detected from URL.
-        public init(fileURL: NSURL, name: String, mimeType: String? = nil, fileName: String? = nil) throws {
-            guard let inputStream = NSInputStream(URL: fileURL) else {
+        public init(fileURL: URL, name: String, mimeType: String? = nil, fileName: String? = nil) throws {
+            guard let inputStream = InputStream(url: fileURL) else {
                 throw Error.IllegalFileURL(fileURL)
             }
 
-            let fileSize = fileURL.path
-                .flatMap { try? NSFileManager.defaultManager().attributesOfItemAtPath($0) }
-                .flatMap { $0[NSFileSize] as? NSNumber }
-                .map { $0.integerValue }
+            let fileSize = (try? FileManager.default.attributesOfItem(atPath: fileURL.path))
+                .flatMap { $0[FileAttributeKey.size] as? NSNumber }
+                .map { $0.intValue }
 
             guard let bodyLength = fileSize else {
                 throw Error.CannotGetFileSize(fileURL)
             }
 
-            let detectedMimeType = fileURL.pathExtension
-                .flatMap { UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, $0, nil)?.takeRetainedValue() }
+            let detectedMimeType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileURL.pathExtension, nil)
+                .map { $0.takeRetainedValue() }
                 .flatMap { UTTypeCopyPreferredTagWithClass($0, kUTTagClassMIMEType)?.takeRetainedValue() }
                 .map { $0 as String }
 
@@ -118,8 +117,8 @@ public extension MultipartFormDataBodyParameters {
     }
 
     internal class PartInputStream: AbstractInputStream {
-        let headerData: NSData
-        let footerData: NSData
+        let headerData: Data
+        let footerData: Data
         let bodyPart: Part
 
         let totalLength: Int
@@ -138,33 +137,33 @@ public extension MultipartFormDataBodyParameters {
                 header = "--\(boundary)\r\nContent-Disposition: form-data; name=\"\(part.name)\"\r\n\r\n"
             }
 
-            headerData = header.dataUsingEncoding(NSUTF8StringEncoding)!
-            footerData = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
+            headerData = header.data(using: .utf8)!
+            footerData = "\r\n".data(using: .utf8)!
             bodyPart = part
-            totalLength = headerData.length + bodyPart.length + footerData.length
+            totalLength = headerData.count + bodyPart.length + footerData.count
             totalSentLength = 0
 
             super.init()
         }
 
         var headerRange: Range<Int> {
-            return 0..<headerData.length
+            return 0..<headerData.count
         }
 
         var bodyRange: Range<Int> {
-            return headerRange.endIndex..<(headerRange.endIndex + bodyPart.length)
+            return headerRange.upperBound..<(headerRange.upperBound + bodyPart.length)
         }
 
         var footerRange: Range<Int> {
-            return bodyRange.endIndex..<(bodyRange.endIndex + footerData.length)
+            return bodyRange.upperBound..<(bodyRange.upperBound + footerData.count)
         }
 
-        // MARK: NSInputStream
+        // MARK: InputStream
         override var hasBytesAvailable: Bool {
             return totalSentLength < totalLength
         }
 
-        override func read(buffer: UnsafeMutablePointer<UInt8>, maxLength: Int) -> Int {
+        override func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength: Int) -> Int {
             var sentLength = 0
 
             while sentLength < maxLength && totalSentLength < totalLength {
@@ -173,14 +172,14 @@ public extension MultipartFormDataBodyParameters {
 
                 switch totalSentLength {
                 case headerRange:
-                    let readLength = min(headerRange.endIndex - totalSentLength, availableLength)
-                    let readRange = NSRange(location: totalSentLength - headerRange.startIndex, length: readLength)
-                    headerData.getBytes(offsetBuffer, range: readRange)
+                    let readLength = min(headerRange.upperBound - totalSentLength, availableLength)
+                    let readRange = NSRange(location: totalSentLength - headerRange.lowerBound, length: readLength)
+                    (headerData as NSData).getBytes(offsetBuffer, range: readRange)
                     sentLength += readLength
                     totalSentLength += sentLength
 
                 case bodyRange:
-                    if bodyPart.inputStream.streamStatus == .NotOpen {
+                    if bodyPart.inputStream.streamStatus == .notOpen {
                         bodyPart.inputStream.open()
                     }
 
@@ -189,14 +188,14 @@ public extension MultipartFormDataBodyParameters {
                     totalSentLength += readLength
 
                 case footerRange:
-                    let readLength = min(footerRange.endIndex - totalSentLength, availableLength)
-                    let range = NSRange(location: totalSentLength - footerRange.startIndex, length: readLength)
-                    footerData.getBytes(offsetBuffer, range: range)
+                    let readLength = min(footerRange.upperBound - totalSentLength, availableLength)
+                    let range = NSRange(location: totalSentLength - footerRange.lowerBound, length: readLength)
+                    (footerData as NSData).getBytes(offsetBuffer, range: range)
                     sentLength += readLength
                     totalSentLength += readLength
 
                 default:
-                    print("Illegal range access: \(totalSentLength) is out of \(headerRange.startIndex)..<\(footerRange.endIndex)")
+                    print("Illegal range access: \(totalSentLength) is out of \(headerRange.lowerBound)..<\(footerRange.upperBound)")
                     return -1
                 }
             }
@@ -208,18 +207,18 @@ public extension MultipartFormDataBodyParameters {
     internal class MultipartInputStream: AbstractInputStream {
         let boundary: String
         let partStreams: [PartInputStream]
-        let footerData: NSData
+        let footerData: Data
 
         let totalLength: Int
         var totalSentLength: Int
 
-        private var privateStreamStatus = NSStreamStatus.NotOpen
+        private var privateStreamStatus = Stream.Status.notOpen
 
         init(parts: [Part], boundary: String) {
             self.boundary = boundary
             self.partStreams = parts.map { PartInputStream(part: $0, boundary: boundary) }
-            self.footerData = "--\(boundary)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-            self.totalLength = partStreams.reduce(footerData.length) { $0 + $1.totalLength }
+            self.footerData = "--\(boundary)--\r\n".data(using: .utf8)!
+            self.totalLength = partStreams.reduce(footerData.count) { $0 + $1.totalLength }
             self.totalSentLength = 0
             super.init()
         }
@@ -229,7 +228,7 @@ public extension MultipartFormDataBodyParameters {
         }
 
         var footerRange: Range<Int> {
-            return partsRange.endIndex..<(partsRange.endIndex + footerData.length)
+            return partsRange.upperBound..<(partsRange.upperBound + footerData.count)
         }
 
         var currentPartInputStream: PartInputStream? {
@@ -247,9 +246,9 @@ public extension MultipartFormDataBodyParameters {
             return nil
         }
 
-        // MARK: NSInputStream
-        // NOTE: NSInputStream does not have its own implementation because it is a class cluster.
-        override var streamStatus: NSStreamStatus {
+        // MARK: InputStream
+        // NOTE: InputStream does not have its own implementation because it is a class cluster.
+        override var streamStatus: Stream.Status {
             return privateStreamStatus
         }
 
@@ -258,15 +257,15 @@ public extension MultipartFormDataBodyParameters {
         }
 
         override func open() {
-            privateStreamStatus = .Open
+            privateStreamStatus = .open
         }
 
         override func close() {
-            privateStreamStatus = .Closed
+            privateStreamStatus = .closed
         }
 
-        override func read(buffer: UnsafeMutablePointer<UInt8>, maxLength: Int) -> Int {
-            privateStreamStatus = .Reading
+        override func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength: Int) -> Int {
+            privateStreamStatus = .reading
 
             var sentLength = 0
 
@@ -286,35 +285,35 @@ public extension MultipartFormDataBodyParameters {
                     totalSentLength += readLength
 
                 case footerRange:
-                    let readLength = min(footerRange.endIndex - totalSentLength, availableLength)
-                    let range = NSRange(location: totalSentLength - footerRange.startIndex, length: readLength)
-                    footerData.getBytes(offsetBuffer, range: range)
+                    let readLength = min(footerRange.upperBound - totalSentLength, availableLength)
+                    let range = NSRange(location: totalSentLength - footerRange.lowerBound, length: readLength)
+                    (footerData as NSData).getBytes(offsetBuffer, range: range)
                     sentLength += readLength
                     totalSentLength += readLength
 
                 default:
-                    print("Illegal range access: \(totalSentLength) is out of \(partsRange.startIndex)..<\(footerRange.endIndex)")
+                    print("Illegal range access: \(totalSentLength) is out of \(partsRange.lowerBound)..<\(footerRange.upperBound)")
                     return -1
                 }
 
-                if privateStreamStatus != .Closed && !hasBytesAvailable {
-                    privateStreamStatus = .AtEnd
+                if privateStreamStatus != .closed && !hasBytesAvailable {
+                    privateStreamStatus = .atEnd
                 }
             }
 
             return sentLength
         }
 
-        override var delegate: NSStreamDelegate? {
+        override var delegate: StreamDelegate? {
             get { return nil }
             set { }
         }
 
-        override func scheduleInRunLoop(runLoop: NSRunLoop, forMode mode: String) {
+        override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoopMode) {
 
         }
 
-        override func removeFromRunLoop(runLoop: NSRunLoop, forMode mode: String) {
+        override func remove(from aRunLoop: RunLoop, forMode mode: RunLoopMode) {
 
         }
     }
