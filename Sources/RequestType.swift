@@ -4,7 +4,7 @@ import Result
 /// `RequestType` protocol represents a request for Web API.
 /// Following 5 items must be implemented.
 /// - `typealias Response`
-/// - `var baseURL: URL`
+/// - `var baseUrl: URL`
 /// - `var method: HTTPMethod`
 /// - `var path: String`
 /// - `func responseFromObject(object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response`
@@ -13,7 +13,7 @@ public protocol RequestType {
     associatedtype Response
 
     /// The base URL.
-    var baseURL: URL { get }
+    var baseUrl: URL { get }
 
     /// The HTTP request method.
     var method: HTTPMethod { get }
@@ -104,9 +104,9 @@ public extension RequestType {
     /// Builds `URLRequest` from properties of `self`.
     /// - Throws: `RequestError`, `ErrorType`
     public func buildURLRequest() throws -> URLRequest {
-        let url = path.isEmpty ? baseURL : baseURL.appendingPathComponent(path)
+        let url = path.isEmpty ? baseUrl : baseUrl.appendingPathComponent(path)
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw RequestError.InvalidBaseURL(baseURL)
+            throw RequestError.InvalidBaseURL(baseUrl)
         }
 
         var urlRequest = URLRequest(url: url)

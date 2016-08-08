@@ -179,7 +179,7 @@ class SessionTests: XCTestCase {
     struct AnotherTestRequest: RequestType {
         typealias Response = Void
 
-        var baseURL: URL {
+        var baseUrl: URL {
             return URL(string: "https://example.com")!
         }
 
