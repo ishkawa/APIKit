@@ -61,7 +61,7 @@ public extension MultipartFormDataBodyParameters {
         public let name: String
         public let mimeType: String?
         public let fileName: String?
-        public let length: Int
+        public let count: Int
 
         /// Returns Part instance that has data presentation of passed value.
         /// `value` will be converted via `String(_:)` and serialized via `String.dataUsingEncoding(_:)`.
@@ -75,7 +75,7 @@ public extension MultipartFormDataBodyParameters {
             self.name = name
             self.mimeType = mimeType
             self.fileName = fileName
-            self.length = data.count
+            self.count = data.count
         }
 
         /// Returns Part instance that has input stream of specifed data.
@@ -85,7 +85,7 @@ public extension MultipartFormDataBodyParameters {
             self.name = name
             self.mimeType = mimeType
             self.fileName = fileName
-            self.length = data.count
+            self.count = data.count
         }
 
         /// Returns Part instance that has input stream of specifed file URL.
@@ -112,7 +112,7 @@ public extension MultipartFormDataBodyParameters {
             self.name = name
             self.mimeType = mimeType ?? detectedMimeType ?? "application/octet-stream"
             self.fileName = fileName ?? fileURL.lastPathComponent
-            self.length = bodyLength
+            self.count = bodyLength
         }
     }
 
@@ -140,7 +140,7 @@ public extension MultipartFormDataBodyParameters {
             headerData = header.data(using: .utf8)!
             footerData = "\r\n".data(using: .utf8)!
             bodyPart = part
-            totalLength = headerData.count + bodyPart.length + footerData.count
+            totalLength = headerData.count + bodyPart.count + footerData.count
             totalSentLength = 0
 
             super.init()
@@ -151,7 +151,7 @@ public extension MultipartFormDataBodyParameters {
         }
 
         var bodyRange: Range<Int> {
-            return headerRange.upperBound..<(headerRange.upperBound + bodyPart.length)
+            return headerRange.upperBound..<(headerRange.upperBound + bodyPart.count)
         }
 
         var footerRange: Range<Int> {
