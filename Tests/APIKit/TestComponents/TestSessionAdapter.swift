@@ -7,7 +7,7 @@ class TestSessionAdapter: SessionAdapterType {
     }
 
     var data: Data?
-    var URLResponse: URLResponse?
+    var urlResponse: URLResponse?
     var error: Error?
 
     private class Runner {
@@ -22,9 +22,9 @@ class TestSessionAdapter: SessionAdapterType {
     private let runner: Runner
     private let timer: Timer
 
-    init(data: Data? = Data(), URLResponse: URLResponse? = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 200, httpVersion: nil, headerFields: nil), error: Error? = nil) {
+    init(data: Data? = Data(), urlResponse: URLResponse? = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 200, httpVersion: nil, headerFields: nil), error: Error? = nil) {
         self.data = data
-        self.URLResponse = URLResponse
+        self.urlResponse = urlResponse
         self.error = error
 
         self.runner = Runner()
@@ -42,7 +42,7 @@ class TestSessionAdapter: SessionAdapterType {
             if task.cancelled {
                 task.handler(nil, nil, Error.cancelled)
             } else {
-                task.handler(data, URLResponse, error)
+                task.handler(data, urlResponse, error)
             }
         }
 

@@ -60,7 +60,7 @@ class SessionTests: XCTestCase {
     }
 
     func testUnacceptableStatusCodeError() {
-        adapter.URLResponse = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 400, httpVersion: nil, headerFields: nil)
+        adapter.urlResponse = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 400, httpVersion: nil, headerFields: nil)
 
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
@@ -81,7 +81,7 @@ class SessionTests: XCTestCase {
     }
 
     func testNonHTTPURLResponseError() {
-        adapter.URLResponse = URLResponse()
+        adapter.urlResponse = URLResponse()
 
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
@@ -89,8 +89,8 @@ class SessionTests: XCTestCase {
         session.sendRequest(request) { result in
             if case .failure(let error) = result,
                case .ResponseError(let responseError as ResponseError) = error,
-               case .NonHTTPURLResponse(let URLResponse) = responseError {
-                XCTAssert(URLResponse === self.adapter.URLResponse)
+               case .NonHTTPURLResponse(let urlResponse) = responseError {
+                XCTAssert(urlResponse === self.adapter.urlResponse)
             } else {
                 XCTFail()
             }
