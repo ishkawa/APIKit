@@ -62,11 +62,11 @@ let request = GetRateLimitRequest()
 
 Session.sendRequest(request) { result in
     switch result {
-    case .Success(let rateLimit):
+    case .success(let rateLimit):
         print("count: \(rateLimit.count)")
         print("reset: \(rateLimit.resetDate)")
 
-    case .Failure(let error):
+    case .failure(let error):
         print("error: \(error)")
     }
 }

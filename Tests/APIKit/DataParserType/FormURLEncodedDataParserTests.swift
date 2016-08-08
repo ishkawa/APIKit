@@ -4,14 +4,14 @@ import XCTest
 
 class FormURLEncodedDataParserTests: XCTestCase {
     func testURLAcceptHeader() {
-        let parser = FormURLEncodedDataParser(encoding: NSUTF8StringEncoding)
+        let parser = FormURLEncodedDataParser(encoding: .utf8)
         XCTAssertEqual(parser.contentType, "application/x-www-form-urlencoded")
     }
     
     func testURLSuccess() {
         let string = "foo=1&bar=2&baz=3"
-        let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = FormURLEncodedDataParser(encoding: NSUTF8StringEncoding)
+        let data = string.data(using: .utf8, allowLossyConversion: false)!
+        let parser = FormURLEncodedDataParser(encoding: .utf8)
 
         do {
             let object = try parser.parseData(data)
@@ -26,11 +26,11 @@ class FormURLEncodedDataParserTests: XCTestCase {
 
     func testInvalidString() {
         var bytes = [UInt8]([0xed, 0xa0, 0x80]) // U+D800 (high surrogate)
-        let data = NSData(bytes: &bytes, length: bytes.count)
-        let parser = FormURLEncodedDataParser(encoding: NSUTF8StringEncoding)
+        let data = Data(bytes: &bytes, count: bytes.count)
+        let parser = FormURLEncodedDataParser(encoding: .utf8)
 
         do {
-            try parser.parseData(data)
+            try _ = parser.parseData(data)
             XCTFail()
         } catch {
             guard let error = error as? FormURLEncodedDataParser.Error,

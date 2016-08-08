@@ -3,18 +3,18 @@ import XCTest
 import OHHTTPStubs
 import APIKit
 
-class NSURLSessionAdapterSubclassTests: XCTestCase {
-    class SessionAdapter: NSURLSessionAdapter {
+class URLSessionAdapterSubclassTests: XCTestCase {
+    class SessionAdapter: URLSessionAdapter {
         var functionCallFlags = [String: Bool]()
 
-        override func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError connectionError: NSError?) {
+        override func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
             functionCallFlags[(#function)] = true
-            super.URLSession(session, task: task, didCompleteWithError: connectionError)
+            super.urlSession(session, task: task, didCompleteWithError: error)
         }
 
-        override func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
+        override func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
             functionCallFlags[(#function)] = true
-            super.URLSession(session, dataTask: dataTask, didReceiveData: data)
+            super.urlSession(session, dataTask: dataTask, didReceive: data)
         }
     }
 
@@ -24,7 +24,7 @@ class NSURLSessionAdapterSubclassTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let configuration = URLSessionConfiguration.default
         adapter = SessionAdapter(configuration: configuration)
         session = Session(adapter: adapter)
     }
@@ -35,28 +35,28 @@ class NSURLSessionAdapterSubclassTests: XCTestCase {
     }
 
     func testDelegateMethodCall() {
-        let data = try! NSJSONSerialization.dataWithJSONObject([:], options: [])
+        let data = try! JSONSerialization.data(withJSONObject: [:], options: [])
         
-        OHHTTPStubs.stubRequestsPassingTest({ request in
+        OHHTTPStubs.stubRequests(passingTest: { request in
             return true
         }, withStubResponse: { request in
             return OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         })
         
-        let expectation = expectationWithDescription("wait for response")
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
         session.sendRequest(request) { result in
-            if case .Failure = result {
+            if case .failure = result {
                 XCTFail()
             }
 
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(10.0, handler: nil)
+        waitForExpectations(timeout: 10.0, handler: nil)
 
-        XCTAssertEqual(adapter.functionCallFlags["URLSession(_:task:didCompleteWithError:)"], true)
-        XCTAssertEqual(adapter.functionCallFlags["URLSession(_:dataTask:didReceiveData:)"], true)
+        XCTAssertEqual(adapter.functionCallFlags["urlSession(_:task:didCompleteWithError:)"], true)
+        XCTAssertEqual(adapter.functionCallFlags["urlSession(_:dataTask:didReceive:)"], true)
     }
 }

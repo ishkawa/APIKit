@@ -14,7 +14,7 @@ class JSONBodyParametersTests: XCTestCase {
                 return
             }
 
-            let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+            let dictionary = try JSONSerialization.jsonObject(with: data, options: [])
             XCTAssertEqual(dictionary["foo"], 1)
             XCTAssertEqual(dictionary["bar"], 2)
             XCTAssertEqual(dictionary["baz"], 3)
@@ -28,7 +28,7 @@ class JSONBodyParametersTests: XCTestCase {
         let parameters = JSONBodyParameters(JSONObject: object)
 
         do {
-            try parameters.buildEntity()
+            try _ = parameters.buildEntity()
             XCTFail()
         } catch {
             let nserror = error as NSError

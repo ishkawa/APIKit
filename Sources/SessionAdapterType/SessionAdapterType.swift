@@ -14,5 +14,5 @@ public protocol SessionAdapterType {
     func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: (NSData?, URLResponse?, Error?) -> Void) -> SessionTaskType
 
     /// Collects tasks from backend networking stack. `handler` must be called after collecting.
-    func getTasksWithHandler(handler: ([SessionTaskType]) -> Void)
+    func getTasksWithHandler(_ handler: ([SessionTaskType]) -> Void)
 }

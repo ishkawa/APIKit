@@ -53,7 +53,7 @@ public final class URLEncodedSerialization {
 
     /// Returns `[String: String]` that represents urlencoded `Data`.
     /// - Throws: URLEncodedSerialization.Error
-    public static func objectFromData(data: Data, encoding: String.Encoding) throws -> [String: String] {
+    public static func objectFromData(_ data: Data, encoding: String.Encoding) throws -> [String: String] {
         guard let string = String(data: data, encoding: encoding) else {
             throw Error.CannotGetStringFromData(data, encoding)
         }

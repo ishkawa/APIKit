@@ -10,7 +10,7 @@ class JSONDataParserTests: XCTestCase {
     
     func testJSONSuccess() {
         let string = "{\"foo\": 1, \"bar\": 2, \"baz\": 3}"
-        let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        let data = string.data(using: .utf8, allowLossyConversion: false)!
         let parser = JSONDataParser(readingOptions: [])
 
         do {

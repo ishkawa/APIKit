@@ -2,13 +2,13 @@ import Foundation
 import APIKit
 
 class TestSessionAdapter: SessionAdapterType {
-    enum Error: ErrorType {
-        case Cancelled
+    enum Error: Swift.Error {
+        case cancelled
     }
 
-    var data: NSData?
-    var URLResponse: NSURLResponse?
-    var error: ErrorType?
+    var data: Data?
+    var URLResponse: URLResponse?
+    var error: Error?
 
     private class Runner {
         weak var adapter: TestSessionAdapter?
@@ -20,15 +20,15 @@ class TestSessionAdapter: SessionAdapterType {
 
     private var tasks = [TestSessionTask]()
     private let runner: Runner
-    private let timer: NSTimer
+    private let timer: Timer
 
-    init(data: NSData? = NSData(), URLResponse: NSURLResponse? = NSHTTPURLResponse(URL: NSURL(), statusCode: 200, HTTPVersion: nil, headerFields: nil), error: NSError? = nil) {
+    init(data: Data? = Data(), URLResponse: URLResponse? = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 200, httpVersion: nil, headerFields: nil), error: Error? = nil) {
         self.data = data
         self.URLResponse = URLResponse
         self.error = error
 
         self.runner = Runner()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.001,
+        self.timer = Timer.scheduledTimer(timeInterval: 0.001,
             target: runner,
             selector: #selector(Runner.run),
             userInfo: nil,
@@ -40,7 +40,7 @@ class TestSessionAdapter: SessionAdapterType {
     func executeAllTasks() {
         for task in tasks {
             if task.cancelled {
-                task.handler(nil, nil, Error.Cancelled)
+                task.handler(nil, nil, Error.cancelled)
             } else {
                 task.handler(data, URLResponse, error)
             }
@@ -49,14 +49,14 @@ class TestSessionAdapter: SessionAdapterType {
         tasks = []
     }
 
-    func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType {
+    func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: (NSData?, URLResponse?, Swift.Error?) -> Void) -> SessionTaskType {
         let task = TestSessionTask(handler: handler)
         tasks.append(task)
 
         return task
     }
 
-    func getTasksWithHandler(handler: [SessionTaskType] -> Void) {
+    func getTasksWithHandler(_ handler: ([SessionTaskType]) -> Void) {
         handler(tasks.map { $0 })
     }
 }

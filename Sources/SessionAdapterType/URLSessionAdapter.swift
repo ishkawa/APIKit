@@ -37,7 +37,7 @@ public class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate
     }
 
     /// Aggregates `URLSessionTask` instances in `URLSession` using `getTasksWithCompletionHandler(_:)`.
-    public func getTasksWithHandler(handler: ([SessionTaskType]) -> Void) {
+    public func getTasksWithHandler(_ handler: ([SessionTaskType]) -> Void) {
         urlSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [URLSessionTask]
                 + uploadTasks as [URLSessionTask]

@@ -36,6 +36,7 @@ public class Session {
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
+    @discardableResult
     public class func sendRequest<Request: RequestType>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
         return sharedSession.sendRequest(request, callbackQueue: callbackQueue, handler: handler)
     }
@@ -53,6 +54,7 @@ public class Session {
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
+    @discardableResult
     public func sendRequest<Request: RequestType>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 

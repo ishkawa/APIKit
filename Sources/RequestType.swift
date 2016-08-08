@@ -44,12 +44,12 @@ public protocol RequestType {
     var dataParser: DataParserType { get }
 
     /// Intercepts `URLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
-    /// thrown in this method, the result of `Session.sendRequest()` turns `.Failure(.RequestError(error))`.
+    /// thrown in this method, the result of `Session.sendRequest()` turns `.failure(.RequestError(error))`.
     /// - Throws: `ErrorType`
     func interceptURLRequest(_ urlRequest: URLRequest) throws -> URLRequest
 
     /// Intercepts response `AnyObject` and `HTTPURLResponse`. If an error is thrown in this method,
-    /// the result of `Session.sendRequest()` turns `.Failure(.ResponseError(error))`.
+    /// the result of `Session.sendRequest()` turns `.failure(.ResponseError(error))`.
     /// The default implementation of this method is provided to throw `RequestError.UnacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `ErrorType`
@@ -127,6 +127,7 @@ public extension RequestType {
             }
         }
 
+        urlRequest.url = components.url
         urlRequest.httpMethod = method.rawValue
         urlRequest.setValue(dataParser.contentType, forHTTPHeaderField: "Accept")
 
