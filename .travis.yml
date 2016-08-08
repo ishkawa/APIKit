@@ -7,10 +7,6 @@ matrix:
   include:
     - os: osx
       language: objective-c
-      osx_image: xcode7.3
-      env: JOB=Xcode7.3
-    - os: osx
-      language: objective-c
       osx_image: xcode8
       env: JOB=Xcode8
 
