@@ -410,11 +410,11 @@ class RequestTypeTests: XCTestCase {
     }
 
     func testInterceptURLRequest() {
-        let URL = Foundation.URL(string: "https://example.com/customize")!
+        let url = URL(string: "https://example.com/customize")!
         let request = TestRequest() { _ in
-            return URLRequest(url: URL)
+            return URLRequest(url: url)
         }
 
-        XCTAssertEqual((try? request.buildURLRequest())?.url, URL)
+        XCTAssertEqual((try? request.buildURLRequest())?.url, url)
     }
 }
