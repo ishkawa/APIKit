@@ -17,9 +17,9 @@ install:
 script:
   - if [[ "$JOB" == "Xcode7.3" ]]; then pod lib lint; fi
   - set -o pipefail
-  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit | xcpretty -c
-  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator -destination "name=iPhone 6s" | xcpretty -c
-  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator -destination "name=Apple TV 1080p" | xcpretty -c
+  - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit | xcpretty -c
+  - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator -destination "name=iPhone 6s" | xcpretty -c
+  - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator -destination "name=Apple TV 1080p" | xcpretty -c
   - carthage build --no-skip-current
 
 after_success:
