@@ -90,20 +90,20 @@ public extension MultipartFormDataBodyParameters {
 
         /// Returns Part instance that has input stream of specifed file URL.
         /// If `mimeType` or `fileName` are `nil`, values for the fields will be detected from URL.
-        public init(fileURL: URL, name: String, mimeType: String? = nil, fileName: String? = nil) throws {
-            guard let inputStream = InputStream(url: fileURL) else {
-                throw Error.IllegalFileURL(fileURL)
+        public init(fileUrl: URL, name: String, mimeType: String? = nil, fileName: String? = nil) throws {
+            guard let inputStream = InputStream(url: fileUrl) else {
+                throw Error.IllegalFileURL(fileUrl)
             }
 
-            let fileSize = (try? FileManager.default.attributesOfItem(atPath: fileURL.path))
+            let fileSize = (try? FileManager.default.attributesOfItem(atPath: fileUrl.path))
                 .flatMap { $0[FileAttributeKey.size] as? NSNumber }
                 .map { $0.intValue }
 
             guard let bodyLength = fileSize else {
-                throw Error.CannotGetFileSize(fileURL)
+                throw Error.CannotGetFileSize(fileUrl)
             }
 
-            let detectedMimeType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileURL.pathExtension, nil)
+            let detectedMimeType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileUrl.pathExtension, nil)
                 .map { $0.takeRetainedValue() }
                 .flatMap { UTTypeCopyPreferredTagWithClass($0, kUTTagClassMIMEType)?.takeRetainedValue() }
                 .map { $0 as String }
@@ -111,7 +111,7 @@ public extension MultipartFormDataBodyParameters {
             self.inputStream = inputStream
             self.name = name
             self.mimeType = mimeType ?? detectedMimeType ?? "application/octet-stream"
-            self.fileName = fileName ?? fileURL.lastPathComponent
+            self.fileName = fileName ?? fileUrl.lastPathComponent
             self.count = bodyLength
         }
     }

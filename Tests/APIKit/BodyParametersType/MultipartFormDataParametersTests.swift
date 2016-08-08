@@ -71,8 +71,8 @@ class MultipartFormDataParametersTests: XCTestCase {
 
     // MARK: Values
     func testFileValue() {
-        let fileURL = Bundle(for: self.dynamicType).url(forResource: "test", withExtension: "json")!
-        let part = try! MultipartFormDataBodyParameters.Part(fileURL: fileURL, name: "test")
+        let fileUrl = Bundle(for: self.dynamicType).url(forResource: "test", withExtension: "json")!
+        let part = try! MultipartFormDataBodyParameters.Part(fileUrl: fileUrl, name: "test")
         let parameters = MultipartFormDataBodyParameters(parts: [part])
 
         do {
@@ -81,7 +81,7 @@ class MultipartFormDataParametersTests: XCTestCase {
                 return
             }
 
-            let testData = try! Data(contentsOf: fileURL)
+            let testData = try! Data(contentsOf: fileUrl)
             let testString = String(data: testData, encoding: .utf8)!
 
             let encodedData = String(data: data, encoding:.utf8)!
