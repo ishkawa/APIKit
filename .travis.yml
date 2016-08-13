@@ -1,21 +1,29 @@
-language: objective-c
-osx_image: xcode7.3
-
 env:
   global:
     - LC_CTYPE=en_US.UTF-8
     - secure: kg5TFTNojZ9VOYHApONRUXSbwu+erLs3WSNNX/CKbkO8eQnBo+1koXHnEtOTQ641YRAVpFLX4QK7pbRfmWWWzR6ntNgXmvE4IUa1ggsUlcorApLq+cQin1Tp1es0/Ul0nYLJN8WXbcObKSLy8FOmHkrMWYuffMtH9e7qEL01ei0=
+
+matrix:
+  include:
+    - os: osx
+      language: objective-c
+      osx_image: xcode7.3
+      env: JOB=Xcode7.3
+    - os: osx
+      language: objective-c
+      osx_image: xcode8
+      env: JOB=Xcode8
 
 install:
   - carthage bootstrap --use-submodules --no-build
   - pod repo update --silent
 
 script:
-  - pod lib lint
+  - if [[ "$JOB" == "Xcode7.3" ]]; then pod lib lint; fi
   - set -o pipefail
   - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit | xcpretty -c
-  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator | xcpretty -c
-  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator | xcpretty -c
+  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator -destination "name=iPhone 6s" | xcpretty -c
+  - xcodebuild test -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator -destination "name=Apple TV 1080p" | xcpretty -c
   - carthage build --no-skip-current
 
 after_success:
@@ -33,6 +41,7 @@ deploy:
   on:
     repo: ishkawa/APIKit
     tags: true
+    condition: $JOB = Xcode7.3
 
 notifications:
   email: false
