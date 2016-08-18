@@ -11,7 +11,7 @@ public protocol SessionTaskType: class {
 /// with `Session`.
 public protocol SessionAdapterType {
     /// Returns instance that conforms to `SessionTaskType`. `handler` must be called after success or failure.
-    func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: @escaping (NSData?, URLResponse?, Error?) -> Void) -> SessionTaskType
+    func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTaskType
 
     /// Collects tasks from backend networking stack. `handler` must be called after collecting.
     func getTasksWithHandler(_ handler: @escaping ([SessionTaskType]) -> Void)
