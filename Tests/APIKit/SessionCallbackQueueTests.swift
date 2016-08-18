@@ -13,14 +13,14 @@ class SessionCallbackQueueTests: XCTestCase {
         adapter = TestSessionAdapter()
         adapter.data = try! JSONSerialization.data(withJSONObject: ["key": "value"], options: [])
 
-        session = Session(adapter: adapter, callbackQueue: .Main)
+        session = Session(adapter: adapter, callbackQueue: .main)
     }
 
     func testMain() {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .Main) { result in
+        session.sendRequest(request, callbackQueue: .main) { result in
             XCTAssert(Thread.isMainThread)
             expectation.fulfill()
         }
@@ -32,7 +32,7 @@ class SessionCallbackQueueTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .SessionQueue) { result in
+        session.sendRequest(request, callbackQueue: .sessionQueue) { result in
             // This depends on implementation of TestSessionAdapter
             XCTAssert(Thread.isMainThread)
             expectation.fulfill()
@@ -46,7 +46,7 @@ class SessionCallbackQueueTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .OperationQueue(operationQueue)) { result in
+        session.sendRequest(request, callbackQueue: .operationQueue(operationQueue)) { result in
             XCTAssertEqual(OperationQueue.current, operationQueue)
             expectation.fulfill()
         }
@@ -59,7 +59,7 @@ class SessionCallbackQueueTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .DispatchQueue(dispatchQueue)) { result in
+        session.sendRequest(request, callbackQueue: .dispatchQueue(dispatchQueue)) { result in
             // There is no way to test current dispatch queue.
             XCTAssert(!Thread.isMainThread)
             expectation.fulfill()
@@ -71,7 +71,7 @@ class SessionCallbackQueueTests: XCTestCase {
     // MARK: Test Session.callbackQueue
     func testImplicitSessionCallbackQueue() {
         let operationQueue = OperationQueue()
-        let session = Session(adapter: adapter, callbackQueue: .OperationQueue(operationQueue))
+        let session = Session(adapter: adapter, callbackQueue: .operationQueue(operationQueue))
 
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
@@ -86,7 +86,7 @@ class SessionCallbackQueueTests: XCTestCase {
 
     func testExplicitSessionCallbackQueue() {
         let operationQueue = OperationQueue()
-        let session = Session(adapter: adapter, callbackQueue: .OperationQueue(operationQueue))
+        let session = Session(adapter: adapter, callbackQueue: .operationQueue(operationQueue))
 
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()

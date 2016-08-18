@@ -3,33 +3,33 @@ import Foundation
 /// `CallbackQueue` represents queue where `handler` of `Session.sendRequest(_:handler:)` runs.
 public enum CallbackQueue {
     /// Dispatches callback closure on main queue asynchronously.
-    case Main
+    case main
 
     /// Dispatches callback closure on the queue where backend adapter callback runs.
-    case SessionQueue
+    case sessionQueue
 
     /// Dispatches callback closure on associated operation queue.
-    case OperationQueue(OperationQueue)
+    case operationQueue(OperationQueue)
 
     /// Dispatches callback closure on associated dispatch queue.
-    case DispatchQueue(Foundation.DispatchQueue)
+    case dispatchQueue(DispatchQueue)
 
     internal func execute(closure: @escaping () -> Void) {
         switch self {
-        case .Main:
-            Foundation.DispatchQueue.main.async {
+        case .main:
+            DispatchQueue.main.async {
                 closure()
             }
 
-        case .SessionQueue:
+        case .sessionQueue:
             closure()
 
-        case .OperationQueue(let operationQueue):
+        case .operationQueue(let operationQueue):
             operationQueue.addOperation {
                 closure()
             }
 
-        case .DispatchQueue(let dispatchQueue):
+        case .dispatchQueue(let dispatchQueue):
             dispatchQueue.async {
                 closure()
             }

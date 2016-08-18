@@ -14,7 +14,7 @@ open class Session {
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
     /// - parameter callbackQueue: The default callback queue for `sendRequest(_:handler:)`.
-    public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .Main) {
+    public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .main) {
         self.adapter = adapter
         self.callbackQueue = callbackQueue
     }
