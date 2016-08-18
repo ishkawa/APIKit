@@ -191,7 +191,7 @@ class SessionTests: XCTestCase {
             return "/"
         }
 
-        func responseFromObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Response {
+        func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
             return ()
         }
     }

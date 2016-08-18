@@ -58,7 +58,7 @@ public protocol RequestType {
     /// Build `Response` instance from raw response object. This method is called after
     /// `interceptObject(:URLResponse:)` if it does not throw any error.
     /// - Throws: `ErrorType`
-    func responseFromObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Response
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response
 }
 
 public extension RequestType {
@@ -143,6 +143,6 @@ public extension RequestType {
     public func parseData(_ data: Data, urlResponse: HTTPURLResponse) throws -> Response {
         let parsedObject = try dataParser.parseData(data)
         let passedObject = try interceptObject(parsedObject, urlResponse: urlResponse)
-        return try responseFromObject(passedObject, urlResponse: urlResponse)
+        return try response(from: passedObject, urlResponse: urlResponse)
     }
 }

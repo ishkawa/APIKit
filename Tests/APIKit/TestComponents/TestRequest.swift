@@ -30,7 +30,7 @@ struct TestRequest: RequestType {
         return try interceptURLRequest(urlRequest)
     }
 
-    func responseFromObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Response {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         return object
     }
 }
