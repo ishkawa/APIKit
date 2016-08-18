@@ -3,7 +3,7 @@ import XCTest
 import APIKit
 
 class URLEncodedSerializationTests: XCTestCase {
-    // MARK: NSData -> AnyObject
+    // MARK: NSData -> Any
     func testObjectFromData() {
         let data = "key1=value1&key2=value2".data(using: .utf8)!
         let object = try? URLEncodedSerialization.objectFromData(data, encoding: .utf8)
@@ -48,16 +48,16 @@ class URLEncodedSerializationTests: XCTestCase {
         }
     }
 
-    // MARK: AnyObject -> NSData
+    // MARK: Any -> NSData
     func testDataFromObject() {
-        let object = ["hey": "yo"] as AnyObject
+        let object = ["hey": "yo"] as Any
         let data = try? URLEncodedSerialization.dataFromObject(object, encoding: .utf8)
         let string = data.flatMap { String(data: $0, encoding: .utf8) }
         XCTAssertEqual(string, "hey=yo")
     }
 
     func testNonDictionaryObject() {
-        let dictionaries = [["hey": "yo"]] as AnyObject
+        let dictionaries = [["hey": "yo"]] as Any
 
         do {
             try _ = URLEncodedSerialization.dataFromObject(dictionaries, encoding: .utf8)
@@ -69,7 +69,7 @@ class URLEncodedSerializationTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(object["hey"], dictionaries["hey"])
+            XCTAssertEqual((object as AnyObject)["hey"], (dictionaries as AnyObject)["hey"])
         }
     }
 }

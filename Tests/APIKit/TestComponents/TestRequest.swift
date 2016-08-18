@@ -8,9 +8,9 @@ struct TestRequest: RequestType {
     }
 
     // MARK: RequestType
-    typealias Response = AnyObject
+    typealias Response = Any
 
-    init(baseUrl: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], headerFields: [String: String] = [:], interceptURLRequest: (URLRequest) throws -> URLRequest = { $0 }) {
+    init(baseUrl: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
         self.baseUrl = URL(string: baseUrl)!
         self.path = path
         self.method = method
@@ -22,7 +22,7 @@ struct TestRequest: RequestType {
     let baseUrl: URL
     let method: HTTPMethod
     let path: String
-    let parameters: AnyObject?
+    let parameters: Any?
     let headerFields: [String: String]
     let interceptURLRequest: (URLRequest) throws -> URLRequest
 
@@ -30,7 +30,7 @@ struct TestRequest: RequestType {
         return try interceptURLRequest(urlRequest)
     }
 
-    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func responseFromObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         return object
     }
 }

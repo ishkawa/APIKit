@@ -7,7 +7,7 @@ import Result
 /// - `var baseUrl: URL`
 /// - `var method: HTTPMethod`
 /// - `var path: String`
-/// - `func responseFromObject(object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response`
+/// - `func responseFromObject(object: Any, urlResponse: HTTPURLResponse) throws -> Response`
 public protocol RequestType {
     /// The response type associated with the request type.
     associatedtype Response
@@ -24,12 +24,12 @@ public protocol RequestType {
     /// The convenience property for `queryParameters` and `bodyParameters`. If the implementation of
     /// `queryParameters` and `bodyParameters` are not provided, the values for them will be computed
     /// from this property depending on `method`.
-    var parameters: AnyObject? { get }
+    var parameters: Any? { get }
 
     /// The actual parameters for the URL query. The values of this property will be escaped using `URLEncodedSerialization`.
     /// If this property is not implemented and `method.prefersQueryParameter` is `true`, the value of this property
     /// will be computed from `parameters`.
-    var queryParameters: [String: AnyObject]? { get }
+    var queryParameters: [String: Any]? { get }
 
     /// The actual parameters for the HTTP body. If this property is not implemented and `method.prefersQueryParameter` is `false`,
     /// the value of this property will be computed from `parameters` using `JSONBodyParameters`.
@@ -48,26 +48,26 @@ public protocol RequestType {
     /// - Throws: `ErrorType`
     func interceptURLRequest(_ urlRequest: URLRequest) throws -> URLRequest
 
-    /// Intercepts response `AnyObject` and `HTTPURLResponse`. If an error is thrown in this method,
+    /// Intercepts response `Any` and `HTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.sendRequest()` turns `.failure(.ResponseError(error))`.
     /// The default implementation of this method is provided to throw `RequestError.UnacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `ErrorType`
-    func interceptObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> AnyObject
+    func interceptObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Any
 
     /// Build `Response` instance from raw response object. This method is called after
     /// `interceptObject(:URLResponse:)` if it does not throw any error.
     /// - Throws: `ErrorType`
-    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response
+    func responseFromObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Response
 }
 
 public extension RequestType {
-    public var parameters: AnyObject? {
+    public var parameters: Any? {
         return nil
     }
 
-    public var queryParameters: [String: AnyObject]? {
-        guard let parameters = parameters as? [String: AnyObject], method.prefersQueryParameters else {
+    public var queryParameters: [String: Any]? {
+        guard let parameters = parameters as? [String: Any], method.prefersQueryParameters else {
             return nil
         }
 
@@ -94,7 +94,7 @@ public extension RequestType {
         return urlRequest
     }
 
-    public func interceptObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> AnyObject {
+    public func interceptObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Any {
         guard (200..<300).contains(urlResponse.statusCode) else {
             throw ResponseError.UnacceptableStatusCode(urlResponse.statusCode)
         }

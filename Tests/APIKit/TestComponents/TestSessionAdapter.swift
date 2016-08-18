@@ -42,21 +42,21 @@ class TestSessionAdapter: SessionAdapterType {
             if task.cancelled {
                 task.handler(nil, nil, Error.cancelled)
             } else {
-                task.handler(data, urlResponse, error)
+                task.handler(data as NSData?, urlResponse, error)
             }
         }
 
         tasks = []
     }
 
-    func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: (NSData?, URLResponse?, Swift.Error?) -> Void) -> SessionTaskType {
+    func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: @escaping (NSData?, URLResponse?, Swift.Error?) -> Void) -> SessionTaskType {
         let task = TestSessionTask(handler: handler)
         tasks.append(task)
 
         return task
     }
 
-    func getTasksWithHandler(_ handler: ([SessionTaskType]) -> Void) {
+    func getTasksWithHandler(_ handler: @escaping ([SessionTaskType]) -> Void) {
         handler(tasks.map { $0 })
     }
 }

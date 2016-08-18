@@ -5,7 +5,7 @@ public protocol DataParserType {
     /// Value for `Accept` header field of HTTP request.
     var contentType: String? { get }
 
-    /// Return `AnyObject` that expresses structure of response such as JSON and XML. 
+    /// Return `Any` that expresses structure of response such as JSON and XML.
     /// - Throws: `ErrorType` when parser encountered invalid format data.
-    func parseData(_ data: Data) throws -> AnyObject
+    func parseData(_ data: Data) throws -> Any
 }

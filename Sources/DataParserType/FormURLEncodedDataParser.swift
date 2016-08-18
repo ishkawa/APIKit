@@ -21,9 +21,9 @@ public class FormURLEncodedDataParser: DataParserType {
         return "application/x-www-form-urlencoded"
     }
 
-    /// Return `AnyObject` that expresses structure of response.
+    /// Return `Any` that expresses structure of response.
     /// - Throws: `FormURLEncodedDataParser.Error` when the parser fails to initialize `String` from `Data`.
-    public func parseData(_ data: Data) throws -> AnyObject {
+    public func parseData(_ data: Data) throws -> Any {
         guard let string = String(data: data, encoding: encoding) else {
             throw Error.CannotGetStringFromData(data)
         }
@@ -32,7 +32,7 @@ public class FormURLEncodedDataParser: DataParserType {
         components.percentEncodedQuery = string
 
         let queryItems = components.queryItems ?? []
-        var dictionary = [String: AnyObject]()
+        var dictionary = [String: Any]()
 
         for queryItem in queryItems {
             dictionary[queryItem.name] = queryItem.value

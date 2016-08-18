@@ -1,7 +1,7 @@
 import Foundation
 
 /// `ResponseError` represents a common error that occurs while getting `RequestType.Response`
-/// from raw result tuple `(Data?, URLResponse?, NSError?)`.
+/// from raw result tuple `(NSData?, URLResponse?, Error?)`.
 public enum ResponseError: Error {
     /// Indicates the session adapter returned `URLResponse` that fails to down-cast to `HTTPURLResponse`.
     case NonHTTPURLResponse(URLResponse?)
@@ -10,6 +10,6 @@ public enum ResponseError: Error {
     /// In most cases, *acceptable* means the value is in `200..<300`.
     case UnacceptableStatusCode(Int)
 
-    /// Indicates `AnyObject` that represents the response is unexpected.
-    case UnexpectedObject(AnyObject)
+    /// Indicates `Any` that represents the response is unexpected.
+    case UnexpectedObject(Any)
 }

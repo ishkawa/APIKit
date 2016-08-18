@@ -14,9 +14,9 @@ private var taskAssociatedObjectCompletionHandlerKey = 0
 /// delegate methods that you want to implement. Since `URLSessionAdapter` also implements delegate methods
 /// `URLSession(_:task: didCompleteWithError:)` and `URLSession(_:dataTask:didReceiveData:)`, you have to call
 /// `super` in these methods if you implement them.
-public class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
+open class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     /// The undelying `URLSession` instance.
-    public var urlSession: URLSession!
+    open var urlSession: URLSession!
 
     /// Returns `URLSessionAdapter` initialized with `URLSessionConfiguration`.
     public init(configuration: URLSessionConfiguration) {
@@ -25,7 +25,7 @@ public class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate
     }
 
     /// Creates `URLSessionDataTask` instance using `dataTaskWithRequest(_:completionHandler:)`.
-    public func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: (NSData?, URLResponse?, Error?) -> Void) -> SessionTaskType {
+    open func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: @escaping (NSData?, URLResponse?, Error?) -> Void) -> SessionTaskType {
         let task = urlSession.dataTask(with: URLRequest)
 
         setBuffer(NSMutableData(), forTask: task)
@@ -37,7 +37,7 @@ public class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate
     }
 
     /// Aggregates `URLSessionTask` instances in `URLSession` using `getTasksWithCompletionHandler(_:)`.
-    public func getTasksWithHandler(_ handler: ([SessionTaskType]) -> Void) {
+    open func getTasksWithHandler(_ handler: @escaping ([SessionTaskType]) -> Void) {
         urlSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [URLSessionTask]
                 + uploadTasks as [URLSessionTask]
@@ -55,21 +55,21 @@ public class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate
         return objc_getAssociatedObject(task, &dataTaskResponseBufferKey) as? NSMutableData
     }
 
-    private func setHandler(_ handler: (NSData?, URLResponse?, NSError?) -> Void, forTask task: URLSessionTask) {
+    private func setHandler(_ handler: (NSData?, URLResponse?, Error?) -> Void, forTask task: URLSessionTask) {
         objc_setAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey, Box(handler), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func handlerForTask(_ task: URLSessionTask) -> ((NSData?, URLResponse?, NSError?) -> Void)? {
-        return (objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? Box<(NSData?, URLResponse?, NSError?) -> Void>)?.value
+    private func handlerForTask(_ task: URLSessionTask) -> ((NSData?, URLResponse?, Error?) -> Void)? {
+        return (objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? Box<(NSData?, URLResponse?, Error?) -> Void>)?.value
     }
 
     // MARK: URLSessionTaskDelegate
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    open func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         handlerForTask(task)?(bufferForTask(task), task.response, error)
     }
 
     // MARK: URLSessionDataDelegate
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         bufferForTask(dataTask)?.append(data)
     }
 }

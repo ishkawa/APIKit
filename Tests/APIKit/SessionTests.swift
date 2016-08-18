@@ -25,7 +25,7 @@ class SessionTests: XCTestCase {
         session.sendRequest(request) { response in
             switch response {
             case .success(let dictionary):
-                XCTAssertEqual(dictionary["key"], "value")
+                XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
 
             case .failure:
                 XCTFail()
@@ -191,7 +191,7 @@ class SessionTests: XCTestCase {
             return "/"
         }
 
-        func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+        func responseFromObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Response {
             return ()
         }
     }
@@ -239,12 +239,12 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            private override func sendRequest<Request : RequestType>(_ request: Request, callbackQueue: CallbackQueue?, handler: (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTaskType? {
+            private override func sendRequest<Request : RequestType>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTaskType? {
                 functionCallFlags[(#function)] = true
                 return super.sendRequest(request)
             }
 
-            private override func cancelRequest<Request : RequestType>(_ requestType: Request.Type, passingTest test: (Request) -> Bool) {
+            private override func cancelRequest<Request : RequestType>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
                 functionCallFlags[(#function)] = true
             }
         }

@@ -3,13 +3,13 @@ import Foundation
 /// `JSONBodyParameters` serializes JSON object for HTTP body and states its content type is JSON.
 public struct JSONBodyParameters: BodyParametersType {
     /// The JSON object to be serialized.
-    public let JSONObject: AnyObject
+    public let JSONObject: Any
 
     /// The writing options for serialization.
     public let writingOptions: JSONSerialization.WritingOptions
 
     /// Returns `JSONBodyParameters` that is initialized with JSON object and writing options.
-    public init(JSONObject: AnyObject, writingOptions: JSONSerialization.WritingOptions = []) {
+    public init(JSONObject: Any, writingOptions: JSONSerialization.WritingOptions = []) {
         self.JSONObject = JSONObject
         self.writingOptions = writingOptions
     }

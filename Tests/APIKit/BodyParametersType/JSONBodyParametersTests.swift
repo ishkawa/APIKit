@@ -15,9 +15,9 @@ class JSONBodyParametersTests: XCTestCase {
             }
 
             let dictionary = try JSONSerialization.jsonObject(with: data, options: [])
-            XCTAssertEqual(dictionary["foo"], 1)
-            XCTAssertEqual(dictionary["bar"], 2)
-            XCTAssertEqual(dictionary["baz"], 3)
+            XCTAssertEqual((dictionary as? [String: Int])?["foo"], 1)
+            XCTAssertEqual((dictionary as? [String: Int])?["bar"], 2)
+            XCTAssertEqual((dictionary as? [String: Int])?["baz"], 3)
         } catch {
             XCTFail()
         }

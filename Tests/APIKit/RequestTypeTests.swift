@@ -29,22 +29,22 @@ class RequestTypeTests: XCTestCase {
     }
 
     func testPOSTJSONRequest() {
-        let parameters: [AnyObject] = [
+        let parameters: [Any] = [
             ["id": "1"],
             ["id": "2"],
             ["hello", "yellow"]
         ]
 
         let request = TestRequest(method: .POST, parameters: parameters)
-        XCTAssert(request.parameters?.count == 3)
+        XCTAssert((request.parameters as? [Any])?.count == 3)
 
         let urlRequest = try? request.buildURLRequest()
         XCTAssertNotNil(urlRequest?.httpBody)
 
         let json = urlRequest?.httpBody.flatMap { try? JSONSerialization.jsonObject(with: $0, options: []) } as? [AnyObject]
         XCTAssertEqual(json?.count, 3)
-        XCTAssertEqual(json?[0]["id"], "1")
-        XCTAssertEqual(json?[1]["id"], "2")
+        XCTAssertEqual((json?[0] as? [String: String])?["id"], "1")
+        XCTAssertEqual((json?[1] as? [String: String])?["id"], "2")
 
         let array = json?[2] as? [String]
         XCTAssertEqual(array?[0], "hello")

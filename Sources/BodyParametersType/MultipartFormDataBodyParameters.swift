@@ -67,7 +67,7 @@ public extension MultipartFormDataBodyParameters {
         /// `value` will be converted via `String(_:)` and serialized via `String.dataUsingEncoding(_:)`.
         /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.
         public init(value: Any, name: String, mimeType: String? = nil, fileName: String? = nil, encoding: String.Encoding = .utf8) throws {
-            guard let data = String(value).data(using: encoding) else {
+            guard let data = String(describing: value).data(using: encoding) else {
                 throw Error.IllegalValue(value)
             }
 
@@ -103,7 +103,7 @@ public extension MultipartFormDataBodyParameters {
                 throw Error.CannotGetFileSize(fileUrl)
             }
 
-            let detectedMimeType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileUrl.pathExtension, nil)
+            let detectedMimeType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileUrl.pathExtension as CFString, nil)
                 .map { $0.takeRetainedValue() }
                 .flatMap { UTTypeCopyPreferredTagWithClass($0, kUTTagClassMIMEType)?.takeRetainedValue() }
                 .map { $0 as String }
