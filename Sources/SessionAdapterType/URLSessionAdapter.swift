@@ -55,12 +55,12 @@ open class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, 
         return objc_getAssociatedObject(task, &dataTaskResponseBufferKey) as? NSMutableData
     }
 
-    private func setHandler(_ handler: (Data?, URLResponse?, Error?) -> Void, forTask task: URLSessionTask) {
-        objc_setAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey, Box(handler), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    private func setHandler(_ handler: @escaping (Data?, URLResponse?, Error?) -> Void, forTask task: URLSessionTask) {
+        objc_setAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey, handler as Any, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     private func handler(for task: URLSessionTask) -> ((Data?, URLResponse?, Error?) -> Void)? {
-        return (objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? Box<(Data?, URLResponse?, Error?) -> Void>)?.value
+        return objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? (Data?, URLResponse?, Error?) -> Void
     }
 
     // MARK: URLSessionTaskDelegate

@@ -46,7 +46,6 @@
 		7FA19A421C9CBF2A005D25AE /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA19A3F1C9CBF2A005D25AE /* ResponseError.swift */; };
 		7FA19A431C9CBF2A005D25AE /* SessionTaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA19A401C9CBF2A005D25AE /* SessionTaskError.swift */; };
 		7FA19A461C9CC9D0005D25AE /* DataParserType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA19A451C9CC9D0005D25AE /* DataParserType.swift */; };
-		7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC40331C8F2C900098C4B2 /* Box.swift */; };
 		7FAC64AE1CDC7ADE00F1BB45 /* AbstractInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FAC64AC1CDC7ADE00F1BB45 /* AbstractInputStream.m */; };
 		7FB650DF1CEA0E6B00366992 /* StringDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB650DE1CEA0E6B00366992 /* StringDataParser.swift */; };
 		7FB650E11CEA0F3D00366992 /* StringDataParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB650E01CEA0F3D00366992 /* StringDataParserTests.swift */; };
@@ -122,7 +121,6 @@
 		7FA19A3F1C9CBF2A005D25AE /* ResponseError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
 		7FA19A401C9CBF2A005D25AE /* SessionTaskError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTaskError.swift; sourceTree = "<group>"; };
 		7FA19A451C9CC9D0005D25AE /* DataParserType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataParserType.swift; sourceTree = "<group>"; };
-		7FAC40331C8F2C900098C4B2 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		7FAC64AC1CDC7ADE00F1BB45 /* AbstractInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractInputStream.m; sourceTree = "<group>"; };
 		7FB650DE1CEA0E6B00366992 /* StringDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringDataParser.swift; sourceTree = "<group>"; };
 		7FB650E01CEA0F3D00366992 /* StringDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringDataParserTests.swift; sourceTree = "<group>"; };
@@ -244,7 +242,6 @@
 				7F7E8F101C8AD4B1008A13A9 /* RequestType.swift */,
 				7F7E8F0C1C8AD4B1008A13A9 /* HTTPMethod.swift */,
 				7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */,
-				7FAC40331C8F2C900098C4B2 /* Box.swift */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapterType */,
 				7F18BD0D1C972C38003A31DF /* BodyParametersType */,
 				7FA19A441C9CC9A2005D25AE /* DataParserType */,
@@ -453,7 +450,6 @@
 				7F7E8F1C1C8AD4B1008A13A9 /* Session.swift in Sources */,
 				7F18BD0F1C972C38003A31DF /* BodyParametersType.swift in Sources */,
 				7F2A15BD1CEB5F67009A12A2 /* Data+InputStream.swift in Sources */,
-				7FAC40341C8F2C900098C4B2 /* Box.swift in Sources */,
 				7FB650DF1CEA0E6B00366992 /* StringDataParser.swift in Sources */,
 				7F18BD131C972E5A003A31DF /* FormURLEncodedBodyParameters.swift in Sources */,
 				7FA19A461C9CC9D0005D25AE /* DataParserType.swift in Sources */,

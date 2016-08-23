@@ -115,10 +115,10 @@ open class Session {
     }
 
     private func setRequest<Request: RequestType>(_ request: Request, forTask task: SessionTaskType) {
-        objc_setAssociatedObject(task, &taskRequestKey, Box(request), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     private func requestForTask<Request: RequestType>(_ task: SessionTaskType) -> Request? {
-        return (objc_getAssociatedObject(task, &taskRequestKey) as? Box<Request>)?.value
+        return objc_getAssociatedObject(task, &taskRequestKey) as? Request
     }
 }
