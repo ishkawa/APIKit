@@ -2,10 +2,10 @@ import Foundation
 
 /// `RequestBodyEntity` represents entity of HTTP body.
 public enum RequestBodyEntity {
-    /// Expresses entity as `Data`. The associated value will be set to `URLRequest.HTTPBody`.
+    /// Expresses entity as `Data`. The associated value will be set to `URLRequest.httpBody`.
     case data(Data)
 
-    /// Expresses entity as `InputStream`. The associated value will be set to `URLRequest.HTTPBodyStream`.
+    /// Expresses entity as `InputStream`. The associated value will be set to `URLRequest.httpBodyStream`.
     case inputStream(InputStream)
 }
 
