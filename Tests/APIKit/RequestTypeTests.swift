@@ -35,7 +35,7 @@ class RequestTypeTests: XCTestCase {
             ["hello", "yellow"]
         ]
 
-        let request = TestRequest(method: .POST, parameters: parameters)
+        let request = TestRequest(method: .post, parameters: parameters)
         XCTAssert((request.parameters as? [Any])?.count == 3)
 
         let urlRequest = try? request.buildURLRequest()
@@ -52,7 +52,7 @@ class RequestTypeTests: XCTestCase {
     }
 
     func testPOSTInvalidJSONRequest() {
-        let request = TestRequest(method: .POST, parameters: "foo")
+        let request = TestRequest(method: .post, parameters: "foo")
         let urlRequest = try? request.buildURLRequest()
         XCTAssertNil(urlRequest?.httpBody)
     }

@@ -34,7 +34,7 @@ class FormURLEncodedDataParserTests: XCTestCase {
             XCTFail()
         } catch {
             guard let error = error as? FormURLEncodedDataParser.Error,
-                  case .CannotGetStringFromData(let invalidData) = error else {
+                  case .cannotGetStringFromData(let invalidData) = error else {
                 XCTFail()
                 return
             }

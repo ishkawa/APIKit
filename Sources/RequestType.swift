@@ -44,13 +44,13 @@ public protocol RequestType {
     var dataParser: DataParserType { get }
 
     /// Intercepts `URLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
-    /// thrown in this method, the result of `Session.sendRequest()` turns `.failure(.RequestError(error))`.
+    /// thrown in this method, the result of `Session.sendRequest()` turns `.failure(.requestError(error))`.
     /// - Throws: `ErrorType`
     func interceptURLRequest(_ urlRequest: URLRequest) throws -> URLRequest
 
     /// Intercepts response `Any` and `HTTPURLResponse`. If an error is thrown in this method,
-    /// the result of `Session.sendRequest()` turns `.failure(.ResponseError(error))`.
-    /// The default implementation of this method is provided to throw `RequestError.UnacceptableStatusCode`
+    /// the result of `Session.sendRequest()` turns `.failure(.responseError(error))`.
+    /// The default implementation of this method is provided to throw `RequestError.unacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `ErrorType`
     func interceptObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Any
@@ -96,7 +96,7 @@ public extension RequestType {
 
     public func interceptObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Any {
         guard (200..<300).contains(urlResponse.statusCode) else {
-            throw ResponseError.UnacceptableStatusCode(urlResponse.statusCode)
+            throw ResponseError.unacceptableStatusCode(urlResponse.statusCode)
         }
         return object
     }
@@ -106,7 +106,7 @@ public extension RequestType {
     public func buildURLRequest() throws -> URLRequest {
         let url = path.isEmpty ? baseUrl : baseUrl.appendingPathComponent(path)
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw RequestError.InvalidBaseURL(baseUrl)
+            throw RequestError.invalidBaseURL(baseUrl)
         }
 
         var urlRequest = URLRequest(url: url)
@@ -119,10 +119,10 @@ public extension RequestType {
             urlRequest.setValue(bodyParameters.contentType, forHTTPHeaderField: "Content-Type")
 
             switch try bodyParameters.buildEntity() {
-            case .Data(let data):
+            case .data(let data):
                 urlRequest.httpBody = data
 
-            case .InputStream(let inputStream):
+            case .inputStream(let inputStream):
                 urlRequest.httpBodyStream = inputStream
             }
         }

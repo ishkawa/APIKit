@@ -31,7 +31,7 @@ class StringDataParserTests: XCTestCase {
             XCTFail()
         } catch {
             guard let error = error as? StringDataParser.Error,
-                  case .InvalidData(let invalidData) = error else {
+                  case .invalidData(let invalidData) = error else {
                 XCTFail()
                 return
             }

@@ -3,7 +3,7 @@ import Foundation
 /// `StringDataParser` parses data and convert it to string.
 public class StringDataParser: DataParserType {
     public enum Error: Swift.Error {
-        case InvalidData(Data)
+        case invalidData(Data)
     }
 
     /// The string encoding of the data.
@@ -25,7 +25,7 @@ public class StringDataParser: DataParserType {
     /// - Throws: `StringDataParser.Error` when the parser fails to initialize `String` from `Data`.
     public func parseData(_ data: Data) throws -> Any {
         guard let string = String(data: data, encoding: encoding) else {
-            throw Error.InvalidData(data)
+            throw Error.invalidData(data)
         }
 
         return string

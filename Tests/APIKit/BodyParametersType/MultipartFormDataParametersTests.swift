@@ -14,7 +14,7 @@ class MultipartFormDataParametersTests: XCTestCase {
         ])
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }
@@ -43,10 +43,10 @@ class MultipartFormDataParametersTests: XCTestCase {
         let parameters = MultipartFormDataBodyParameters(parts: [
             MultipartFormDataBodyParameters.Part(data: value1, name: "foo"),
             MultipartFormDataBodyParameters.Part(data: value2, name: "bar"),
-        ], entityType: .InputStream)
+        ], entityType: .inputStream)
 
         do {
-            guard case .InputStream(let inputStream) = try parameters.buildEntity() else {
+            guard case .inputStream(let inputStream) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }
@@ -76,7 +76,7 @@ class MultipartFormDataParametersTests: XCTestCase {
         let parameters = MultipartFormDataBodyParameters(parts: [part])
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }
@@ -106,7 +106,7 @@ class MultipartFormDataParametersTests: XCTestCase {
         let parameters = MultipartFormDataBodyParameters(parts: [part])
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }
@@ -123,7 +123,7 @@ class MultipartFormDataParametersTests: XCTestCase {
         let parameters = MultipartFormDataBodyParameters(parts: [part])
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }
@@ -140,7 +140,7 @@ class MultipartFormDataParametersTests: XCTestCase {
         let parameters = MultipartFormDataBodyParameters(parts: [part])
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }

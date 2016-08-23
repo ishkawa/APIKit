@@ -63,7 +63,7 @@ open class Session {
             urlRequest = try request.buildURLRequest()
         } catch {
             callbackQueue.execute {
-                handler(.failure(.RequestError(error)))
+                handler(.failure(.requestError(error)))
             }
             return nil
         }
@@ -73,17 +73,17 @@ open class Session {
 
             switch (data, urlResponse, error) {
             case (_, _, let error?):
-                result = .failure(.ConnectionError(error))
+                result = .failure(.connectionError(error))
 
             case (let data?, let urlResponse as HTTPURLResponse, _):
                 do {
                     result = .success(try request.parseData(data as Data, urlResponse: urlResponse))
                 } catch {
-                    result = .failure(.ResponseError(error))
+                    result = .failure(.responseError(error))
                 }
 
             default:
-                result = .failure(.ResponseError(ResponseError.NonHTTPURLResponse(urlResponse)))
+                result = .failure(.responseError(ResponseError.nonHTTPURLResponse(urlResponse)))
             }
 
             callbackQueue.execute {

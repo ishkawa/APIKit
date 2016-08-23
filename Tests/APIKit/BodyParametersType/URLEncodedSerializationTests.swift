@@ -20,7 +20,7 @@ class URLEncodedSerializationTests: XCTestCase {
             XCTFail()
         } catch {
             guard let error = error as? URLEncodedSerialization.Error,
-                  case .InvalidFormatString(let invalidString) = error else {
+                  case .invalidFormatString(let invalidString) = error else {
                 XCTFail()
                 return
             }
@@ -38,7 +38,7 @@ class URLEncodedSerializationTests: XCTestCase {
             XCTFail()
         } catch {
             guard let error = error as? URLEncodedSerialization.Error,
-                  case .CannotGetStringFromData(let invalidData, let encoding) = error else {
+                  case .cannotGetStringFromData(let invalidData, let encoding) = error else {
                 XCTFail()
                 return
             }
@@ -64,7 +64,7 @@ class URLEncodedSerializationTests: XCTestCase {
             XCTFail()
         } catch {
             guard let error = error as? URLEncodedSerialization.Error,
-                  case .CannotCastObjectToDictionary(let object) = error else {
+                  case .cannotCastObjectToDictionary(let object) = error else {
                 XCTFail()
                 return
             }

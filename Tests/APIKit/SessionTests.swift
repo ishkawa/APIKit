@@ -46,7 +46,7 @@ class SessionTests: XCTestCase {
         
         session.sendRequest(request) { result in
             if case .failure(let error) = result,
-               case .ResponseError(let responseError as NSError) = error {
+               case .responseError(let responseError as NSError) = error {
                 XCTAssertEqual(responseError.domain, NSCocoaErrorDomain)
                 XCTAssertEqual(responseError.code, 3840)
             } else {
@@ -67,8 +67,8 @@ class SessionTests: XCTestCase {
         
         session.sendRequest(request) { result in
             if case .failure(let error) = result,
-               case .ResponseError(let responseError as ResponseError) = error,
-               case .UnacceptableStatusCode(let statusCode) = responseError {
+               case .responseError(let responseError as ResponseError) = error,
+               case .unacceptableStatusCode(let statusCode) = responseError {
                 XCTAssertEqual(statusCode, 400)
             } else {
                 XCTFail()
@@ -88,8 +88,8 @@ class SessionTests: XCTestCase {
         
         session.sendRequest(request) { result in
             if case .failure(let error) = result,
-               case .ResponseError(let responseError as ResponseError) = error,
-               case .NonHTTPURLResponse(let urlResponse) = responseError {
+               case .responseError(let responseError as ResponseError) = error,
+               case .nonHTTPURLResponse(let urlResponse) = responseError {
                 XCTAssert(urlResponse === self.adapter.urlResponse)
             } else {
                 XCTFail()
@@ -112,7 +112,7 @@ class SessionTests: XCTestCase {
         
         session.sendRequest(request) { result in
             if case .failure(let error) = result,
-               case .RequestError(let requestError) = error {
+               case .requestError(let requestError) = error {
                 XCTAssert(requestError is Error)
             } else {
                 XCTFail()
@@ -132,7 +132,7 @@ class SessionTests: XCTestCase {
         
         session.sendRequest(request) { result in
             if case .failure(let error) = result,
-               case .ConnectionError(let connectionError as NSError) = error {
+               case .connectionError(let connectionError as NSError) = error {
                 XCTAssertEqual(connectionError.code, 0)
             } else {
                 XCTFail()
@@ -184,7 +184,7 @@ class SessionTests: XCTestCase {
         }
 
         var method: HTTPMethod {
-            return .GET
+            return .get
         }
 
         var path: String {

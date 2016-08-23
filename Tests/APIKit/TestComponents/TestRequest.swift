@@ -10,7 +10,7 @@ struct TestRequest: RequestType {
     // MARK: RequestType
     typealias Response = Any
 
-    init(baseUrl: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
+    init(baseUrl: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
         self.baseUrl = URL(string: baseUrl)!
         self.path = path
         self.method = method

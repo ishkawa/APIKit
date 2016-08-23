@@ -45,17 +45,17 @@ private func unescape(_ string: String) -> String {
 /// and returns dictionary that represents the data or the string.
 public final class URLEncodedSerialization {
     public enum Error: Swift.Error {
-        case CannotGetStringFromData(Data, String.Encoding)
-        case CannotGetDataFromString(String, String.Encoding)
-        case CannotCastObjectToDictionary(Any)
-        case InvalidFormatString(String)
+        case cannotGetStringFromData(Data, String.Encoding)
+        case cannotGetDataFromString(String, String.Encoding)
+        case cannotCastObjectToDictionary(Any)
+        case invalidFormatString(String)
     }
 
     /// Returns `[String: String]` that represents urlencoded `Data`.
     /// - Throws: URLEncodedSerialization.Error
     public static func objectFromData(_ data: Data, encoding: String.Encoding) throws -> [String: String] {
         guard let string = String(data: data, encoding: encoding) else {
-            throw Error.CannotGetStringFromData(data, encoding)
+            throw Error.cannotGetStringFromData(data, encoding)
         }
 
         var dictionary = [String: String]()
@@ -63,7 +63,7 @@ public final class URLEncodedSerialization {
             let contents = pair.components(separatedBy: "=")
 
             guard contents.count == 2 else {
-                throw Error.InvalidFormatString(string)
+                throw Error.invalidFormatString(string)
             }
 
             dictionary[contents[0]] = unescape(contents[1])
@@ -76,12 +76,12 @@ public final class URLEncodedSerialization {
     /// - Throws: URLEncodedSerialization.Error
     public static func dataFromObject(_ object: Any, encoding: String.Encoding) throws -> Data {
         guard let dictionary = object as? [String: Any] else {
-            throw Error.CannotCastObjectToDictionary(object)
+            throw Error.cannotCastObjectToDictionary(object)
         }
 
         let string = stringFromDictionary(dictionary)
         guard let data = string.data(using: encoding, allowLossyConversion: false) else {
-            throw Error.CannotGetDataFromString(string, encoding)
+            throw Error.cannotGetDataFromString(string, encoding)
         }
 
         return data

@@ -11,17 +11,17 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
     /// `EntityType` represents wheather the entity is expressed as `Data` or `InputStream`.
     public enum EntityType {
         /// Expresses the entity as `Data`, which has faster upload speed and lager memory usage.
-        case Data
+        case data
 
         /// Expresses the entity as `InputStream`, which has smaller memory usage and slower upload speed.
-        case InputStream
+        case inputStream
     }
 
     public let parts: [Part]
     public let boundary: String
     public let entityType: EntityType
 
-    public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random()), entityType: EntityType = .Data) {
+    public init(parts: [Part], boundary: String = String(format: "%08x%08x", arc4random(), arc4random()), entityType: EntityType = .data) {
         self.parts = parts
         self.boundary = boundary
         self.entityType = entityType
@@ -34,16 +34,16 @@ public struct MultipartFormDataBodyParameters: BodyParametersType {
         return "multipart/form-data; boundary=\(boundary)"
     }
 
-    /// Builds `RequestBodyEntity.Data` that represents `form`.
+    /// Builds `RequestBodyEntity.data` that represents `form`.
     public func buildEntity() throws -> RequestBodyEntity {
         let inputStream = MultipartInputStream(parts: parts, boundary: boundary)
 
         switch entityType {
-        case .InputStream:
-            return .InputStream(inputStream)
+        case .inputStream:
+            return .inputStream(inputStream)
 
-        case .Data:
-            return .Data(try Data(inputStream: inputStream))
+        case .data:
+            return .data(try Data(inputStream: inputStream))
         }
     }
 }
@@ -52,9 +52,9 @@ public extension MultipartFormDataBodyParameters {
     /// Part represents single part of multipart/form-data.
     public struct Part {
         public enum Error: Swift.Error {
-            case IllegalValue(Any)
-            case IllegalFileURL(URL)
-            case CannotGetFileSize(URL)
+            case illegalValue(Any)
+            case illegalFileURL(URL)
+            case cannotGetFileSize(URL)
         }
 
         public let inputStream: InputStream
@@ -68,7 +68,7 @@ public extension MultipartFormDataBodyParameters {
         /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.
         public init(value: Any, name: String, mimeType: String? = nil, fileName: String? = nil, encoding: String.Encoding = .utf8) throws {
             guard let data = String(describing: value).data(using: encoding) else {
-                throw Error.IllegalValue(value)
+                throw Error.illegalValue(value)
             }
 
             self.inputStream = InputStream(data: data)
@@ -92,7 +92,7 @@ public extension MultipartFormDataBodyParameters {
         /// If `mimeType` or `fileName` are `nil`, values for the fields will be detected from URL.
         public init(fileUrl: URL, name: String, mimeType: String? = nil, fileName: String? = nil) throws {
             guard let inputStream = InputStream(url: fileUrl) else {
-                throw Error.IllegalFileURL(fileUrl)
+                throw Error.illegalFileURL(fileUrl)
             }
 
             let fileSize = (try? FileManager.default.attributesOfItem(atPath: fileUrl.path))
@@ -100,7 +100,7 @@ public extension MultipartFormDataBodyParameters {
                 .map { $0.intValue }
 
             guard let bodyLength = fileSize else {
-                throw Error.CannotGetFileSize(fileUrl)
+                throw Error.cannotGetFileSize(fileUrl)
             }
 
             let detectedMimeType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileUrl.pathExtension as CFString, nil)

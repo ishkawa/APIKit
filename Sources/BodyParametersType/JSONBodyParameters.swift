@@ -21,7 +21,7 @@ public struct JSONBodyParameters: BodyParametersType {
         return "application/json"
     }
 
-    /// Builds `RequestBodyEntity.Data` that represents `JSONObject`.
+    /// Builds `RequestBodyEntity.data` that represents `JSONObject`.
     /// - Throws: `NSError` if `JSONSerialization` fails to serialize `JSONObject`.
     public func buildEntity() throws -> RequestBodyEntity {
         // If isValidJSONObject(_:) is false, dataWithJSONObject(_:options:) throws NSException.
@@ -29,6 +29,6 @@ public struct JSONBodyParameters: BodyParametersType {
             throw NSError(domain: NSCocoaErrorDomain, code: 3840, userInfo: nil)
         }
 
-        return .Data(try JSONSerialization.data(withJSONObject: JSONObject, options: writingOptions))
+        return .data(try JSONSerialization.data(withJSONObject: JSONObject, options: writingOptions))
     }
 }

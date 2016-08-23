@@ -9,7 +9,7 @@ class JSONBodyParametersTests: XCTestCase {
         XCTAssertEqual(parameters.contentType, "application/json")
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }

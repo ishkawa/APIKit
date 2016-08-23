@@ -3,7 +3,7 @@ import Foundation
 /// `FormURLEncodedDataParser` parses form URL encoded response data.
 public class FormURLEncodedDataParser: DataParserType {
     public enum Error: Swift.Error {
-        case CannotGetStringFromData(Data)
+        case cannotGetStringFromData(Data)
     }
 
     /// The string encoding of the data.
@@ -25,7 +25,7 @@ public class FormURLEncodedDataParser: DataParserType {
     /// - Throws: `FormURLEncodedDataParser.Error` when the parser fails to initialize `String` from `Data`.
     public func parseData(_ data: Data) throws -> Any {
         guard let string = String(data: data, encoding: encoding) else {
-            throw Error.CannotGetStringFromData(data)
+            throw Error.cannotGetStringFromData(data)
         }
 
         var components = URLComponents()
