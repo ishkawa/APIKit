@@ -24,6 +24,6 @@ public struct FormURLEncodedBodyParameters: BodyParametersType {
     /// Builds `RequestBodyEntity.data` that represents `form`.
     /// - Throws: `URLEncodedSerialization.Error` if `URLEncodedSerialization` fails to serialize form object.
     public func buildEntity() throws -> RequestBodyEntity {
-        return .data(try URLEncodedSerialization.dataFromObject(form, encoding: encoding))
+        return .data(try URLEncodedSerialization.data(from: form, encoding: encoding))
     }
 }

@@ -14,7 +14,7 @@ class StringDataParserTests: XCTestCase {
         let parser = StringDataParser(encoding: .utf8)
 
         do {
-            let object = try parser.parseData(data)
+            let object = try parser.parse(data: data)
             XCTAssertEqual(object as? String, string)
         } catch {
             XCTFail()
@@ -27,7 +27,7 @@ class StringDataParserTests: XCTestCase {
         let parser = StringDataParser(encoding: .utf8)
 
         do {
-            try _ = parser.parseData(data)
+            try _ = parser.parse(data: data)
             XCTFail()
         } catch {
             guard let error = error as? StringDataParser.Error,

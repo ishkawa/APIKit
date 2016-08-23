@@ -14,7 +14,7 @@ class FormURLEncodedDataParserTests: XCTestCase {
         let parser = FormURLEncodedDataParser(encoding: .utf8)
 
         do {
-            let object = try parser.parseData(data)
+            let object = try parser.parse(data: data)
             let dictionary = object as? [String: String]
             XCTAssertEqual(dictionary?["foo"], "1")
             XCTAssertEqual(dictionary?["bar"], "2")
@@ -30,7 +30,7 @@ class FormURLEncodedDataParserTests: XCTestCase {
         let parser = FormURLEncodedDataParser(encoding: .utf8)
 
         do {
-            try _ = parser.parseData(data)
+            try _ = parser.parse(data: data)
             XCTFail()
         } catch {
             guard let error = error as? FormURLEncodedDataParser.Error,

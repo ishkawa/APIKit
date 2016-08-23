@@ -25,7 +25,7 @@ open class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, 
     }
 
     /// Creates `URLSessionDataTask` instance using `dataTaskWithRequest(_:completionHandler:)`.
-    open func createTaskWithURLRequest(_ URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTaskType {
+    open func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTaskType {
         let task = urlSession.dataTask(with: URLRequest)
 
         setBuffer(NSMutableData(), forTask: task)
@@ -37,7 +37,7 @@ open class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, 
     }
 
     /// Aggregates `URLSessionTask` instances in `URLSession` using `getTasksWithCompletionHandler(_:)`.
-    open func getTasksWithHandler(_ handler: @escaping ([SessionTaskType]) -> Void) {
+    open func getTasks(with handler: @escaping ([SessionTaskType]) -> Void) {
         urlSession.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             let allTasks = dataTasks as [URLSessionTask]
                 + uploadTasks as [URLSessionTask]
@@ -51,7 +51,7 @@ open class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, 
         objc_setAssociatedObject(task, &dataTaskResponseBufferKey, buffer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func bufferForTask(_ task: URLSessionTask) -> NSMutableData? {
+    private func buffer(for task: URLSessionTask) -> NSMutableData? {
         return objc_getAssociatedObject(task, &dataTaskResponseBufferKey) as? NSMutableData
     }
 
@@ -59,17 +59,17 @@ open class URLSessionAdapter: NSObject, SessionAdapterType, URLSessionDelegate, 
         objc_setAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey, Box(handler), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func handlerForTask(_ task: URLSessionTask) -> ((Data?, URLResponse?, Error?) -> Void)? {
+    private func handler(for task: URLSessionTask) -> ((Data?, URLResponse?, Error?) -> Void)? {
         return (objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? Box<(Data?, URLResponse?, Error?) -> Void>)?.value
     }
 
     // MARK: URLSessionTaskDelegate
     open func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        handlerForTask(task)?(bufferForTask(task) as Data?, task.response, error)
+        handler(for: task)?(buffer(for: task) as Data?, task.response, error)
     }
 
     // MARK: URLSessionDataDelegate
     open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        bufferForTask(dataTask)?.append(data)
+        buffer(for: dataTask)?.append(data)
     }
 }

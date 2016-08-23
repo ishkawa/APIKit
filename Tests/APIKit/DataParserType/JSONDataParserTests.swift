@@ -14,7 +14,7 @@ class JSONDataParserTests: XCTestCase {
         let parser = JSONDataParser(readingOptions: [])
 
         do {
-            let object = try parser.parseData(data)
+            let object = try parser.parse(data: data)
             let dictionary = object as? [String: Int]
             XCTAssertEqual(dictionary?["foo"], 1)
             XCTAssertEqual(dictionary?["bar"], 2)

@@ -112,7 +112,7 @@ public extension RequestType {
         var urlRequest = URLRequest(url: url)
 
         if let queryParameters = queryParameters, !queryParameters.isEmpty {
-            components.percentEncodedQuery = URLEncodedSerialization.stringFromDictionary(queryParameters)
+            components.percentEncodedQuery = URLEncodedSerialization.string(from: queryParameters)
         }
 
         if let bodyParameters = bodyParameters {
@@ -140,8 +140,8 @@ public extension RequestType {
 
     /// Builds `Response` from response `Data`.
     /// - Throws: `ResponseError`, `ErrorType`
-    public func parseData(_ data: Data, urlResponse: HTTPURLResponse) throws -> Response {
-        let parsedObject = try dataParser.parseData(data)
+    public func parse(data: Data, urlResponse: HTTPURLResponse) throws -> Response {
+        let parsedObject = try dataParser.parse(data: data)
         let passedObject = try intercept(object: parsedObject, urlResponse: urlResponse)
         return try response(from: passedObject, urlResponse: urlResponse)
     }

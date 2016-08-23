@@ -53,7 +53,7 @@ public final class URLEncodedSerialization {
 
     /// Returns `[String: String]` that represents urlencoded `Data`.
     /// - Throws: URLEncodedSerialization.Error
-    public static func objectFromData(_ data: Data, encoding: String.Encoding) throws -> [String: String] {
+    public static func object(from data: Data, encoding: String.Encoding) throws -> [String: String] {
         guard let string = String(data: data, encoding: encoding) else {
             throw Error.cannotGetStringFromData(data, encoding)
         }
@@ -74,12 +74,12 @@ public final class URLEncodedSerialization {
 
     /// Returns urlencoded `Data` from the object.
     /// - Throws: URLEncodedSerialization.Error
-    public static func dataFromObject(_ object: Any, encoding: String.Encoding) throws -> Data {
+    public static func data(from object: Any, encoding: String.Encoding) throws -> Data {
         guard let dictionary = object as? [String: Any] else {
             throw Error.cannotCastObjectToDictionary(object)
         }
 
-        let string = stringFromDictionary(dictionary)
+        let string = self.string(from: dictionary)
         guard let data = string.data(using: encoding, allowLossyConversion: false) else {
             throw Error.cannotGetDataFromString(string, encoding)
         }
@@ -88,7 +88,7 @@ public final class URLEncodedSerialization {
     }
 
     /// Returns urlencoded `Data` from the string.
-    public static func stringFromDictionary(_ dictionary: [String: Any]) -> String {
+    public static func string(from dictionary: [String: Any]) -> String {
         let pairs = dictionary.map { key, value -> String in
             if value is NSNull {
                 return "\(escape(key))"

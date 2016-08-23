@@ -7,5 +7,5 @@ public protocol DataParserType {
 
     /// Return `Any` that expresses structure of response such as JSON and XML.
     /// - Throws: `ErrorType` when parser encountered invalid format data.
-    func parseData(_ data: Data) throws -> Any
+    func parse(data: Data) throws -> Any
 }

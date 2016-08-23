@@ -68,7 +68,7 @@ open class Session {
             return nil
         }
 
-        let task = adapter.createTaskWithURLRequest(urlRequest) { data, urlResponse, error in
+        let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
             let result: Result<Request.Response, SessionTaskError>
 
             switch (data, urlResponse, error) {
@@ -77,7 +77,7 @@ open class Session {
 
             case (let data?, let urlResponse as HTTPURLResponse, _):
                 do {
-                    result = .success(try request.parseData(data as Data, urlResponse: urlResponse))
+                    result = .success(try request.parse(data: data as Data, urlResponse: urlResponse))
                 } catch {
                     result = .failure(.responseError(error))
                 }
@@ -101,7 +101,7 @@ open class Session {
     /// - parameter requestType: The request type to cancel.
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
     open func cancelRequest<Request: RequestType>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
-        adapter.getTasksWithHandler { [weak self] tasks in
+        adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in
                     if let request = self?.requestForTask(task) as Request? {
