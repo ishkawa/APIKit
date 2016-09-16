@@ -6,7 +6,7 @@ enum InputStreamError: ErrorType {
 }
 
 extension NSData {
-    convenience init(inputStream: NSInputStream, capacity: Int = Int(UInt16.max)) throws {
+    public convenience init(inputStream: NSInputStream, capacity: Int = Int(UInt16.max)) throws {
         guard let data = NSMutableData(capacity: capacity) else {
             throw InputStreamError.InvalidDataCapacity(capacity)
         }
