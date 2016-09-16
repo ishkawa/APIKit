@@ -44,12 +44,12 @@ public protocol Request {
     var dataParser: DataParser { get }
 
     /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
-    /// thrown in this method, the result of `Session.sendRequest()` turns `.failure(.requestError(error))`.
+    /// thrown in this method, the result of `Session.send()` turns `.failure(.requestError(error))`.
     /// - Throws: `ErrorType`
     func intercept(urlRequest: URLRequest) throws -> URLRequest
 
     /// Intercepts response `Any` and `HTTPURLResponse`. If an error is thrown in this method,
-    /// the result of `Session.sendRequest()` turns `.failure(.responseError(error))`.
+    /// the result of `Session.send()` turns `.failure(.responseError(error))`.
     /// The default implementation of this method is provided to throw `RequestError.unacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `ErrorType`

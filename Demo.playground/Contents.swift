@@ -60,7 +60,7 @@ struct GetRateLimitRequest: GitHubRequest {
 //: Step 4: Send request
 let request = GetRateLimitRequest()
 
-Session.sendRequest(request) { result in
+Session.send(request) { result in
     switch result {
     case .success(let rateLimit):
         print("count: \(rateLimit.count)")

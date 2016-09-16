@@ -8,12 +8,12 @@ open class Session {
     /// The adapter that connects `Session` instance and lower level backend.
     public let adapter: SessionAdapter
 
-    /// The default callback queue for `sendRequest(_:handler:)`.
+    /// The default callback queue for `send(_:handler:)`.
     public let callbackQueue: CallbackQueue
 
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
-    /// - parameter callbackQueue: The default callback queue for `sendRequest(_:handler:)`.
+    /// - parameter callbackQueue: The default callback queue for `send(_:handler:)`.
     public init(adapter: SessionAdapter, callbackQueue: CallbackQueue = .main) {
         self.adapter = adapter
         self.callbackQueue = callbackQueue
@@ -26,19 +26,19 @@ open class Session {
         return Session(adapter: adapter)
     }()
 
-    /// The shared `Session` instance for class methods, `Session.sendRequest(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
+    /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
     open class var sharedSession: Session {
         return privateSharedSession
     }
 
-    /// Calls `sendRequest(_:handler:)` of `sharedSession`.
+    /// Calls `send(_:handler:)` of `sharedSession`.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func sendRequest<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
-        return sharedSession.sendRequest(request, callbackQueue: callbackQueue, handler: handler)
+    open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+        return sharedSession.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
     /// Calls `cancelRequest(_:passingTest:)` of `sharedSession`.
@@ -55,7 +55,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func sendRequest<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+    open func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest

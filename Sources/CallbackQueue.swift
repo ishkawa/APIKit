@@ -1,6 +1,6 @@
 import Foundation
 
-/// `CallbackQueue` represents queue where `handler` of `Session.sendRequest(_:handler:)` runs.
+/// `CallbackQueue` represents queue where `handler` of `Session.send(_:handler:)` runs.
 public enum CallbackQueue {
     /// Dispatches callback closure on main queue asynchronously.
     case main

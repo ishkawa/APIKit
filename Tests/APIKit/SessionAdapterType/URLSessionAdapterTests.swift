@@ -33,7 +33,7 @@ class URLSessionAdapterTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.sendRequest(request) { response in
+        session.send(request) { response in
             switch response {
             case .success(let dictionary):
                 XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
@@ -60,7 +60,7 @@ class URLSessionAdapterTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request) { response in
+        session.send(request) { response in
             switch response {
             case .success:
                 XCTFail()
@@ -93,7 +93,7 @@ class URLSessionAdapterTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request) { result in
+        session.send(request) { result in
             guard case .failure(let error) = result,
                   case .connectionError(let connectionError as NSError) = error else {
                 XCTFail()

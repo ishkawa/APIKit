@@ -46,7 +46,7 @@ class URLSessionAdapterSubclassTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.sendRequest(request) { result in
+        session.send(request) { result in
             if case .failure = result {
                 XCTFail()
             }
