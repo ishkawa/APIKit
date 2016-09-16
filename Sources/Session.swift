@@ -37,17 +37,17 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func sendRequest<Request: RequestType>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+    open class func sendRequest<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
         return sharedSession.sendRequest(request, callbackQueue: callbackQueue, handler: handler)
     }
 
     /// Calls `cancelRequest(_:passingTest:)` of `sharedSession`.
-    open class func cancelRequest<Request: RequestType>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
+    open class func cancelRequest<Req: Request>(_ requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
         sharedSession.cancelRequest(requestType, passingTest: test)
     }
 
     /// Sends a request and receives the result as the argument of `handler` closure. This method takes
-    /// a type parameter `Request` that conforms to `RequestType` protocol. The result of passed request is
+    /// a type parameter `Request` that conforms to `Request` protocol. The result of passed request is
     /// expressed as `Result<Request.Response, SessionTaskError>`. Since the response type
     /// `Request.Response` is inferred from `Request` type parameter, the it changes depending on the request type.
     /// - parameter request: The request to be sent.
@@ -55,7 +55,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func sendRequest<Request: RequestType>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+    open func sendRequest<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest
@@ -69,7 +69,7 @@ open class Session {
         }
 
         let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
-            let result: Result<Request.Response, SessionTaskError>
+            let result: Result<Req.Response, SessionTaskError>
 
             switch (data, urlResponse, error) {
             case (_, _, let error?):
@@ -100,11 +100,11 @@ open class Session {
     /// Cancels requests that passes the test.
     /// - parameter requestType: The request type to cancel.
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
-    open func cancelRequest<Request: RequestType>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
+    open func cancelRequest<Req: Request>(_ requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
         adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in
-                    if let request = self?.requestForTask(task) as Request? {
+                    if let request = self?.requestForTask(task) as Req? {
                         return test(request)
                     } else {
                         return false
@@ -114,11 +114,11 @@ open class Session {
         }
     }
 
-    private func setRequest<Request: RequestType>(_ request: Request, forTask task: SessionTaskType) {
+    private func setRequest<Req: Request>(_ request: Req, forTask task: SessionTaskType) {
         objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func requestForTask<Request: RequestType>(_ task: SessionTaskType) -> Request? {
-        return objc_getAssociatedObject(task, &taskRequestKey) as? Request
+    private func requestForTask<Req: Request>(_ task: SessionTaskType) -> Req? {
+        return objc_getAssociatedObject(task, &taskRequestKey) as? Req
     }
 }

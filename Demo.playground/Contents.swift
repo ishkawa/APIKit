@@ -5,11 +5,11 @@ import APIKit
 PlaygroundPage.current.needsIndefiniteExecution = true
 
 //: Step 1: Define request protocol
-protocol GitHubRequestType: RequestType {
+protocol GitHubRequest: Request {
 
 }
 
-extension GitHubRequestType {
+extension GitHubRequest {
     var baseUrl: URL {
         return URL(string: "https://api.github.com")!
     }
@@ -36,7 +36,7 @@ struct RateLimit {
 
 //: Step 3: Define request type conforming to created request protocol
 // https://developer.github.com/v3/rate_limit/
-struct GetRateLimitRequest: GitHubRequestType {
+struct GetRateLimitRequest: GitHubRequest {
     typealias Response = RateLimit
 
     var method: HTTPMethod {

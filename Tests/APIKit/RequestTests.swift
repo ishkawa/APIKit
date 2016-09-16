@@ -1,7 +1,7 @@
 import XCTest
 import APIKit
 
-class RequestTypeTests: XCTestCase {
+class RequestTests: XCTestCase {
     func testJapanesesQueryParameters() {
         let request = TestRequest(parameters: ["q": "こんにちは"])
         let urlRequest = try? request.buildURLRequest()

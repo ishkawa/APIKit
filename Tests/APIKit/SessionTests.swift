@@ -176,7 +176,7 @@ class SessionTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-    struct AnotherTestRequest: RequestType {
+    struct AnotherTestRequest: Request {
         typealias Response = Void
 
         var baseUrl: URL {
@@ -196,7 +196,7 @@ class SessionTests: XCTestCase {
         }
     }
 
-    func testCancelOtherRequestType() {
+    func testCancelOtherRequest() {
         let successExpectation = expectation(description: "wait for response")
         let successRequest = AnotherTestRequest()
 
@@ -239,12 +239,12 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            private override func sendRequest<Request : RequestType>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTaskType? {
+            private override func sendRequest<Req : Request>(_ request: Req, callbackQueue: CallbackQueue?, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void) -> SessionTaskType? {
                 functionCallFlags[(#function)] = true
                 return super.sendRequest(request)
             }
 
-            private override func cancelRequest<Request : RequestType>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
+            private override func cancelRequest<Req : Request>(_ requestType: Req.Type, passingTest test: @escaping (Req) -> Bool) {
                 functionCallFlags[(#function)] = true
             }
         }

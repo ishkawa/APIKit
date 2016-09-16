@@ -8,6 +8,6 @@ public enum SessionTaskError: Error {
     /// Error while creating `URLReqeust` from `Request`.
     case requestError(Error)
 
-    /// Error while creating `RequestType.Response` from `(Data, URLResponse)`.
+    /// Error while creating `Request.Response` from `(Data, URLResponse)`.
     case responseError(Error)
 }

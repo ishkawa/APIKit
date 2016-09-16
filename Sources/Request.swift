@@ -1,14 +1,14 @@
 import Foundation
 import Result
 
-/// `RequestType` protocol represents a request for Web API.
+/// `Request` protocol represents a request for Web API.
 /// Following 5 items must be implemented.
 /// - `typealias Response`
 /// - `var baseUrl: URL`
 /// - `var method: HTTPMethod`
 /// - `var path: String`
 /// - `func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response`
-public protocol RequestType {
+public protocol Request {
     /// The response type associated with the request type.
     associatedtype Response
 
@@ -43,7 +43,7 @@ public protocol RequestType {
     /// The parser object that states `Content-Type` to accept and parses response body.
     var dataParser: DataParserType { get }
 
-    /// Intercepts `URLRequest` which is created by `RequestType.buildURLRequest()`. If an error is
+    /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.sendRequest()` turns `.failure(.requestError(error))`.
     /// - Throws: `ErrorType`
     func intercept(urlRequest: URLRequest) throws -> URLRequest
@@ -61,7 +61,7 @@ public protocol RequestType {
     func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response
 }
 
-public extension RequestType {
+public extension Request {
     public var parameters: Any? {
         return nil
     }

@@ -1,13 +1,13 @@
 import Foundation
 import APIKit
 
-struct TestRequest: RequestType {
+struct TestRequest: Request {
     var absoluteUrl: URL? {
         let urlRequest = try? buildURLRequest()
         return urlRequest?.url
     }
 
-    // MARK: RequestType
+    // MARK: Request
     typealias Response = Any
 
     init(baseUrl: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
