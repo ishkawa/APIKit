@@ -56,7 +56,7 @@ public protocol Request {
     func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any
 
     /// Build `Response` instance from raw response object. This method is called after
-    /// `interceptObject(:URLResponse:)` if it does not throw any error.
+    /// `intercept(object:urlResponse:)` if it does not throw any error.
     /// - Throws: `ErrorType`
     func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response
 }
