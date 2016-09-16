@@ -6,7 +6,7 @@ private var taskRequestKey = 0
 /// `Session` manages tasks for HTTP/HTTPS requests.
 open class Session {
     /// The adapter that connects `Session` instance and lower level backend.
-    public let adapter: SessionAdapterType
+    public let adapter: SessionAdapter
 
     /// The default callback queue for `sendRequest(_:handler:)`.
     public let callbackQueue: CallbackQueue
@@ -14,7 +14,7 @@ open class Session {
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
     /// - parameter callbackQueue: The default callback queue for `sendRequest(_:handler:)`.
-    public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .main) {
+    public init(adapter: SessionAdapter, callbackQueue: CallbackQueue = .main) {
         self.adapter = adapter
         self.callbackQueue = callbackQueue
     }

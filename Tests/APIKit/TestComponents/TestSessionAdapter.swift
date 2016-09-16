@@ -1,7 +1,7 @@
 import Foundation
 import APIKit
 
-class TestSessionAdapter: SessionAdapterType {
+class TestSessionAdapter: SessionAdapter {
     enum Error: Swift.Error {
         case cancelled
     }
