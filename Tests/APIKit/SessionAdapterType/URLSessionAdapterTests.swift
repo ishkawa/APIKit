@@ -106,7 +106,7 @@ class URLSessionAdapterTests: XCTestCase {
         }
 
         DispatchQueue.main.async {
-            self.session.cancelRequest(TestRequest.self)
+            self.session.cancelRequests(withType: TestRequest.self)
         }
 
         waitForExpectations(timeout: 10.0, handler: nil)
