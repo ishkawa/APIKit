@@ -9,7 +9,7 @@ public class StringDataParser: DataParserType {
     /// The string encoding of the data.
     public let encoding: String.Encoding
 
-    /// Returns `FormURLEncodedDataParser` with the string encoding.
+    /// Returns `StringDataParser` with the string encoding.
     public init(encoding: String.Encoding = .utf8) {
         self.encoding = encoding
     }
