@@ -9,7 +9,7 @@ public class StringDataParser: DataParserType {
     /// The string encoding of the data.
     public let encoding: NSStringEncoding
 
-    /// Returns `FormURLEncodedDataParser` with the string encoding.
+    /// Returns `StringDataParser` with the string encoding.
     public init(encoding: NSStringEncoding = NSUTF8StringEncoding) {
         self.encoding = encoding
     }
