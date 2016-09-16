@@ -33,7 +33,7 @@ public protocol Request {
 
     /// The actual parameters for the HTTP body. If this property is not implemented and `method.prefersQueryParameter` is `false`,
     /// the value of this property will be computed from `parameters` using `JSONBodyParameters`.
-    var bodyParameters: BodyParametersType? { get }
+    var bodyParameters: BodyParameters? { get }
 
     /// The HTTP header fields. In addition to fields defined in this property, `Accept` and `Content-Type`
     /// fields will be added by `dataParser` and `bodyParameters`. If you define `Accept` and `Content-Type`
@@ -74,7 +74,7 @@ public extension Request {
         return parameters
     }
 
-    public var bodyParameters: BodyParametersType? {
+    public var bodyParameters: BodyParameters? {
         guard let parameters = parameters, !method.prefersQueryParameters else {
             return nil
         }

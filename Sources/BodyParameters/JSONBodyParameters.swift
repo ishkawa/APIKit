@@ -1,7 +1,7 @@
 import Foundation
 
 /// `JSONBodyParameters` serializes JSON object for HTTP body and states its content type is JSON.
-public struct JSONBodyParameters: BodyParametersType {
+public struct JSONBodyParameters: BodyParameters {
     /// The JSON object to be serialized.
     public let JSONObject: Any
 
@@ -14,7 +14,7 @@ public struct JSONBodyParameters: BodyParametersType {
         self.writingOptions = writingOptions
     }
 
-    // MARK: - BodyParametersType
+    // MARK: - BodyParameters
 
     /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     public var contentType: String {

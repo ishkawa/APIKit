@@ -1,7 +1,7 @@
 import Foundation
 
 /// `FormURLEncodedBodyParameters` serializes form object for HTTP body and states its content type is form.
-public struct FormURLEncodedBodyParameters: BodyParametersType {
+public struct FormURLEncodedBodyParameters: BodyParameters {
     /// The form object to be serialized.
     public let form: [String: Any]
 
@@ -14,7 +14,7 @@ public struct FormURLEncodedBodyParameters: BodyParametersType {
         self.encoding = encoding
     }
 
-    // MARK: - BodyParametersType
+    // MARK: - BodyParameters
 
     /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     public var contentType: String {

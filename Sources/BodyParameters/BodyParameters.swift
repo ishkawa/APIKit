@@ -9,8 +9,8 @@ public enum RequestBodyEntity {
     case inputStream(InputStream)
 }
 
-/// `BodyParametersType` provides interface to parse HTTP response body and to state `Content-Type` to accept.
-public protocol BodyParametersType {
+/// `BodyParameters` provides interface to parse HTTP response body and to state `Content-Type` to accept.
+public protocol BodyParameters {
     /// `Content-Type` to send. The value for this property will be set to `Accept` HTTP header field.
     var contentType: String { get }
 

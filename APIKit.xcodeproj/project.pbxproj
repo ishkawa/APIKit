@@ -15,7 +15,7 @@
 		7F09BF931C8AE8DB00F4A59A /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F09BF8D1C8AE8DB00F4A59A /* RequestTests.swift */; };
 		7F10D8EE1CD5CF8D00722F66 /* CallbackQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */; };
 		7F10D8F01CD5D10100722F66 /* SessionCallbackQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */; };
-		7F18BD0F1C972C38003A31DF /* BodyParametersType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */; };
+		7F18BD0F1C972C38003A31DF /* BodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD0E1C972C38003A31DF /* BodyParameters.swift */; };
 		7F18BD111C972C69003A31DF /* JSONBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */; };
 		7F18BD131C972E5A003A31DF /* FormURLEncodedBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */; };
 		7F18BD1A1C9730ED003A31DF /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD181C9730ED003A31DF /* URLEncodedSerialization.swift */; };
@@ -88,7 +88,7 @@
 		7F09BF8D1C8AE8DB00F4A59A /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackQueue.swift; sourceTree = "<group>"; };
 		7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCallbackQueueTests.swift; sourceTree = "<group>"; };
-		7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParametersType.swift; sourceTree = "<group>"; };
+		7F18BD0E1C972C38003A31DF /* BodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParameters.swift; sourceTree = "<group>"; };
 		7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONBodyParameters.swift; sourceTree = "<group>"; };
 		7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormURLEncodedBodyParameters.swift; sourceTree = "<group>"; };
 		7F18BD181C9730ED003A31DF /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedSerialization.swift; sourceTree = "<group>"; };
@@ -194,17 +194,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		7F18BD0D1C972C38003A31DF /* BodyParametersType */ = {
+		7F18BD0D1C972C38003A31DF /* BodyParameters */ = {
 			isa = PBXGroup;
 			children = (
-				7F18BD0E1C972C38003A31DF /* BodyParametersType.swift */,
+				7F18BD0E1C972C38003A31DF /* BodyParameters.swift */,
 				7F18BD101C972C69003A31DF /* JSONBodyParameters.swift */,
 				7F18BD121C972E5A003A31DF /* FormURLEncodedBodyParameters.swift */,
 				7FA19A311C98542E005D25AE /* MultipartFormDataBodyParameters.swift */,
 				7F2A15BC1CEB5F67009A12A2 /* Data+InputStream.swift */,
 				7FAC64AC1CDC7ADE00F1BB45 /* AbstractInputStream.m */,
 			);
-			path = BodyParametersType;
+			path = BodyParameters;
 			sourceTree = "<group>";
 		};
 		7F18BD161C9730ED003A31DF /* Serializations */ = {
@@ -243,7 +243,7 @@
 				7F7E8F0C1C8AD4B1008A13A9 /* HTTPMethod.swift */,
 				7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapterType */,
-				7F18BD0D1C972C38003A31DF /* BodyParametersType */,
+				7F18BD0D1C972C38003A31DF /* BodyParameters */,
 				7FA19A441C9CC9A2005D25AE /* DataParserType */,
 				7F18BD161C9730ED003A31DF /* Serializations */,
 				7FA19A3D1C9CBF2A005D25AE /* Error */,
@@ -448,7 +448,7 @@
 				7F85FB871C9CF47300CEE132 /* FormURLEncodedDataParser.swift in Sources */,
 				7FA19A431C9CBF2A005D25AE /* SessionTaskError.swift in Sources */,
 				7F7E8F1C1C8AD4B1008A13A9 /* Session.swift in Sources */,
-				7F18BD0F1C972C38003A31DF /* BodyParametersType.swift in Sources */,
+				7F18BD0F1C972C38003A31DF /* BodyParameters.swift in Sources */,
 				7F2A15BD1CEB5F67009A12A2 /* Data+InputStream.swift in Sources */,
 				7FB650DF1CEA0E6B00366992 /* StringDataParser.swift in Sources */,
 				7F18BD131C972E5A003A31DF /* FormURLEncodedBodyParameters.swift in Sources */,
