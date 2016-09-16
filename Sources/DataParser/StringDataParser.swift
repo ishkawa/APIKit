@@ -1,7 +1,7 @@
 import Foundation
 
 /// `StringDataParser` parses data and convert it to string.
-public class StringDataParser: DataParserType {
+public class StringDataParser: DataParser {
     public enum Error: Swift.Error {
         case invalidData(Data)
     }
@@ -14,7 +14,7 @@ public class StringDataParser: DataParserType {
         self.encoding = encoding
     }
 
-    // MARK: - DataParserType
+    // MARK: - DataParser
 
     /// Value for `Accept` header field of HTTP request.
     public var contentType: String? {

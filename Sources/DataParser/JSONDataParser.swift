@@ -1,7 +1,7 @@
 import Foundation
 
 /// `JSONDataParser` response JSON data.
-public class JSONDataParser: DataParserType {
+public class JSONDataParser: DataParser {
     /// Options for reading the JSON data and creating the objects.
     public let readingOptions: JSONSerialization.ReadingOptions
 
@@ -10,7 +10,7 @@ public class JSONDataParser: DataParserType {
         self.readingOptions = readingOptions
     }
 
-    // MARK: - DataParserType
+    // MARK: - DataParser
 
     /// Value for `Accept` header field of HTTP request.
     public var contentType: String? {

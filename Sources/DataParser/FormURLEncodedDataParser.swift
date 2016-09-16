@@ -1,7 +1,7 @@
 import Foundation
 
 /// `FormURLEncodedDataParser` parses form URL encoded response data.
-public class FormURLEncodedDataParser: DataParserType {
+public class FormURLEncodedDataParser: DataParser {
     public enum Error: Swift.Error {
         case cannotGetStringFromData(Data)
     }
@@ -14,7 +14,7 @@ public class FormURLEncodedDataParser: DataParserType {
         self.encoding = encoding
     }
 
-    // MARK: - DataParserType
+    // MARK: - DataParser
 
     /// Value for `Accept` header field of HTTP request.
     public var contentType: String? {

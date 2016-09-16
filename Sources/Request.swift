@@ -41,7 +41,7 @@ public protocol Request {
     var headerFields: [String: String] { get }
 
     /// The parser object that states `Content-Type` to accept and parses response body.
-    var dataParser: DataParserType { get }
+    var dataParser: DataParser { get }
 
     /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.sendRequest()` turns `.failure(.requestError(error))`.
@@ -86,7 +86,7 @@ public extension Request {
         return [:]
     }
 
-    public var dataParser: DataParserType {
+    public var dataParser: DataParser {
         return JSONDataParser(readingOptions: [])
     }
 
