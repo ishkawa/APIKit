@@ -2,7 +2,7 @@ import Foundation
 import APIKit
 
 struct TestRequest: Request {
-    var absoluteUrl: URL? {
+    var absoluteURL: URL? {
         let urlRequest = try? buildURLRequest()
         return urlRequest?.url
     }
@@ -10,8 +10,8 @@ struct TestRequest: Request {
     // MARK: Request
     typealias Response = Any
 
-    init(baseUrl: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
-        self.baseUrl = URL(string: baseUrl)!
+    init(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
+        self.baseURL = URL(string: baseURL)!
         self.path = path
         self.method = method
         self.parameters = parameters
@@ -19,7 +19,7 @@ struct TestRequest: Request {
         self.interceptURLRequest = interceptURLRequest
     }
 
-    let baseUrl: URL
+    let baseURL: URL
     let method: HTTPMethod
     let path: String
     let parameters: Any?

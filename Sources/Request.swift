@@ -4,7 +4,7 @@ import Result
 /// `Request` protocol represents a request for Web API.
 /// Following 5 items must be implemented.
 /// - `typealias Response`
-/// - `var baseUrl: URL`
+/// - `var baseURL: URL`
 /// - `var method: HTTPMethod`
 /// - `var path: String`
 /// - `func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response`
@@ -13,7 +13,7 @@ public protocol Request {
     associatedtype Response
 
     /// The base URL.
-    var baseUrl: URL { get }
+    var baseURL: URL { get }
 
     /// The HTTP request method.
     var method: HTTPMethod { get }
@@ -104,9 +104,9 @@ public extension Request {
     /// Builds `URLRequest` from properties of `self`.
     /// - Throws: `RequestError`, `ErrorType`
     public func buildURLRequest() throws -> URLRequest {
-        let url = path.isEmpty ? baseUrl : baseUrl.appendingPathComponent(path)
+        let url = path.isEmpty ? baseURL : baseURL.appendingPathComponent(path)
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw RequestError.invalidBaseURL(baseUrl)
+            throw RequestError.invalidBaseURL(baseURL)
         }
 
         var urlRequest = URLRequest(url: url)

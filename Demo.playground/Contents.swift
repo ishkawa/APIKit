@@ -10,7 +10,7 @@ protocol GitHubRequest: Request {
 }
 
 extension GitHubRequest {
-    var baseUrl: URL {
+    var baseURL: URL {
         return URL(string: "https://api.github.com")!
     }
 }
