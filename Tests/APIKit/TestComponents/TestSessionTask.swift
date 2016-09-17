@@ -3,10 +3,10 @@ import APIKit
 
 class TestSessionTask: SessionTaskType {
     
-    var handler: (NSData?, NSURLResponse?, ErrorType?) -> Void
+    var handler: (Data?, URLResponse?, Error?) -> Void
     var cancelled = false
 
-    init(handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) {
+    init(handler: @escaping (Data?, URLResponse?, Error?) -> Void) {
         self.handler = handler
     }
 

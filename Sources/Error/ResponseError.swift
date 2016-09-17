@@ -1,15 +1,15 @@
 import Foundation
 
-/// `ResponseError` represents a common error that occurs while getting `RequestType.Response`
-/// from raw result tuple `(NSData?, NSURLResponse?, NSError?)`.
-public enum ResponseError: ErrorType {
-    /// Indicates the session adapter returned `NSURLResponse` that fails to down-cast to `NSHTTPURLResponse`.
-    case NonHTTPURLResponse(NSURLResponse?)
+/// `ResponseError` represents a common error that occurs while getting `Request.Response`
+/// from raw result tuple `(Data?, URLResponse?, Error?)`.
+public enum ResponseError: Error {
+    /// Indicates the session adapter returned `URLResponse` that fails to down-cast to `HTTPURLResponse`.
+    case nonHTTPURLResponse(URLResponse?)
 
-    /// Indicates `NSHTTPURLResponse.statusCode` is not acceptable.
+    /// Indicates `HTTPURLResponse.statusCode` is not acceptable.
     /// In most cases, *acceptable* means the value is in `200..<300`.
-    case UnacceptableStatusCode(Int)
+    case unacceptableStatusCode(Int)
 
-    /// Indicates `AnyObject` that represents the response is unexpected.
-    case UnexpectedObject(AnyObject)
+    /// Indicates `Any` that represents the response is unexpected.
+    case unexpectedObject(Any)
 }

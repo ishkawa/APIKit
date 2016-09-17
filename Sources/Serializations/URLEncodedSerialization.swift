@@ -1,15 +1,15 @@
 import Foundation
 
-private func escape(string: String) -> String {
+private func escape(_ string: String) -> String {
     // Reserved characters defined by RFC 3986
     // Reference: https://www.ietf.org/rfc/rfc3986.txt
     let generalDelimiters = ":#[]@"
     let subDelimiters = "!$&'()*+,;="
     let reservedCharacters = generalDelimiters + subDelimiters
 
-    let allowedCharacterSet = NSMutableCharacterSet()
-    allowedCharacterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
-    allowedCharacterSet.removeCharactersInString(reservedCharacters)
+    var allowedCharacterSet = CharacterSet()
+    allowedCharacterSet.formUnion(.urlQueryAllowed)
+    allowedCharacterSet.remove(charactersIn: reservedCharacters)
 
     // Crashes due to internal bug in iOS 7 ~ iOS 8.2.
     // References:
@@ -24,12 +24,12 @@ private func escape(string: String) -> String {
 
     while index != string.endIndex {
         let startIndex = index
-        let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
+        let endIndex = string.index(index, offsetBy: batchSize, limitedBy: string.endIndex) ?? string.endIndex
         let range = startIndex..<endIndex
 
-        let substring = string.substringWithRange(range)
+        let substring = string.substring(with: range)
 
-        escaped += substring.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacterSet) ?? substring
+        escaped += substring.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? substring
 
         index = endIndex
     }
@@ -37,33 +37,33 @@ private func escape(string: String) -> String {
     return escaped
 }
 
-private func unescape(string: String) -> String {
-    return CFURLCreateStringByReplacingPercentEscapes(nil, string, nil) as String
+private func unescape(_ string: String) -> String {
+    return CFURLCreateStringByReplacingPercentEscapes(nil, string as CFString, nil) as String
 }
 
-/// `URLEncodedSerialization` parses `NSData` and `String` as urlencoded,
+/// `URLEncodedSerialization` parses `Data` and `String` as urlencoded,
 /// and returns dictionary that represents the data or the string.
 public final class URLEncodedSerialization {
-    public enum Error: ErrorType {
-        case CannotGetStringFromData(NSData, NSStringEncoding)
-        case CannotGetDataFromString(String, NSStringEncoding)
-        case CannotCastObjectToDictionary(AnyObject)
-        case InvalidFormatString(String)
+    public enum Error: Swift.Error {
+        case cannotGetStringFromData(Data, String.Encoding)
+        case cannotGetDataFromString(String, String.Encoding)
+        case cannotCastObjectToDictionary(Any)
+        case invalidFormatString(String)
     }
 
-    /// Returns `[String: String]` that represents urlencoded `NSData`.
+    /// Returns `[String: String]` that represents urlencoded `Data`.
     /// - Throws: URLEncodedSerialization.Error
-    public static func objectFromData(data: NSData, encoding: NSStringEncoding) throws -> [String: String] {
+    public static func object(from data: Data, encoding: String.Encoding) throws -> [String: String] {
         guard let string = String(data: data, encoding: encoding) else {
-            throw Error.CannotGetStringFromData(data, encoding)
+            throw Error.cannotGetStringFromData(data, encoding)
         }
 
         var dictionary = [String: String]()
-        for pair in string.componentsSeparatedByString("&") {
-            let contents = pair.componentsSeparatedByString("=")
+        for pair in string.components(separatedBy: "&") {
+            let contents = pair.components(separatedBy: "=")
 
             guard contents.count == 2 else {
-                throw Error.InvalidFormatString(string)
+                throw Error.invalidFormatString(string)
             }
 
             dictionary[contents[0]] = unescape(contents[1])
@@ -72,23 +72,23 @@ public final class URLEncodedSerialization {
         return dictionary
     }
 
-    /// Returns urlencoded `NSData` from the object.
+    /// Returns urlencoded `Data` from the object.
     /// - Throws: URLEncodedSerialization.Error
-    public static func dataFromObject(object: AnyObject, encoding: NSStringEncoding) throws -> NSData {
-        guard let dictionary = object as? [String: AnyObject] else {
-            throw Error.CannotCastObjectToDictionary(object)
+    public static func data(from object: Any, encoding: String.Encoding) throws -> Data {
+        guard let dictionary = object as? [String: Any] else {
+            throw Error.cannotCastObjectToDictionary(object)
         }
 
-        let string = stringFromDictionary(dictionary)
-        guard let data = string.dataUsingEncoding(encoding, allowLossyConversion: false) else {
-            throw Error.CannotGetDataFromString(string, encoding)
+        let string = self.string(from: dictionary)
+        guard let data = string.data(using: encoding, allowLossyConversion: false) else {
+            throw Error.cannotGetDataFromString(string, encoding)
         }
 
         return data
     }
 
-    /// Returns urlencoded `NSData` from the string.
-    public static func stringFromDictionary(dictionary: [String: AnyObject]) -> String {
+    /// Returns urlencoded `Data` from the string.
+    public static func string(from dictionary: [String: Any]) -> String {
         let pairs = dictionary.map { key, value -> String in
             if value is NSNull {
                 return "\(escape(key))"
@@ -98,6 +98,6 @@ public final class URLEncodedSerialization {
             return "\(escape(key))=\(escape(valueAsString))"
         }
 
-        return pairs.joinWithSeparator("&")
+        return pairs.joined(separator: "&")
     }
 }

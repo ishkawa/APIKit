@@ -4,17 +4,17 @@ import APIKit
 
 class StringDataParserTests: XCTestCase {
     func testAcceptHeader() {
-        let parser = StringDataParser(encoding: NSUTF8StringEncoding)
+        let parser = StringDataParser(encoding: .utf8)
         XCTAssertNil(parser.contentType)
     }
     
     func testParseData() {
         let string = "abcdef"
-        let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        let parser = StringDataParser(encoding: NSUTF8StringEncoding)
+        let data = string.data(using: .utf8, allowLossyConversion: false)!
+        let parser = StringDataParser(encoding: .utf8)
 
         do {
-            let object = try parser.parseData(data)
+            let object = try parser.parse(data: data)
             XCTAssertEqual(object as? String, string)
         } catch {
             XCTFail()
@@ -23,15 +23,15 @@ class StringDataParserTests: XCTestCase {
 
     func testInvalidString() {
         var bytes = [UInt8]([0xed, 0xa0, 0x80]) // U+D800 (high surrogate)
-        let data = NSData(bytes: &bytes, length: bytes.count)
-        let parser = StringDataParser(encoding: NSUTF8StringEncoding)
+        let data = Data(bytes: &bytes, count: bytes.count)
+        let parser = StringDataParser(encoding: .utf8)
 
         do {
-            try parser.parseData(data)
+            try _ = parser.parse(data: data)
             XCTFail()
         } catch {
             guard let error = error as? StringDataParser.Error,
-                  case .InvalidData(let invalidData) = error else {
+                  case .invalidData(let invalidData) = error else {
                 XCTFail()
                 return
             }

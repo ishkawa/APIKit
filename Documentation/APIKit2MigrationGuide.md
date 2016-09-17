@@ -16,7 +16,7 @@ Errors cases of `Session.sendRequest(_:handler:)` is reduced to 3 cases listed b
 ```swift
 public enum SessionTaskError: ErrorType {
     /// Error of networking backend such as `NSURLSession`.
-    case ConnectionError(NSError)
+    case ConnectionError(ErrorType)
 
     /// Error while creating `NSURLRequest` from `Request`.
     case RequestError(ErrorType)
