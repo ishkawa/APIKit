@@ -11,17 +11,19 @@ APIKit
 APIKit is a type-safe networking abstraction layer that associates request type with response type.
 
 ```swift
-let request = SearchRepositoriesRequest(query: "APIKit", sort: .Stars)
+// SearchRepositoriesRequest conforms to Request protocol.
+let request = SearchRepositoriesRequest(query: "swift")
 
+// Session receives an instance of a type that conforms to Request.
 Session.send(request) { result in
     switch result {
-    case .success(let repositories):
+    case .success(let response):
         // Type of `repositories` is `[Repository]`,
         // which is inferred from `SearchRepositoriesRequest`.
-        print(repositories)
+        print(response)
 
     case .failure(let error):
-        print(error)
+        self.printError(error)
     }
 }
 ```
