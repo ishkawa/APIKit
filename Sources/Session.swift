@@ -4,84 +4,86 @@ import Result
 private var taskRequestKey = 0
 
 /// `Session` manages tasks for HTTP/HTTPS requests.
-public class Session {
+open class Session {
     /// The adapter that connects `Session` instance and lower level backend.
-    public let adapter: SessionAdapterType
+    public let adapter: SessionAdapter
 
-    /// The default callback queue for `sendRequest(_:handler:)`.
+    /// The default callback queue for `send(_:handler:)`.
     public let callbackQueue: CallbackQueue
 
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
-    /// - parameter callbackQueue: The default callback queue for `sendRequest(_:handler:)`.
-    public init(adapter: SessionAdapterType, callbackQueue: CallbackQueue = .Main) {
+    /// - parameter callbackQueue: The default callback queue for `send(_:handler:)`.
+    public init(adapter: SessionAdapter, callbackQueue: CallbackQueue = .main) {
         self.adapter = adapter
         self.callbackQueue = callbackQueue
     }
 
     // Shared session for class methods
     private static let privateSharedSession: Session = {
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        let adapter = NSURLSessionAdapter(configuration: configuration)
+        let configuration = URLSessionConfiguration.default
+        let adapter = URLSessionAdapter(configuration: configuration)
         return Session(adapter: adapter)
     }()
 
-    /// The shared `Session` instance for class methods, `Session.sendRequest(_:handler:)` and `Session.cancelRequest(_:passingTest:)`.
-    public class var sharedSession: Session {
+    /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequests(withType:passingTest:)`.
+    open class var sharedSession: Session {
         return privateSharedSession
     }
 
-    /// Calls `sendRequest(_:handler:)` of `sharedSession`.
+    /// Calls `send(_:handler:)` of `sharedSession`.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
-    public class func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
-        return sharedSession.sendRequest(request, callbackQueue: callbackQueue, handler: handler)
+    @discardableResult
+    open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+        return sharedSession.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
-    /// Calls `cancelRequest(_:passingTest:)` of `sharedSession`.
-    public class func cancelRequest<Request: RequestType>(requestType: Request.Type, passingTest test: Request -> Bool = { _ in true }) {
-        sharedSession.cancelRequest(requestType, passingTest: test)
+    /// Calls `cancelRequests(withType:passingTest:)` of `sharedSession`.
+    open class func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+        sharedSession.cancelRequests(withType: requestType, passingTest: test)
     }
 
     /// Sends a request and receives the result as the argument of `handler` closure. This method takes
-    /// a type parameter `Request` that conforms to `RequestType` protocol. The result of passed request is
+    /// a type parameter `Request` that conforms to `Request` protocol. The result of passed request is
     /// expressed as `Result<Request.Response, SessionTaskError>`. Since the response type
     /// `Request.Response` is inferred from `Request` type parameter, the it changes depending on the request type.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
-    public func sendRequest<Request: RequestType>(request: Request, callbackQueue: CallbackQueue? = nil, handler: (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+    @discardableResult
+    open func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
-        let URLRequest: NSURLRequest
+        let urlRequest: URLRequest
         do {
-            URLRequest = try request.buildURLRequest()
+            urlRequest = try request.buildURLRequest()
         } catch {
             callbackQueue.execute {
-                handler(.Failure(.RequestError(error)))
+                handler(.failure(.requestError(error)))
             }
             return nil
         }
 
-        let task = adapter.createTaskWithURLRequest(URLRequest) { data, URLResponse, error in
-            let result: Result<Request.Response, SessionTaskError>
+        let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
+            let result: Result<Req.Response, SessionTaskError>
 
-            switch (data, URLResponse, error) {
+            switch (data, urlResponse, error) {
             case (_, _, let error?):
-                result = .Failure(.ConnectionError(error))
+                result = .failure(.connectionError(error))
 
-            case (let data?, let URLResponse as NSHTTPURLResponse, _):
+            case (let data?, let urlResponse as HTTPURLResponse, _):
                 do {
-                    result = .Success(try request.parseData(data, URLResponse: URLResponse))
+                    result = .success(try request.parse(data: data as Data, urlResponse: urlResponse))
                 } catch {
-                    result = .Failure(.ResponseError(error))
+                    result = .failure(.responseError(error))
                 }
 
             default:
-                result = .Failure(.ResponseError(ResponseError.NonHTTPURLResponse(URLResponse)))
+                result = .failure(.responseError(ResponseError.nonHTTPURLResponse(urlResponse)))
             }
 
             callbackQueue.execute {
@@ -98,11 +100,11 @@ public class Session {
     /// Cancels requests that passes the test.
     /// - parameter requestType: The request type to cancel.
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
-    public func cancelRequest<Request: RequestType>(requestType: Request.Type, passingTest test: Request -> Bool = { _ in true }) {
-        adapter.getTasksWithHandler { [weak self] tasks in
+    open func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+        adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in
-                    if let request = self?.requestForTask(task) as Request? {
+                    if let request = self?.requestForTask(task) as Req? {
                         return test(request)
                     } else {
                         return false
@@ -112,11 +114,11 @@ public class Session {
         }
     }
 
-    private func setRequest<Request: RequestType>(request: Request, forTask task: SessionTaskType) {
-        objc_setAssociatedObject(task, &taskRequestKey, Box(request), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    private func setRequest<Req: Request>(_ request: Req, forTask task: SessionTaskType) {
+        objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func requestForTask<Request: RequestType>(task: SessionTaskType) -> Request? {
-        return (objc_getAssociatedObject(task, &taskRequestKey) as? Box<Request>)?.value
+    private func requestForTask<Req: Request>(_ task: SessionTaskType) -> Req? {
+        return objc_getAssociatedObject(task, &taskRequestKey) as? Req
     }
 }

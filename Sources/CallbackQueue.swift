@@ -1,36 +1,36 @@
 import Foundation
 
-/// `CallbackQueue` represents queue where `handler` of `Session.sendRequest(_:handler:)` runs.
+/// `CallbackQueue` represents queue where `handler` of `Session.send(_:handler:)` runs.
 public enum CallbackQueue {
     /// Dispatches callback closure on main queue asynchronously.
-    case Main
+    case main
 
     /// Dispatches callback closure on the queue where backend adapter callback runs.
-    case SessionQueue
+    case sessionQueue
 
     /// Dispatches callback closure on associated operation queue.
-    case OperationQueue(NSOperationQueue)
+    case operationQueue(OperationQueue)
 
     /// Dispatches callback closure on associated dispatch queue.
-    case DispatchQueue(dispatch_queue_t)
+    case dispatchQueue(DispatchQueue)
 
-    internal func execute(closure: () -> Void) {
+    internal func execute(closure: @escaping () -> Void) {
         switch self {
-        case .Main:
-            dispatch_async(dispatch_get_main_queue()) {
+        case .main:
+            DispatchQueue.main.async {
                 closure()
             }
 
-        case .SessionQueue:
+        case .sessionQueue:
             closure()
 
-        case .OperationQueue(let operationQueue):
-            operationQueue.addOperationWithBlock {
+        case .operationQueue(let operationQueue):
+            operationQueue.addOperation {
                 closure()
             }
 
-        case .DispatchQueue(let dispatchQueue):
-            dispatch_async(dispatchQueue) {
+        case .dispatchQueue(let dispatchQueue):
+            dispatchQueue.async {
                 closure()
             }
         }

@@ -11,91 +11,91 @@ class SessionCallbackQueueTests: XCTestCase {
         super.setUp()
 
         adapter = TestSessionAdapter()
-        adapter.data = try! NSJSONSerialization.dataWithJSONObject(["key": "value"], options: [])
+        adapter.data = try! JSONSerialization.data(withJSONObject: ["key": "value"], options: [])
 
-        session = Session(adapter: adapter, callbackQueue: .Main)
+        session = Session(adapter: adapter, callbackQueue: .main)
     }
 
     func testMain() {
-        let expectation = expectationWithDescription("wait for response")
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .Main) { result in
-            XCTAssert(NSThread.isMainThread())
+        session.send(request, callbackQueue: .main) { result in
+            XCTAssert(Thread.isMainThread)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     func testSessionQueue() {
-        let expectation = expectationWithDescription("wait for response")
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .SessionQueue) { result in
+        session.send(request, callbackQueue: .sessionQueue) { result in
             // This depends on implementation of TestSessionAdapter
-            XCTAssert(NSThread.isMainThread())
+            XCTAssert(Thread.isMainThread)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     func testOperationQueue() {
-        let operationQueue = NSOperationQueue()
-        let expectation = expectationWithDescription("wait for response")
+        let operationQueue = OperationQueue()
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .OperationQueue(operationQueue)) { result in
-            XCTAssertEqual(NSOperationQueue.currentQueue(), operationQueue)
+        session.send(request, callbackQueue: .operationQueue(operationQueue)) { result in
+            XCTAssertEqual(OperationQueue.current, operationQueue)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     func testDispatchQueue() {
-        let dispatchQueue = dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0)
-        let expectation = expectationWithDescription("wait for response")
+        let dispatchQueue = DispatchQueue.global(qos: .default)
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: .DispatchQueue(dispatchQueue)) { result in
+        session.send(request, callbackQueue: .dispatchQueue(dispatchQueue)) { result in
             // There is no way to test current dispatch queue.
-            XCTAssert(!NSThread.isMainThread())
+            XCTAssert(!Thread.isMainThread)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     // MARK: Test Session.callbackQueue
     func testImplicitSessionCallbackQueue() {
-        let operationQueue = NSOperationQueue()
-        let session = Session(adapter: adapter, callbackQueue: .OperationQueue(operationQueue))
+        let operationQueue = OperationQueue()
+        let session = Session(adapter: adapter, callbackQueue: .operationQueue(operationQueue))
 
-        let expectation = expectationWithDescription("wait for response")
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request) { result in
-            XCTAssertEqual(NSOperationQueue.currentQueue(), operationQueue)
+        session.send(request) { result in
+            XCTAssertEqual(OperationQueue.current, operationQueue)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     func testExplicitSessionCallbackQueue() {
-        let operationQueue = NSOperationQueue()
-        let session = Session(adapter: adapter, callbackQueue: .OperationQueue(operationQueue))
+        let operationQueue = OperationQueue()
+        let session = Session(adapter: adapter, callbackQueue: .operationQueue(operationQueue))
 
-        let expectation = expectationWithDescription("wait for response")
+        let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.sendRequest(request, callbackQueue: nil) { result in
-            XCTAssertEqual(NSOperationQueue.currentQueue(), operationQueue)
+        session.send(request, callbackQueue: nil) { result in
+            XCTAssertEqual(OperationQueue.current, operationQueue)
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(1.0, handler: nil)
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 }

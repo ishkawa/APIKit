@@ -1,17 +1,17 @@
 import Foundation
 import APIKit
 
-struct TestRequest: RequestType {
-    var absoluteURL: NSURL? {
-        let URLRequest = try? buildURLRequest()
-        return URLRequest?.URL
+struct TestRequest: Request {
+    var absoluteURL: URL? {
+        let urlRequest = try? buildURLRequest()
+        return urlRequest?.url
     }
 
-    // MARK: RequestType
-    typealias Response = AnyObject
+    // MARK: Request
+    typealias Response = Any
 
-    init(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .GET, parameters: AnyObject? = [:], headerFields: [String: String] = [:], interceptURLRequest: NSMutableURLRequest throws -> NSMutableURLRequest = { $0 }) {
-        self.baseURL = NSURL(string: baseURL)!
+    init(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
+        self.baseURL = URL(string: baseURL)!
         self.path = path
         self.method = method
         self.parameters = parameters
@@ -19,18 +19,18 @@ struct TestRequest: RequestType {
         self.interceptURLRequest = interceptURLRequest
     }
 
-    let baseURL: NSURL
+    let baseURL: URL
     let method: HTTPMethod
     let path: String
-    let parameters: AnyObject?
+    let parameters: Any?
     let headerFields: [String: String]
-    let interceptURLRequest: NSMutableURLRequest throws -> NSMutableURLRequest
+    let interceptURLRequest: (URLRequest) throws -> URLRequest
 
-    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
-        return try interceptURLRequest(URLRequest)
+    func intercept(urlRequest: URLRequest) throws -> URLRequest {
+        return try interceptURLRequest(urlRequest)
     }
 
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         return object
     }
 }

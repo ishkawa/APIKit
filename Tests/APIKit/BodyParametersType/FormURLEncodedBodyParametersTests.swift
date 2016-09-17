@@ -9,12 +9,12 @@ class FormURLEncodedBodyParametersTests: XCTestCase {
         XCTAssertEqual(parameters.contentType, "application/x-www-form-urlencoded")
 
         do {
-            guard case .Data(let data) = try parameters.buildEntity() else {
+            guard case .data(let data) = try parameters.buildEntity() else {
                 XCTFail()
                 return
             }
 
-            let createdObject = try URLEncodedSerialization.objectFromData(data, encoding: NSUTF8StringEncoding)
+            let createdObject = try URLEncodedSerialization.object(from: data, encoding: .utf8)
             XCTAssertEqual(createdObject["foo"], "1")
             XCTAssertEqual(createdObject["bar"], "2")
             XCTAssertEqual(createdObject["baz"], "3")

@@ -1,10 +1,10 @@
 import Foundation
 
-/// `RequestError` represents a common error that occurs while building `NSURLRequest` from `RequestType`.
-public enum RequestError: ErrorType {
-    /// Indicates `baseURL` of a type that conforms `RequestType` is invalid.
-    case InvalidBaseURL(NSURL)
+/// `RequestError` represents a common error that occurs while building `URLRequest` from `Request`.
+public enum RequestError: Error {
+    /// Indicates `baseURL` of a type that conforms `Request` is invalid.
+    case invalidBaseURL(URL)
 
-    /// Indicates `NSURLRequest` built by `RequestType.buildURLRequest` is unexpected.
-    case UnexpectedURLRequest(NSURLRequest)
+    /// Indicates `URLRequest` built by `Request.buildURLRequest` is unexpected.
+    case unexpectedURLRequest(URLRequest)
 }
