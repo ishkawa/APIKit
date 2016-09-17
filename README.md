@@ -34,7 +34,7 @@ Session.send(request) { result in
 - watchOS 2.0 or later
 - tvOS 9.0 or later
 
-If you use Swift 2.2 or 2.3, try (APIKit 2.0.5)[https://github.com/ishkawa/APIKit/tree/2.0.5].
+If you use Swift 2.2 or 2.3, try [APIKit 2.0.5](https://github.com/ishkawa/APIKit/tree/2.0.5).
 
 ## Installation
 
