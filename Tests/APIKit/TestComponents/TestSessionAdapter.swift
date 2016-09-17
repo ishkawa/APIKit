@@ -49,14 +49,14 @@ class TestSessionAdapter: SessionAdapter {
         tasks = []
     }
 
-    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTaskType {
+    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
         let task = TestSessionTask(handler: handler)
         tasks.append(task)
 
         return task
     }
 
-    func getTasks(with handler: @escaping ([SessionTaskType]) -> Void) {
+    func getTasks(with handler: @escaping ([SessionTask]) -> Void) {
         handler(tasks.map { $0 })
     }
 }
