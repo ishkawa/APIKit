@@ -1,57 +1,59 @@
 # Customizing Networking Backend
 
-APIKit uses `NSURLSession` as networking backend by default. Since `Session` has abstraction layer of backend called `SessionAdapterType`, you can change the backend of `Session` like below:
+APIKit uses `URLSession` as networking backend by default. Since `Session` has abstraction layer of backend called `SessionAdapter`, you can change the backend of `Session` like below:
 
 - Third party HTTP client like [Alamofire](https://github.com/Alamofire/Alamofire)
 - Mock backend like [`TestSessionAdapter`](../Tests/APIKit/TestComponents/TestSessionAdapter.swift)
-- `NSURLSession` with custom configuration and delegate
+- `URLSession` with custom configuration and delegate
 
 Demo implementation of Alamofire adapter is available [here](https://github.com/ishkawa/APIKit-AlamofireAdapter).
 
-## SessionAdapterType
+## SessionAdapter
 
-`SessionAdapterType` provides an interface to get `(NSData?, NSURLResponse?, NSError?)` from `NSURLRequest` and returns `SessionTaskType` for cancellation.
+`SessionAdapter` provides an interface to get `(Data?, URLResponse?, Error?)` from `URLRequest` and returns `SessionTask` for cancellation.
 
 ```swift
-public protocol SessionAdapterType {
-    public func createTaskWithURLRequest(URLRequest: NSURLRequest, handler: (NSData?, NSURLResponse?, ErrorType?) -> Void) -> SessionTaskType
-    public func getTasksWithHandler(handler: [SessionTaskType] -> Void)
+public protocol SessionAdapter {
+public protocol SessionAdapter {
+    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTaskType
+    func getTasks(with handler: @escaping ([SessionTaskType]) -> Void)
 }
 
-public protocol SessionTaskType : class {
-    public func resume()
-    public func cancel()
+public protocol SessionTaskType: class {
+    func resume()
+    func cancel()
 }
 ```
 
 
-## How Session works with SessionAdapterType
+## How Session works with SessionAdapter
 
-`Session` takes an instance of type that conforms `SessionAdapterType` as a parameter of initializer.
+`Session` takes an instance of type that conforms `SessionAdapter` as a parameter of initializer.
 
 ```swift
-public class Session {
-    public let adapter: SessionAdapterType
+open class Session {
+    public let adapter: SessionAdapter
+    public let callbackQueue: CallbackQueue
 
-    public init(adapter: SessionAdapterType) {
+    public init(adapter: SessionAdapter, callbackQueue: CallbackQueue = .main) {
         self.adapter = adapter
+        self.callbackQueue = callbackQueue
     }
 
     ...
 }
 ```
 
-Once it is initialized with a session adapter, it sends `NSURLRequest` and receives `(NSData?, NSURLResponse?, NSError?)` via the interfaces which are defined in `SessionAdapterType`.
+Once it is initialized with a session adapter, it sends `URLRequest` and receives `(NSData?, NSURLResponse?, NSError?)` via the interfaces which are defined in `SessionAdapter`.
 
 ```swift
-func sendRequest<T: RequestType>(request: T, handler: (Result<T.Response, APIError>) -> Void = {r in}) -> SessionTaskType? {
-    let URLRequest: NSURLRequest = ...
-    let task = adapter.createTaskWithURLRequest(URLRequest) { data, URLResponse, error in
+open func send<Request: APIKit.Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    let urlRequest: URLRequest = ...
+    let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
         ...
     }
 
     task.resume()
 
     return task
-}
 ```
