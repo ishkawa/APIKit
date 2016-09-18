@@ -6,6 +6,7 @@
 //  Copyright © 2016 Yosuke Ishikawa. All rights reserved.
 //
 
+import Result
 
 // MARK: - Protocols
 
@@ -23,3 +24,29 @@ public typealias BodyParametersType = BodyParameters
 
 @available(*, deprecated, renamed: "DataParser")
 public typealias DataParserType = DataParser
+
+// MARK: Session
+
+extension Session {
+    @available(*, deprecated, renamed: "send(_:callbackQueue:handler:)")
+    @discardableResult
+    public class func sendRequest<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return send(request, callbackQueue: callbackQueue, handler: handler)
+    }
+
+    @available(*, deprecated, renamed: "send(_:callbackQueue:handler:)")
+    @discardableResult
+    public func sendRequest<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return send(request, callbackQueue: callbackQueue, handler: handler)
+    }
+
+    @available(*, deprecated, renamed: "cancelRequests(withType:passingTest:)")
+    public class func cancelRequest<Request: APIKit.Request>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
+        cancelRequests(withType: requestType, passingTest: test)
+    }
+
+    @available(*, deprecated, renamed: "cancelRequests(withType:passingTest:)")
+    public func cancelRequest<Request: APIKit.Request>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
+        cancelRequests(withType: requestType, passingTest: test)
+    }
+}
