@@ -239,7 +239,7 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            private override func send<Request : APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTaskType? {
+            private override func send<Request : APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
                 functionCallFlags[(#function)] = true
                 return super.send(request)
             }
