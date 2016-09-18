@@ -6,7 +6,7 @@ enum InputStreamError: Error {
 }
 
 extension Data {
-    public init(inputStream: InputStream, capacity: Int = Int(UInt16.max)) throws {
+    init(inputStream: InputStream, capacity: Int = Int(UInt16.max)) throws {
         var data = Data(capacity: capacity)
 
         let bufferSize = Swift.min(Int(UInt16.max), capacity)

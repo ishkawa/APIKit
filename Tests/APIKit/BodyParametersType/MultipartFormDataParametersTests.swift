@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-import APIKit
+@testable import APIKit
 
 class MultipartFormDataParametersTests: XCTestCase {
     // MARK: Entity
