@@ -1,5 +1,8 @@
 coverage:
     ignore: Tests
+    status:
+      patch: false
+      changes: false
 
 comment: false
 
