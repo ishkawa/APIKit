@@ -26,7 +26,7 @@ open class Session {
         return Session(adapter: adapter)
     }()
 
-    /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequests(withType:passingTest:)`.
+    /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequests(with:passingTest:)`.
     open class var shared: Session {
         return privateShared
     }
@@ -41,9 +41,9 @@ open class Session {
         return shared.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
-    /// Calls `cancelRequests(withType:passingTest:)` of `sharedSession`.
-    open class func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
-        shared.cancelRequests(withType: requestType, passingTest: test)
+    /// Calls `cancelRequests(with:passingTest:)` of `sharedSession`.
+    open class func cancelRequests<Req: Request>(with requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+        shared.cancelRequests(with: requestType, passingTest: test)
     }
 
     /// Sends a request and receives the result as the argument of `handler` closure. This method takes
@@ -100,7 +100,7 @@ open class Session {
     /// Cancels requests that passes the test.
     /// - parameter requestType: The request type to cancel.
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
-    open func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+    open func cancelRequests<Req: Request>(with requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
         adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in

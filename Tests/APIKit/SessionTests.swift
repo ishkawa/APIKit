@@ -141,7 +141,7 @@ class SessionTests: XCTestCase {
             expectation.fulfill()
         }
         
-        session.cancelRequests(withType: TestRequest.self)
+        session.cancelRequests(with: TestRequest.self)
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -169,7 +169,7 @@ class SessionTests: XCTestCase {
             failureExpectation.fulfill()
         }
         
-        session.cancelRequests(withType: TestRequest.self) { request in
+        session.cancelRequests(with: TestRequest.self) { request in
             return request.path == failureRequest.path
         }
         
@@ -219,7 +219,7 @@ class SessionTests: XCTestCase {
             failureExpectation.fulfill()
         }
         
-        session.cancelRequests(withType: TestRequest.self)
+        session.cancelRequests(with: TestRequest.self)
 
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -244,16 +244,16 @@ class SessionTests: XCTestCase {
                 return super.send(request)
             }
 
-            private override func cancelRequests<Req : Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool) {
+            private override func cancelRequests<Req : Request>(with requestType: Req.Type, passingTest test: @escaping (Req) -> Bool) {
                 functionCallFlags[(#function)] = true
             }
         }
 
         let testSession = SessionSubclass.testSesssion
         SessionSubclass.send(TestRequest())
-        SessionSubclass.cancelRequests(withType: TestRequest.self)
+        SessionSubclass.cancelRequests(with: TestRequest.self)
 
         XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:handler:)"], true)
-        XCTAssertEqual(testSession.functionCallFlags["cancelRequests(withType:passingTest:)"], true)
+        XCTAssertEqual(testSession.functionCallFlags["cancelRequests(with:passingTest:)"], true)
     }
 }
