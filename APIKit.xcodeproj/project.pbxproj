@@ -13,6 +13,7 @@
 		141F12361C1C9AC70026D415 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		141F12371C1C9AC70026D415 /* OHHTTPStubs.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F09BF931C8AE8DB00F4A59A /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F09BF8D1C8AE8DB00F4A59A /* RequestTests.swift */; };
+		7F0D638F1D8EFA360011F7E9 /* Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0D638E1D8EFA360011F7E9 /* Deprecated.swift */; };
 		7F10D8EE1CD5CF8D00722F66 /* CallbackQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */; };
 		7F10D8F01CD5D10100722F66 /* SessionCallbackQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */; };
 		7F18BD0F1C972C38003A31DF /* BodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F18BD0E1C972C38003A31DF /* BodyParameters.swift */; };
@@ -86,6 +87,7 @@
 		141F12401C1C9EA30026D415 /* Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Tests.xcconfig; path = Configurations/Tests.xcconfig; sourceTree = "<group>"; };
 		7F09BF8B1C8AE8DB00F4A59A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F09BF8D1C8AE8DB00F4A59A /* RequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
+		7F0D638E1D8EFA360011F7E9 /* Deprecated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deprecated.swift; sourceTree = "<group>"; };
 		7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallbackQueue.swift; sourceTree = "<group>"; };
 		7F10D8EF1CD5D10100722F66 /* SessionCallbackQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCallbackQueueTests.swift; sourceTree = "<group>"; };
 		7F18BD0E1C972C38003A31DF /* BodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParameters.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				7F7E8F101C8AD4B1008A13A9 /* Request.swift */,
 				7F7E8F0C1C8AD4B1008A13A9 /* HTTPMethod.swift */,
 				7F10D8ED1CD5CF8D00722F66 /* CallbackQueue.swift */,
+				7F0D638E1D8EFA360011F7E9 /* Deprecated.swift */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapter */,
 				7F18BD0D1C972C38003A31DF /* BodyParameters */,
 				7FA19A441C9CC9A2005D25AE /* DataParser */,
@@ -443,6 +446,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F0D638F1D8EFA360011F7E9 /* Deprecated.swift in Sources */,
 				7F7E8F1A1C8AD4B1008A13A9 /* Request.swift in Sources */,
 				7FA19A331C985CEC005D25AE /* MultipartFormDataBodyParameters.swift in Sources */,
 				7F85FB871C9CF47300CEE132 /* FormURLEncodedDataParser.swift in Sources */,
