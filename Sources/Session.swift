@@ -20,15 +20,15 @@ open class Session {
     }
 
     // Shared session for class methods
-    private static let privateSharedSession: Session = {
+    private static let privateShared: Session = {
         let configuration = URLSessionConfiguration.default
         let adapter = URLSessionAdapter(configuration: configuration)
         return Session(adapter: adapter)
     }()
 
     /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequests(withType:passingTest:)`.
-    open class var sharedSession: Session {
-        return privateSharedSession
+    open class var shared: Session {
+        return privateShared
     }
 
     /// Calls `send(_:handler:)` of `sharedSession`.
@@ -38,12 +38,12 @@ open class Session {
     /// - returns: The new session task.
     @discardableResult
     open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return sharedSession.send(request, callbackQueue: callbackQueue, handler: handler)
+        return shared.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
     /// Calls `cancelRequests(withType:passingTest:)` of `sharedSession`.
     open class func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
-        sharedSession.cancelRequests(withType: requestType, passingTest: test)
+        shared.cancelRequests(withType: requestType, passingTest: test)
     }
 
     /// Sends a request and receives the result as the argument of `handler` closure. This method takes

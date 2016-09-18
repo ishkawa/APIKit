@@ -226,7 +226,7 @@ class SessionTests: XCTestCase {
 
     // MARK: Class methods
     func testSharedSession() {
-        XCTAssert(Session.sharedSession === Session.sharedSession)
+        XCTAssert(Session.shared === Session.shared)
     }
 
     func testSubclassClassMethods() {
@@ -235,7 +235,7 @@ class SessionTests: XCTestCase {
 
             var functionCallFlags = [String: Bool]()
 
-            override class var sharedSession: Session {
+            override class var shared: Session {
                 return testSesssion
             }
 
