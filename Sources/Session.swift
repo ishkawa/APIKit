@@ -37,7 +37,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+    open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         return sharedSession.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
@@ -55,7 +55,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTaskType? {
+    open func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest
@@ -114,11 +114,11 @@ open class Session {
         }
     }
 
-    private func setRequest<Req: Request>(_ request: Req, forTask task: SessionTaskType) {
+    private func setRequest<Req: Request>(_ request: Req, forTask task: SessionTask) {
         objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func requestForTask<Req: Request>(_ task: SessionTaskType) -> Req? {
+    private func requestForTask<Req: Request>(_ task: SessionTask) -> Req? {
         return objc_getAssociatedObject(task, &taskRequestKey) as? Req
     }
 }

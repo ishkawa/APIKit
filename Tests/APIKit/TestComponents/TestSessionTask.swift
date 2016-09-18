@@ -1,7 +1,7 @@
 import Foundation
 import APIKit
 
-class TestSessionTask: SessionTaskType {
+class TestSessionTask: SessionTask {
     
     var handler: (Data?, URLResponse?, Error?) -> Void
     var cancelled = false
