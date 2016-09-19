@@ -37,7 +37,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         return shared.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
@@ -55,7 +55,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest
@@ -69,7 +69,7 @@ open class Session {
         }
 
         let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
-            let result: Result<Req.Response, SessionTaskError>
+            let result: Result<Request.Response, SessionTaskError>
 
             switch (data, urlResponse, error) {
             case (_, _, let error?):
@@ -114,11 +114,11 @@ open class Session {
         }
     }
 
-    private func setRequest<Req: Request>(_ request: Req, forTask task: SessionTask) {
+    private func setRequest<Request: APIKit.Request>(_ request: Request, forTask task: SessionTask) {
         objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func requestForTask<Req: Request>(_ task: SessionTask) -> Req? {
-        return objc_getAssociatedObject(task, &taskRequestKey) as? Req
+    private func requestForTask<Request: APIKit.Request>(_ task: SessionTask) -> Request? {
+        return objc_getAssociatedObject(task, &taskRequestKey) as? Request
     }
 }
