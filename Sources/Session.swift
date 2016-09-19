@@ -20,15 +20,15 @@ open class Session {
     }
 
     // Shared session for class methods
-    private static let privateSharedSession: Session = {
+    private static let privateShared: Session = {
         let configuration = URLSessionConfiguration.default
         let adapter = URLSessionAdapter(configuration: configuration)
         return Session(adapter: adapter)
     }()
 
-    /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequests(withType:passingTest:)`.
-    open class var sharedSession: Session {
-        return privateSharedSession
+    /// The shared `Session` instance for class methods, `Session.send(_:handler:)` and `Session.cancelRequests(with:passingTest:)`.
+    open class var shared: Session {
+        return privateShared
     }
 
     /// Calls `send(_:handler:)` of `sharedSession`.
@@ -37,13 +37,13 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return sharedSession.send(request, callbackQueue: callbackQueue, handler: handler)
+    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return shared.send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
-    /// Calls `cancelRequests(withType:passingTest:)` of `sharedSession`.
-    open class func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
-        sharedSession.cancelRequests(withType: requestType, passingTest: test)
+    /// Calls `cancelRequests(with:passingTest:)` of `sharedSession`.
+    open class func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
+        shared.cancelRequests(with: requestType, passingTest: test)
     }
 
     /// Sends a request and receives the result as the argument of `handler` closure. This method takes
@@ -55,7 +55,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Req: Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest
@@ -69,7 +69,7 @@ open class Session {
         }
 
         let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
-            let result: Result<Req.Response, SessionTaskError>
+            let result: Result<Request.Response, SessionTaskError>
 
             switch (data, urlResponse, error) {
             case (_, _, let error?):
@@ -100,11 +100,11 @@ open class Session {
     /// Cancels requests that passes the test.
     /// - parameter requestType: The request type to cancel.
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
-    open func cancelRequests<Req: Request>(withType requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+    open func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
         adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in
-                    if let request = self?.requestForTask(task) as Req? {
+                    if let request = self?.requestForTask(task) as Request? {
                         return test(request)
                     } else {
                         return false
@@ -114,11 +114,11 @@ open class Session {
         }
     }
 
-    private func setRequest<Req: Request>(_ request: Req, forTask task: SessionTask) {
+    private func setRequest<Request: APIKit.Request>(_ request: Request, forTask task: SessionTask) {
         objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func requestForTask<Req: Request>(_ task: SessionTask) -> Req? {
-        return objc_getAssociatedObject(task, &taskRequestKey) as? Req
+    private func requestForTask<Request: APIKit.Request>(_ task: SessionTask) -> Request? {
+        return objc_getAssociatedObject(task, &taskRequestKey) as? Request
     }
 }
