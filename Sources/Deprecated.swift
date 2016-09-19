@@ -40,13 +40,13 @@ extension Session {
         return send(request, callbackQueue: callbackQueue, handler: handler)
     }
 
-    @available(*, deprecated, renamed: "cancelRequests(withType:passingTest:)")
+    @available(*, deprecated, renamed: "cancelRequests(with:passingTest:)")
     public class func cancelRequest<Request: APIKit.Request>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
-        cancelRequests(withType: requestType, passingTest: test)
+        cancelRequests(with: requestType, passingTest: test)
     }
 
-    @available(*, deprecated, renamed: "cancelRequests(withType:passingTest:)")
+    @available(*, deprecated, renamed: "cancelRequests(with:passingTest:)")
     public func cancelRequest<Request: APIKit.Request>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
-        cancelRequests(withType: requestType, passingTest: test)
+        cancelRequests(with: requestType, passingTest: test)
     }
 }
