@@ -42,7 +42,7 @@ open class Session {
     }
 
     /// Calls `cancelRequests(with:passingTest:)` of `sharedSession`.
-    open class func cancelRequests<Req: Request>(with requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+    open class func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
         shared.cancelRequests(with: requestType, passingTest: test)
     }
 
@@ -100,11 +100,11 @@ open class Session {
     /// Cancels requests that passes the test.
     /// - parameter requestType: The request type to cancel.
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
-    open func cancelRequests<Req: Request>(with requestType: Req.Type, passingTest test: @escaping (Req) -> Bool = { _ in true }) {
+    open func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
         adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in
-                    if let request = self?.requestForTask(task) as Req? {
+                    if let request = self?.requestForTask(task) as Request? {
                         return test(request)
                     } else {
                         return false
