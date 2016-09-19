@@ -28,6 +28,11 @@ public typealias DataParserType = DataParser
 // MARK: Session
 
 extension Session {
+    @available(*, deprecated, renamed: "shared")
+    public class var sharedSession: Session {
+        return shared
+    }
+    
     @available(*, deprecated, renamed: "send(_:callbackQueue:handler:)")
     @discardableResult
     public class func sendRequest<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
