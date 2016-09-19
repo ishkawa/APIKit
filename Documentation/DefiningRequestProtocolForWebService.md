@@ -2,56 +2,59 @@
 
 Most web APIs have common configurations such as base URL, authorization header fields and MIME type to accept. For example, GitHub API has common base URL `https://api.github.com`, authorization header field `Authorization` and MIME type `application/json`. Protocol to express such common interfaces and default implementations is useful in defining many request types.
 
-We define `GitHubRequestType` to give common configuration for example.
+We define `GitHubRequest` to give common configuration for example.
 
-1. [Giving default implementation to RequestType components](#giving-default-implementation-to-requesttype-components)
+1. [Giving default implementation to Request components](#giving-default-implementation-to-request-components)
 2. [Throwing custom errors web API returns](#throwing-custom-errors-web-api-returns)
 
-## Giving default implementation to RequestType components
+## Giving default implementation to Request components
 
 ### Base URL
 
 First of all, we give default implementation for `baseURL`.
 
 ```swift
-protocol GitHubRequestType: RequestType {
+import APIKit
+
+protocol GitHubRequest: Request {
 
 }
 
-extension GitHubRequestType {
-    var baseURL: NSURL {
-        return NSURL(string: "https://api.github.com")!
+extension GitHubRequest {
+    var baseURL: URL {
+        return URL(string: "https://api.github.com")!
     }
 }
 ```
 
 ### JSON Mapping
 
-There are several JSON mapping library such as [Himotoki](https://github.com/ikesyo/Himotoki), [Argo](https://github.com/thoughtbot/Argo) and [Unbox](https://github.com/JohnSundell/Unbox). These libraries provide protocol that define interface to decode `AnyObject` into JSON model type. If you adopt one of them, you can give default implementation to `responseFromObject(_:URLResponse:)`. Here is an example of default implementation with Himotoki:
+There are several JSON mapping library such as [Himotoki](https://github.com/ikesyo/Himotoki), [Argo](https://github.com/thoughtbot/Argo) and [Unbox](https://github.com/JohnSundell/Unbox). These libraries provide protocol that define interface to decode `Any` into JSON model type. If you adopt one of them, you can give default implementation to `response(from:urlResponse:)`. Here is an example of default implementation with Himotoki:
 
 ```swift
 import Himotoki
 
-extension GitHubRequestType where Response: Decodable {
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
-        return try decodeValue(object)
+extension GitHubRequest where Response: Decodable {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
+        return try Response.decodeValue(object)
     }
 }
 ```
 
 ### Defining request types
 
-Since `GitHubRequestType` has default implementations of `baseURL` and `responseFromObject(_:URLResponse:)`, all you have to implement to conform to `GitHubRequestType` are 3 components, `Response`, `method` and `path`.
+Since `GitHubRequest` has default implementations of `baseURL` and `response(from:urlResponse:)`, all you have to implement to conform to `GitHubRequest` are 3 components, `Response`, `method` and `path`.
 
 ```swift
+import APIKit
 import Himotoki
 
 final class GitHubAPI {
-    struct RateLimitRequest: GitHubRequestType {
+    struct RateLimitRequest: GitHubRequest {
         typealias Response = RateLimit
 
         var method: HTTPMethod {
-            return .GET
+            return .get
         }
 
         var path: String {
@@ -59,21 +62,21 @@ final class GitHubAPI {
         }
     }
 
-    struct SearchRepositoriesRequest: GitHubRequestType {
+    struct SearchRepositoriesRequest: GitHubRequest {
         let query: String
 
-        // MARK: RequestType
+        // MARK: Request
         typealias Response = SearchResponse<Repository>
 
         var method: HTTPMethod {
-            return .GET
+            return .get
         }
 
         var path: String {
             return "/search/repositories"
         }
 
-        var parameters: AnyObject? {
+        var parameters: Any? {
             return ["q": query]
         }
     }
@@ -83,10 +86,21 @@ struct RateLimit: Decodable {
     let limit: Int
     let remaining: Int
 
-    static func decode(e: Extractor) throws -> RateLimit {
+    static func decode(_ e: Extractor) throws -> RateLimit {
         return try RateLimit(
             limit: e.value(["rate", "limit"]),
             remaining: e.value(["rate", "remaining"]))
+    }
+}
+
+struct Repository: Decodable {
+    let id: Int64
+    let name: String
+
+    static func decode(_ e: Extractor) throws -> Repository {
+        return try Repository(
+            id: e.value("id"),
+            name: e.value("name"))
     }
 }
 
@@ -94,7 +108,7 @@ struct SearchResponse<Item: Decodable>: Decodable {
     let items: [Item]
     let totalCount: Int
 
-    static func decode(e: Extractor) throws -> SearchResponse {
+    static func decode(_ e: Extractor) throws -> SearchResponse {
         return try SearchResponse(
             items: e.array("items"),
             totalCount: e.value("total_count"))
@@ -106,23 +120,24 @@ It is useful for code completion to nest request types in a utility class like `
 
 ## Throwing custom errors web API returns
 
-Most web APIs define error response to notify what happened on the server. For example, GitHub API defines errors [like this](https://developer.github.com/v3/#client-errors). `interceptObject(_:URLResponse:)` in `RequestType` gives us a chance to determine if the response is an error. If the response is an error, you can create custom error object from the response object and throw the error in `interceptObject(_:URLResponse:)`.
+Most web APIs define error response to notify what happened on the server. For example, GitHub API defines errors [like this](https://developer.github.com/v3/#client-errors). `interceptObject(_:URLResponse:)` in `Request` gives us a chance to determine if the response is an error. If the response is an error, you can create custom error object from the response object and throw the error in `interceptObject(_:URLResponse:)`.
 
 Here is an example of handling [GitHub API errors](https://developer.github.com/v3/#client-errors):
 
 ```swift
 // https://developer.github.com/v3/#client-errors
-struct GitHubError: ErrorType {
+struct GitHubError: Error {
     let message: String
 
-    init(object: AnyObject) {
-        message = object["message"] as? String ?? "Unknown error occurred"
+    init(object: Any) {
+        let dictionary = object as? [String: Any]
+        message = dictionary?["message"] as? String ?? "Unknown error occurred"
     }
 }
 
-extension GitHubRequestType {
-    func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
-        guard (200..<300).contains(URLResponse.statusCode) else {
+extension GitHubRequest {
+    func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
+        guard (200..<300).contains(urlResponse.statusCode) else {
             throw GitHubError(object: object)
         }
 
@@ -131,27 +146,27 @@ extension GitHubRequestType {
 }
 ```
 
-The custom error you throw in `interceptObject(_:URLResponse:)` can be retrieved from call-site as `.Failure(.ResponseError(GitHubError))`.
+The custom error you throw in `intercept(object:urlResponse:)` can be retrieved from call-site as `.failure(.responseError(GitHubError))`.
 
 ```swift
-let request = SomeGitHubRequest()
+let request = GitHubAPI.SearchRepositoriesRequest(query: "swift")
 
-Session.sendRequest(request) { result in
+Session.send(request) { result in
     switch result {
-    case .Success(let response):
+    case .success(let response):
         print(response)
 
-    case .Failure(let error):
-        printSessionTaskError(error)
+    case .failure(let error):
+        self.printError(error)
     }
 }
 
-func printSessionTaskError(error: SessionTaskError) {
+func printError(_ error: SessionTaskError) {
     switch error {
-    case .ResponseError(let error as GitHubError):
+    case .responseError(let error as GitHubError):
         print(error.message) // Prints message from GitHub API
 
-    case .ConnectionError(let error):
+    case .connectionError(let error):
         print("Connection error: \(error)")
 
     default:
