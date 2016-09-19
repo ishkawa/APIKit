@@ -141,7 +141,7 @@ class SessionTests: XCTestCase {
             expectation.fulfill()
         }
         
-        session.cancelRequests(withType: TestRequest.self)
+        session.cancelRequests(with: TestRequest.self)
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -169,7 +169,7 @@ class SessionTests: XCTestCase {
             failureExpectation.fulfill()
         }
         
-        session.cancelRequests(withType: TestRequest.self) { request in
+        session.cancelRequests(with: TestRequest.self) { request in
             return request.path == failureRequest.path
         }
         
@@ -219,14 +219,14 @@ class SessionTests: XCTestCase {
             failureExpectation.fulfill()
         }
         
-        session.cancelRequests(withType: TestRequest.self)
+        session.cancelRequests(with: TestRequest.self)
 
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
     // MARK: Class methods
     func testSharedSession() {
-        XCTAssert(Session.sharedSession === Session.sharedSession)
+        XCTAssert(Session.shared === Session.shared)
     }
 
     func testSubclassClassMethods() {
@@ -235,7 +235,7 @@ class SessionTests: XCTestCase {
 
             var functionCallFlags = [String: Bool]()
 
-            override class var sharedSession: Session {
+            override class var shared: Session {
                 return testSesssion
             }
 
@@ -244,16 +244,16 @@ class SessionTests: XCTestCase {
                 return super.send(request)
             }
 
-            private override func cancelRequests<Request : APIKit.Request>(withType requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
+            private override func cancelRequests<Request : APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
                 functionCallFlags[(#function)] = true
             }
         }
 
         let testSession = SessionSubclass.testSesssion
         SessionSubclass.send(TestRequest())
-        SessionSubclass.cancelRequests(withType: TestRequest.self)
+        SessionSubclass.cancelRequests(with: TestRequest.self)
 
         XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:handler:)"], true)
-        XCTAssertEqual(testSession.functionCallFlags["cancelRequests(withType:passingTest:)"], true)
+        XCTAssertEqual(testSession.functionCallFlags["cancelRequests(with:passingTest:)"], true)
     }
 }
