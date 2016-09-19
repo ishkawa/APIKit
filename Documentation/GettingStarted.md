@@ -17,7 +17,7 @@ let request = SearchRepositoriesRequest(query: "swift")
 Session.send(request) { result in
     switch result {
     case .success(let response):
-        // Type of `repositories` is `[Repository]`,
+        // Type of `response` is `[Repository]`,
         // which is inferred from `SearchRepositoriesRequest`.
         print(response)
 
@@ -32,7 +32,7 @@ Session.send(request) { result in
 `Request` defines several properties and methods. Since many of them have default implementation, components which is necessary for conforming to `Request` are following 5 components:
 
 - `typealias Response`
-- `var baseURL: NSURL`
+- `var baseURL: URL`
 - `var method: HTTPMethod`
 - `var path: String`
 - `func response(from object: Any, urlResponse: HTTPURLResponse) throws -> RateLimit`
@@ -107,18 +107,18 @@ Session.send(request) { result in
 
 ## Canceling request
 
-`Session.cancelRequests(withType:passingTest:)` also has a type parameter `Request` that conforms to `Request`. This method takes 2 parameters `requestType: Request.Type` and `test: Request -> Bool`. `requestType` is a type of request to cancel, and `test` is a closure that determines if request should be cancelled.
+`Session.cancelRequests(with:passingTest:)` also has a type parameter `Request` that conforms to `Request`. This method takes 2 parameters `requestType: Request.Type` and `test: Request -> Bool`. `requestType` is a type of request to cancel, and `test` is a closure that determines if request should be cancelled.
 
-For example, when `Session.cancelRequests(withType:passingTest:)` receives `RateLimitRequest.Type` and `{ request in true }` as parameters, `Session` finds all session tasks associated with `RateLimitRequest` in the backend queue. Next, execute `{ request in true }` for each session tasks and cancel the task if it returns `true`. Since `{ request in true }` always returns `true`, all request associated with `RateLimitRequest` will be cancelled.
+For example, when `Session.cancelRequests(with:passingTest:)` receives `RateLimitRequest.Type` and `{ request in true }` as parameters, `Session` finds all session tasks associated with `RateLimitRequest` in the backend queue. Next, execute `{ request in true }` for each session tasks and cancel the task if it returns `true`. Since `{ request in true }` always returns `true`, all request associated with `RateLimitRequest` will be cancelled.
 
 ```swift
-Session.cancelRequests(withType: RateLimitRequest.self) { request in
+Session.cancelRequests(with: RateLimitRequest.self) { request in
     return true
 }
 ```
 
-`Session.cancelRequests(withType:passingTest:)` has default parameter for predicate closure, so you can omit the predicate closure like below:
+`Session.cancelRequests(with:passingTest:)` has default parameter for predicate closure, so you can omit the predicate closure like below:
 
 ```swift
-Session.cancelRequests(withType: RateLimitRequest.self)
+Session.cancelRequests(with: RateLimitRequest.self)
 ```

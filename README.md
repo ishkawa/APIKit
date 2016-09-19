@@ -18,7 +18,7 @@ let request = SearchRepositoriesRequest(query: "swift")
 Session.send(request) { result in
     switch result {
     case .success(let response):
-        // Type of `repositories` is `[Repository]`,
+        // Type of `response` is `[Repository]`,
         // which is inferred from `SearchRepositoriesRequest`.
         print(response)
 

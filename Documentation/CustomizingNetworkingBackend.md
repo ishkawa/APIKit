@@ -14,12 +14,11 @@ Demo implementation of Alamofire adapter is available [here](https://github.com/
 
 ```swift
 public protocol SessionAdapter {
-public protocol SessionAdapter {
-    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTaskType
-    func getTasks(with handler: @escaping ([SessionTaskType]) -> Void)
+    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask
+    func getTasks(with handler: @escaping ([SessionTask]) -> Void)
 }
 
-public protocol SessionTaskType: class {
+public protocol SessionTask: class {
     func resume()
     func cancel()
 }
@@ -44,10 +43,10 @@ open class Session {
 }
 ```
 
-Once it is initialized with a session adapter, it sends `URLRequest` and receives `(NSData?, NSURLResponse?, NSError?)` via the interfaces which are defined in `SessionAdapter`.
+Once it is initialized with a session adapter, it sends `URLRequest` and receives `(Data?, URLResponse?, Error?)` via the interfaces which are defined in `SessionAdapter`.
 
 ```swift
-open func send<Request: APIKit.Request>(_ request: Req, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Req.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
     let urlRequest: URLRequest = ...
     let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
         ...
@@ -56,4 +55,5 @@ open func send<Request: APIKit.Request>(_ request: Req, callbackQueue: CallbackQ
     task.resume()
 
     return task
+}
 ```
