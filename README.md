@@ -65,4 +65,5 @@ Note: CocoaPods 1.1.0 is required to install APIKit 3.
 
 ### Migration Guides
 
+- [APIKit 3 Migration Guide](Documentation/APIKit3MigrationGuide.md)
 - [APIKit 2 Migration Guide](Documentation/APIKit2MigrationGuide.md)
