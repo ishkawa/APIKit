@@ -1,5 +1,5 @@
 //
-//  Deprecated.swift
+//  Unavailable.swift
 //  APIKit
 //
 //  Created by Yosuke Ishikawa on 9/19/16.
@@ -10,48 +10,46 @@ import Result
 
 // MARK: - Protocols
 
-@available(*, deprecated, renamed: "Request")
+@available(*, unavailable, renamed: "Request")
 public typealias RequestType = Request
 
-@available(*, deprecated, renamed: "SessionAdapter")
+@available(*, unavailable, renamed: "SessionAdapter")
 public typealias SessionAdapterType = SessionAdapter
 
-@available(*, deprecated, renamed: "SessionTask")
+@available(*, unavailable, renamed: "SessionTask")
 public typealias SessionTaskType = SessionTask
 
-@available(*, deprecated, renamed: "BodyParameters")
+@available(*, unavailable, renamed: "BodyParameters")
 public typealias BodyParametersType = BodyParameters
 
-@available(*, deprecated, renamed: "DataParser")
+@available(*, unavailable, renamed: "DataParser")
 public typealias DataParserType = DataParser
 
 // MARK: Session
 
 extension Session {
-    @available(*, deprecated, renamed: "shared")
+    @available(*, unavailable, renamed: "shared")
     public class var sharedSession: Session {
-        return shared
+        fatalError("\(#function) is no longer available")
     }
     
-    @available(*, deprecated, renamed: "send(_:callbackQueue:handler:)")
-    @discardableResult
+    @available(*, unavailable, renamed: "send(_:callbackQueue:handler:)")
     public class func sendRequest<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return send(request, callbackQueue: callbackQueue, handler: handler)
+        fatalError("\(#function) is no longer available")
     }
 
-    @available(*, deprecated, renamed: "send(_:callbackQueue:handler:)")
-    @discardableResult
+    @available(*, unavailable, renamed: "send(_:callbackQueue:handler:)")
     public func sendRequest<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return send(request, callbackQueue: callbackQueue, handler: handler)
+        fatalError("\(#function) is no longer available")
     }
 
-    @available(*, deprecated, renamed: "cancelRequests(with:passingTest:)")
+    @available(*, unavailable, renamed: "cancelRequests(with:passingTest:)")
     public class func cancelRequest<Request: APIKit.Request>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
-        cancelRequests(with: requestType, passingTest: test)
+        fatalError("\(#function) is no longer available")
     }
 
-    @available(*, deprecated, renamed: "cancelRequests(with:passingTest:)")
+    @available(*, unavailable, renamed: "cancelRequests(with:passingTest:)")
     public func cancelRequest<Request: APIKit.Request>(_ requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
-        cancelRequests(with: requestType, passingTest: test)
+        fatalError("\(#function) is no longer available")
     }
 }
