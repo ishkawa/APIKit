@@ -64,15 +64,15 @@ To satisfy both ease and accuracy, `parameters` property is separated into 1 con
 - [**Deleted**] `var objectParameters: AnyObject`
 - [**Deleted**] `var requestBodyBuilder: RequestBodyBuilder`
 - [**Added**] `var parameters: AnyObject?` (convenience property)
-- [**Added**] `var bodyParameters: BodyParametersType?` (actual property)
+- [**Added**] `var bodyParameters: BodyParameters?` (actual property)
 - [**Added**] `var queryParameters: [String: AnyObject]?` (actual property)
 
 Related types:
 
 - [**Deleted**] `enum RequestBodyBuilder`
-- [**Added**] `protocol BodyParametersType`
+- [**Added**] `protocol BodyParameters`
 
-APIKit provides 3 parameters types that conform to `BodyParametersType`:
+APIKit provides 3 parameters types that conform to `BodyParameters`:
 
 - [**Added**] `class JSONBodyParameters`
 - [**Added**] `class FormURLEncodedBodyParameters`
