@@ -44,7 +44,7 @@ If you use Swift 2.2 or 2.3, try [APIKit 2.0.5](https://github.com/ishkawa/APIKi
 
 - Insert `github "ishkawa/APIKit" ~> 3.0` to your Cartfile.
 - Run `carthage update`.
-- Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Checkouts`.
+- Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Build`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
