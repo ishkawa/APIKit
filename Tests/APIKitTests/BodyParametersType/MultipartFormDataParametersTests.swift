@@ -70,6 +70,9 @@ class MultipartFormDataParametersTests: XCTestCase {
     }
 
     // MARK: Values
+
+    // Skip test cases that uses files until SwiftPM supports resources.
+    #if !SWIFT_PACKAGE
     func testFileValue() {
         let fileURL = Bundle(for: type(of: self)).url(forResource: "test", withExtension: "json")!
         let part = try! MultipartFormDataBodyParameters.Part(fileURL: fileURL, name: "test")
@@ -100,6 +103,7 @@ class MultipartFormDataParametersTests: XCTestCase {
             XCTFail()
         }
     }
+    #endif
 
     func testStringValue() {
         let part = try! MultipartFormDataBodyParameters.Part(value: "abcdef", name: "foo")
