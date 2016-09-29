@@ -1,7 +1,6 @@
 import Foundation
 import APIKit
 import XCTest
-import OHHTTPStubs
 import Result
 
 class SessionTests: XCTestCase {

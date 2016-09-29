@@ -50,6 +50,7 @@
 		7F7048F01D9D8A12003C99F6 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048ED1D9D8A12003C99F6 /* ResponseError.swift */; };
 		7F7048F11D9D8A12003C99F6 /* SessionTaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048EE1D9D8A12003C99F6 /* SessionTaskError.swift */; };
 		7F7048F31D9D8A1F003C99F6 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */; };
+		7FA1690D1D9D8C80006C982B /* HTTPStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1690C1D9D8C80006C982B /* HTTPStub.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		7F7048EE1D9D8A12003C99F6 /* SessionTaskError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SessionTaskError.swift; path = Sources/APIKit/Error/SessionTaskError.swift; sourceTree = SOURCE_ROOT; };
 		7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncodedSerialization.swift; path = Sources/APIKit/Serializations/URLEncodedSerialization.swift; sourceTree = SOURCE_ROOT; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; };
+		7FA1690C1D9D8C80006C982B /* HTTPStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStub.swift; sourceTree = "<group>"; };
 		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD51152D1B1FFCC700514240 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OHHTTPStubs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -260,6 +262,7 @@
 		7F698E4C1D9D680C00F1561D /* TestComponents */ = {
 			isa = PBXGroup;
 			children = (
+				7FA1690C1D9D8C80006C982B /* HTTPStub.swift */,
 				7F698E4D1D9D680C00F1561D /* TestRequest.swift */,
 				7F698E4E1D9D680C00F1561D /* TestSessionAdapter.swift */,
 				7F698E4F1D9D680C00F1561D /* TestSessionTask.swift */,
@@ -481,6 +484,7 @@
 				7F698E581D9D680C00F1561D /* RequestTests.swift in Sources */,
 				7F698E5E1D9D680C00F1561D /* TestRequest.swift in Sources */,
 				7F698E601D9D680C00F1561D /* TestSessionTask.swift in Sources */,
+				7FA1690D1D9D8C80006C982B /* HTTPStub.swift in Sources */,
 				7F698E5A1D9D680C00F1561D /* URLSessionAdapterTests.swift in Sources */,
 				7F698E561D9D680C00F1561D /* StringDataParserTests.swift in Sources */,
 				7F698E541D9D680C00F1561D /* FormURLEncodedDataParserTests.swift in Sources */,

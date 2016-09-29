@@ -1,6 +1,5 @@
 import Foundation
 import XCTest
-import OHHTTPStubs
 import APIKit
 
 class URLSessionAdapterSubclassTests: XCTestCase {
@@ -25,24 +24,16 @@ class URLSessionAdapterSubclassTests: XCTestCase {
         super.setUp()
 
         let configuration = URLSessionConfiguration.default
+        configuration.protocolClasses = [HTTPStub.self]
+
         adapter = SessionAdapter(configuration: configuration)
         session = Session(adapter: adapter)
     }
 
-    override func tearDown() {
-        OHHTTPStubs.removeAllStubs()
-        super.tearDown()
-    }
-
     func testDelegateMethodCall() {
-        let data = try! JSONSerialization.data(withJSONObject: [:], options: [])
-        
-        OHHTTPStubs.stubRequests(passingTest: { request in
-            return true
-        }, withStubResponse: { request in
-            return OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
-        })
-        
+        let data = "{}".data(using: .utf8)!
+        HTTPStub.stubResult = .success(data)
+
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
