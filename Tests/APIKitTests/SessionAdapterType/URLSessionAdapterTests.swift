@@ -75,7 +75,6 @@ class URLSessionAdapterTests: XCTestCase {
         let request = TestRequest()
 
         session.send(request) { result in
-            print(result)
             guard case .failure(let error) = result,
                   case .connectionError(let connectionError as NSError) = error else {
                 XCTFail()
