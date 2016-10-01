@@ -84,10 +84,14 @@ class SessionTests: XCTestCase {
     }
 
     func testNonHTTPURLResponseError() {
-        adapter.urlResponse = URLResponse()
-
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
+        
+        adapter.urlResponse = URLResponse(
+            url: request.absoluteURL!,
+            mimeType: nil,
+            expectedContentLength: 100,
+            textEncodingName: nil)
         
         session.send(request) { result in
             if case .failure(let error) = result,
