@@ -30,10 +30,9 @@ class JSONBodyParametersTests: XCTestCase {
         do {
             try _ = parameters.buildEntity()
             XCTFail()
-        } catch {
-            let nserror = error as NSError
-            XCTAssertEqual(nserror.domain, NSCocoaErrorDomain)
-            XCTAssertEqual(nserror.code, 3840)
+        } catch let error as NSError {
+            XCTAssertEqual(error.domain, NSCocoaErrorDomain)
+            XCTAssertEqual(error.code, 3840)
         }
     }
 }
