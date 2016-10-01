@@ -1,5 +1,6 @@
 import XCTest
 import APIKit
+import Foundation
 
 class RequestTests: XCTestCase {
     func testJapanesesQueryParameters() {
