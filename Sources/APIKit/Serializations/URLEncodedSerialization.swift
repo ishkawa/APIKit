@@ -37,8 +37,8 @@ private func escape(_ string: String) -> String {
     return escaped
 }
 
-private func unescape(_ string: String) -> String {
-    return CFURLCreateStringByReplacingPercentEscapes(nil, string as CFString, nil) as String
+private func unescape(_ string: String) -> String? {
+    return string.removingPercentEncoding
 }
 
 /// `URLEncodedSerialization` parses `Data` and `String` as urlencoded,
@@ -48,6 +48,7 @@ public final class URLEncodedSerialization {
         case cannotGetStringFromData(Data, String.Encoding)
         case cannotGetDataFromString(String, String.Encoding)
         case cannotCastObjectToDictionary(Any)
+        case cannotUnescapeString(String)
         case invalidFormatString(String)
     }
 
@@ -66,7 +67,11 @@ public final class URLEncodedSerialization {
                 throw Error.invalidFormatString(string)
             }
 
-            dictionary[contents[0]] = unescape(contents[1])
+            guard let value = unescape(contents[1]) else {
+                throw Error.cannotUnescapeString(contents[1])
+            }
+
+            dictionary[contents[0]] = value
         }
 
         return dictionary
