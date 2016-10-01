@@ -1,4 +1,5 @@
 import Foundation
+import Dispatch
 import APIKit
 
 class TestSessionAdapter: SessionAdapter {
@@ -10,31 +11,27 @@ class TestSessionAdapter: SessionAdapter {
     var urlResponse: URLResponse?
     var error: Error?
 
-    private class Runner {
-        weak var adapter: TestSessionAdapter?
-
-        @objc func run() {
-            adapter?.executeAllTasks()
-        }
-    }
-
     private var tasks = [TestSessionTask]()
-    private let runner: Runner
-    private let timer: Timer
+    private let timer: DispatchSourceTimer
 
     init(data: Data? = Data(), urlResponse: URLResponse? = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 200, httpVersion: nil, headerFields: nil), error: Error? = nil) {
         self.data = data
         self.urlResponse = urlResponse
         self.error = error
 
-        self.runner = Runner()
-        self.timer = Timer.scheduledTimer(timeInterval: 0.001,
-            target: runner,
-            selector: #selector(Runner.run),
-            userInfo: nil,
-            repeats: true)
+        timer = DispatchSource.makeTimerSource()
+        timer.scheduleRepeating(deadline: .now(), interval: DispatchTimeInterval.milliseconds(10))
+        timer.setEventHandler { [weak self] in
+            DispatchQueue.main.async { [weak self] in
+                self?.executeAllTasks()
+            }
+        }
 
-        self.runner.adapter = self
+        timer.resume()
+    }
+
+    deinit {
+        timer.cancel()
     }
 
     func executeAllTasks() {
