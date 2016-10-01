@@ -1,5 +1,7 @@
 import Foundation
 
+#if !os(Linux)
+    
 #if os(iOS) || os(watchOS) || os(tvOS)
     import MobileCoreServices
 #elseif os(OSX)
@@ -326,3 +328,4 @@ public extension MultipartFormDataBodyParameters {
         }
     }
 }
+#endif

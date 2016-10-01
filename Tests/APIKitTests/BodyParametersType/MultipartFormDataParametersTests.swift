@@ -2,6 +2,7 @@ import Foundation
 import XCTest
 @testable import APIKit
 
+#if !os(Linux)
 class MultipartFormDataParametersTests: XCTestCase {
     // MARK: Entity
     func testDataEntitySuccess() {
@@ -156,3 +157,4 @@ class MultipartFormDataParametersTests: XCTestCase {
         }
     }
 }
+#endif
