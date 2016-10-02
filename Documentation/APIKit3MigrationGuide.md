@@ -61,7 +61,7 @@ APIs of APIKit are redesigned to follow [Swift 3 API design guidelines](https://
 ## RequestError
 
 - [**Renamed**] `InvalidBaseURL` → `invalidBaseURL`
-- [**Renamed**] `unexpectedURLRequest` → `unexpectedURLRequest`
+- [**Renamed**] `UnexpectedURLRequest` → `unexpectedURLRequest`
 
 ## ResponseError
 
