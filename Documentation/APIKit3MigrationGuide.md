@@ -55,13 +55,13 @@ APIs of APIKit are redesigned to follow [Swift 3 API design guidelines](https://
 ## SessionTaskError
 
 - [**Renamed**] `ConnectionError` → `connectionError`
-- [**Renamed**] `requestError` → `requestError`
-- [**Renamed**] `responseError` → `responseError`
+- [**Renamed**] `RequestError` → `requestError`
+- [**Renamed**] `ResponseError` → `responseError`
 
 ## RequestError
 
 - [**Renamed**] `InvalidBaseURL` → `invalidBaseURL`
-- [**Renamed**] `unexpectedURLRequest` → `unexpectedURLRequest`
+- [**Renamed**] `UnexpectedURLRequest` → `unexpectedURLRequest`
 
 ## ResponseError
 
