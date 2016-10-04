@@ -7,21 +7,19 @@ matrix:
     - os: osx
       language: objective-c
       osx_image: xcode8
-      env: JOB=Xcode8
-
-install:
-  - carthage bootstrap --use-submodules --no-build
-  - pod repo update --silent
-
-script:
-  - if [[ "$JOB" == "Xcode7.3" ]]; then pod lib lint; fi
-  - set -o pipefail
-  - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release ENABLE_TESTABILITY=YES | xcpretty -c
-  - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk iphonesimulator -destination "name=iPhone 6s" ENABLE_TESTABILITY=YES | xcpretty -c
-  - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk appletvsimulator -destination "name=Apple TV 1080p" ENABLE_TESTABILITY=YES | xcpretty -c
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+      script:
+        - set -o pipefail
+        - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release ENABLE_TESTABILITY=YES | xcpretty -c
+        - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk iphonesimulator -destination "name=iPhone 6s" ENABLE_TESTABILITY=YES | xcpretty -c
+        - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk appletvsimulator -destination "name=Apple TV 1080p" ENABLE_TESTABILITY=YES | xcpretty -c
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+    - os: osx
+      language: generic
+      osx_image: xcode8
+      script:
+        - swift build
+        - swift test
 
 notifications:
   email: false

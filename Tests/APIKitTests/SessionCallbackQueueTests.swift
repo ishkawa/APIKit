@@ -1,7 +1,6 @@
 import Foundation
 import APIKit
 import XCTest
-import OHHTTPStubs
 
 class SessionCallbackQueueTests: XCTestCase {
     var adapter: TestSessionAdapter!

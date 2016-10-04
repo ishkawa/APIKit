@@ -6,6 +6,14 @@ import Foundation
     import CoreServices
 #endif
 
+#if SWIFT_PACKAGE
+    class AbstractInputStream: InputStream {
+        init() {
+            super.init(data: Data())
+        }
+    }
+#endif
+
 /// `FormURLEncodedBodyParameters` serializes array of `Part` for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParameters {
     /// `EntityType` represents wheather the entity is expressed as `Data` or `InputStream`.

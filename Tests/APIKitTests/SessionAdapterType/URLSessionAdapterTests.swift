@@ -1,38 +1,29 @@
 import Foundation
 import APIKit
 import XCTest
-import OHHTTPStubs
 
 class URLSessionAdapterTests: XCTestCase {
     var session: Session!
 
     override func setUp() {
         super.setUp()
-
+        
         let configuration = URLSessionConfiguration.default
+        configuration.protocolClasses = [HTTPStub.self]
+        
         let adapter = URLSessionAdapter(configuration: configuration)
         session = Session(adapter: adapter)
-    }
-
-    override func tearDown() {
-        OHHTTPStubs.removeAllStubs()
-        super.tearDown()
     }
 
     // MARK: - integration tests
     func testSuccess() {
         let dictionary = ["key": "value"]
         let data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
-        
-        OHHTTPStubs.stubRequests(passingTest: { request in
-            return true
-        }, withStubResponse: { request in
-            return OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil)
-        })
+        HTTPStub.stubResult = .success(data)
         
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
-        
+
         session.send(request) { response in
             switch response {
             case .success(let dictionary):
@@ -50,12 +41,7 @@ class URLSessionAdapterTests: XCTestCase {
     
     func testConnectionError() {
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: nil)
-        
-        OHHTTPStubs.stubRequests(passingTest: { request in
-            return true
-        }, withStubResponse: { request in
-            return OHHTTPStubsResponse(error: error)
-        })
+        HTTPStub.stubResult = .failure(error)
         
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
@@ -82,14 +68,9 @@ class URLSessionAdapterTests: XCTestCase {
     }
 
     func testCancel() {
-        let data = try! JSONSerialization.data(withJSONObject: [:], options: [])
-        
-        OHHTTPStubs.stubRequests(passingTest: { request in
-            return true
-        }, withStubResponse: { request in
-            return OHHTTPStubsResponse(data: data, statusCode: 200, headers: nil).responseTime(1.0)
-        })
-        
+        let data = "{}".data(using: .utf8)!
+        HTTPStub.stubResult = .success(data)
+
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
