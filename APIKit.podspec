@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "3.0.0-beta.2"
-  s.summary  = "A networking library for building type safe web API client in Swift."
+  s.version  = "3.0.0"
+  s.summary  = "Type-safe networking abstraction layer that associates request type with response type."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
   s.author = {
