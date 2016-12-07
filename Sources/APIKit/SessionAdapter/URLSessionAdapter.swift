@@ -31,8 +31,6 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
         setBuffer(NSMutableData(), forTask: task)
         setHandler(handler, forTask: task)
 
-        // task.resume()
-
         return task
     }
 
