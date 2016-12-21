@@ -47,7 +47,7 @@ For example, the code below checks HTTP status code, and if the status code is n
 
 ```swift
 func interceptObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> AnyObject {
-    guard (200..<300).contains(URLResponse.statusCode) else {
+    guard 200..<300 ~= URLResponse.statusCode else {
         // https://developer.github.com/v3/#client-errors
         throw GitHubError(object: object)
     }

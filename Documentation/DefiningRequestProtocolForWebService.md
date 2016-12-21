@@ -137,7 +137,7 @@ struct GitHubError: Error {
 
 extension GitHubRequest {
     func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
-        guard (200..<300).contains(urlResponse.statusCode) else {
+        guard 200..<300 ~= urlResponse.statusCode else {
             throw GitHubError(object: object)
         }
 
