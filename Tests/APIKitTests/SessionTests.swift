@@ -1,7 +1,8 @@
 import Foundation
-import APIKit
 import XCTest
 import Result
+
+@testable import APIKit
 
 class SessionTests: XCTestCase {
     var adapter: TestSessionAdapter!
@@ -34,6 +35,7 @@ class SessionTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     // MARK: Response error
@@ -56,6 +58,7 @@ class SessionTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     func testUnacceptableStatusCodeError() {
@@ -77,6 +80,7 @@ class SessionTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     func testNonHTTPURLResponseError() {
@@ -98,6 +102,7 @@ class SessionTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     // MARK: Request error
@@ -121,7 +126,7 @@ class SessionTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
-
+        XCTAssert(session.requests.isEmpty)
     }
 
     // MARK: Cancel
@@ -143,6 +148,7 @@ class SessionTests: XCTestCase {
         session.cancelRequests(with: TestRequest.self)
         
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     func testCancelFilter() {
@@ -173,6 +179,7 @@ class SessionTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     struct AnotherTestRequest: Request {
@@ -221,6 +228,7 @@ class SessionTests: XCTestCase {
         session.cancelRequests(with: TestRequest.self)
 
         waitForExpectations(timeout: 1.0, handler: nil)
+        XCTAssert(session.requests.isEmpty)
     }
 
     // MARK: Class methods

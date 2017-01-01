@@ -2,6 +2,9 @@ import Foundation
 
 /// `SessionTask` protocol represents a task for a request.
 public protocol SessionTask: class {
+    /// An identifier uniquely identifies the task within a given session.
+    var taskIdentifier: Int { get }
+    
     func resume()
     func cancel()
 }

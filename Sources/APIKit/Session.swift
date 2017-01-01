@@ -10,6 +10,9 @@ open class Session {
 
     /// The default callback queue for `send(_:handler:)`.
     public let callbackQueue: CallbackQueue
+    
+    /// Retains request that associated with executing tasks. 
+    internal var requests = [Int: Any]()
 
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
@@ -56,42 +59,45 @@ open class Session {
     /// - returns: The new session task.
     @discardableResult
     open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        var taskIdentifier: Int?
         let callbackQueue = callbackQueue ?? self.callbackQueue
-
-        let urlRequest: URLRequest
-        do {
-            urlRequest = try request.buildURLRequest()
-        } catch {
-            callbackQueue.execute {
-                handler(.failure(.requestError(error)))
+        let handler: (Result<Request.Response, SessionTaskError>) -> Void = { [weak self] result in
+            if let taskIdentifier = taskIdentifier {
+                self?.requests[taskIdentifier] = nil
             }
-            return nil
-        }
-
-        let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
-            let result: Result<Request.Response, SessionTaskError>
-
-            switch (data, urlResponse, error) {
-            case (_, _, let error?):
-                result = .failure(.connectionError(error))
-
-            case (let data?, let urlResponse as HTTPURLResponse, _):
-                do {
-                    result = .success(try request.parse(data: data as Data, urlResponse: urlResponse))
-                } catch {
-                    result = .failure(.responseError(error))
-                }
-
-            default:
-                result = .failure(.responseError(ResponseError.nonHTTPURLResponse(urlResponse)))
-            }
-
+            
             callbackQueue.execute {
                 handler(result)
             }
         }
 
-        setRequest(request, forTask: task)
+        let urlRequest: URLRequest
+        do {
+            urlRequest = try request.buildURLRequest()
+        } catch {
+            handler(.failure(.requestError(error)))
+            return nil
+        }
+
+        let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
+            switch (data, urlResponse, error) {
+            case (_, _, let error?):
+                handler(.failure(.connectionError(error)))
+
+            case (let data?, let urlResponse as HTTPURLResponse, _):
+                do {
+                    handler(.success(try request.parse(data: data as Data, urlResponse: urlResponse)))
+                } catch {
+                    handler(.failure(.responseError(error)))
+                }
+
+            default:
+                handler(.failure(.responseError(ResponseError.nonHTTPURLResponse(urlResponse))))
+            }
+        }
+
+        taskIdentifier = task.taskIdentifier
+        requests[task.taskIdentifier] = request
         task.resume()
 
         return task
@@ -104,7 +110,7 @@ open class Session {
         adapter.getTasks { [weak self] tasks in
             return tasks
                 .filter { task in
-                    if let request = self?.requestForTask(task) as Request? {
+                    if let request = self?.requests[task.taskIdentifier] as? Request {
                         return test(request)
                     } else {
                         return false
@@ -112,13 +118,5 @@ open class Session {
                 }
                 .forEach { $0.cancel() }
         }
-    }
-
-    private func setRequest<Request: APIKit.Request>(_ request: Request, forTask task: SessionTask) {
-        objc_setAssociatedObject(task, &taskRequestKey, request, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-    }
-
-    private func requestForTask<Request: APIKit.Request>(_ task: SessionTask) -> Request? {
-        return objc_getAssociatedObject(task, &taskRequestKey) as? Request
     }
 }
