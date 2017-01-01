@@ -42,7 +42,7 @@ class RequestTests: XCTestCase {
         let urlRequest = try? request.buildURLRequest()
         XCTAssertNotNil(urlRequest?.httpBody)
 
-        let json = urlRequest?.httpBody.flatMap { try? JSONSerialization.jsonObject(with: $0, options: []) } as? [AnyObject]
+        let json = urlRequest?.httpBody.flatMap { try? JSONSerialization.jsonObject(with: $0, options: []) } as? [Any]
         XCTAssertEqual(json?.count, 3)
         XCTAssertEqual((json?[0] as? [String: String])?["id"], "1")
         XCTAssertEqual((json?[1] as? [String: String])?["id"], "2")

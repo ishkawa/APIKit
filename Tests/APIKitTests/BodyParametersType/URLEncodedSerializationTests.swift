@@ -81,7 +81,9 @@ class URLEncodedSerializationTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual((object as AnyObject)["hey"], (dictionaries as AnyObject)["hey"])
+            XCTAssertEqual(
+                (object as? [[String: String]])?[0]["hey"],
+                (dictionaries as? [[String: String]])?[0]["hey"])
         }
     }
 }
