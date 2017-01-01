@@ -18,12 +18,7 @@ class HTTPStub: URLProtocol {
     }
 
     override func startLoading() {
-        let response = HTTPURLResponse(
-            url: request.url!,
-            statusCode: 200,
-            httpVersion: "1.1",
-            headerFields: nil)
-
+        let response = URLResponse.dummy(url: request.url!)
         let queue = DispatchQueue.global(qos: .default)
 
         queue.asyncAfter(deadline: .now() + 0.01) {
@@ -31,7 +26,7 @@ class HTTPStub: URLProtocol {
                 return
             }
             
-            self.client?.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
+            self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
 
             switch HTTPStub.stubResult {
             case .success(let data):

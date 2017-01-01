@@ -14,7 +14,7 @@ class TestSessionAdapter: SessionAdapter {
     private var tasks = [TestSessionTask]()
     private let timer: DispatchSourceTimer
 
-    init(data: Data? = Data(), urlResponse: URLResponse? = HTTPURLResponse(url: NSURL(string: "")! as URL, statusCode: 200, httpVersion: nil, headerFields: nil), error: Error? = nil) {
+    init(data: Data? = Data(), urlResponse: URLResponse? = .dummy(), error: Error? = nil) {
         self.data = data
         self.urlResponse = urlResponse
         self.error = error
