@@ -1,4 +1,5 @@
 import Foundation
+import Dispatch
 
 /// `CallbackQueue` represents queue where `handler` of `Session.send(_:handler:)` runs.
 public enum CallbackQueue {
