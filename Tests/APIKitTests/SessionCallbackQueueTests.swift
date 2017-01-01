@@ -1,6 +1,7 @@
 import Foundation
 import APIKit
 import XCTest
+import Dispatch
 
 class SessionCallbackQueueTests: XCTestCase {
     var adapter: TestSessionAdapter!
