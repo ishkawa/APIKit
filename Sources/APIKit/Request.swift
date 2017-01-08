@@ -28,7 +28,7 @@ public protocol Request {
     /// The actual parameters for the URL query. The values of this property will be escaped using `URLEncodedSerialization`.
     /// If this property is not implemented and `method.prefersQueryParameter` is `true`, the value of this property
     /// will be computed from `parameters`.
-    var queryParameters: [String: Any]? { get }
+    var queryParameters: QueryParameters? { get }
 
     /// The actual parameters for the HTTP body. If this property is not implemented and `method.prefersQueryParameter` is `false`,
     /// the value of this property will be computed from `parameters` using `JSONBodyParameters`.
@@ -65,12 +65,12 @@ public extension Request {
         return nil
     }
 
-    var queryParameters: [String: Any]? {
-        guard let parameters = parameters as? [String: Any], method.prefersQueryParameters else {
+    var queryParameters: QueryParameters? {
+        guard let parameters = parameters, method.prefersQueryParameters else {
             return nil
         }
 
-        return parameters
+        return URLEncodedQueryParameters(parameters: parameters)
     }
 
     var bodyParameters: BodyParameters? {
@@ -110,8 +110,8 @@ public extension Request {
 
         var urlRequest = URLRequest(url: url)
 
-        if let queryParameters = queryParameters, !queryParameters.isEmpty {
-            components.percentEncodedQuery = URLEncodedSerialization.string(from: queryParameters)
+        if let queryString = queryParameters?.encode(), !queryString.isEmpty {
+            components.percentEncodedQuery = queryString
         }
 
         if let bodyParameters = bodyParameters {
