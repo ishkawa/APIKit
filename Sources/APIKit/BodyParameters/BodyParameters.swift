@@ -15,6 +15,6 @@ public protocol BodyParameters {
     var contentType: String { get }
 
     /// Builds `RequestBodyEntity`.
-    /// Throws: `ErrorType`
+    /// Throws: `Error`
     func buildEntity() throws -> RequestBodyEntity
 }
