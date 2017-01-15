@@ -45,19 +45,19 @@ public protocol Request {
 
     /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.send()` turns `.failure(.requestError(error))`.
-    /// - Throws: `ErrorType`
+    /// - Throws: `Error`
     func intercept(urlRequest: URLRequest) throws -> URLRequest
 
     /// Intercepts response `Any` and `HTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.send()` turns `.failure(.responseError(error))`.
     /// The default implementation of this method is provided to throw `RequestError.unacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
-    /// - Throws: `ErrorType`
+    /// - Throws: `Error`
     func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any
 
     /// Build `Response` instance from raw response object. This method is called after
     /// `intercept(object:urlResponse:)` if it does not throw any error.
-    /// - Throws: `ErrorType`
+    /// - Throws: `Error`
     func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response
 }
 
@@ -102,7 +102,7 @@ public extension Request {
     }
 
     /// Builds `URLRequest` from properties of `self`.
-    /// - Throws: `RequestError`, `ErrorType`
+    /// - Throws: `RequestError`, `Error`
     public func buildURLRequest() throws -> URLRequest {
         let url = path.isEmpty ? baseURL : baseURL.appendingPathComponent(path)
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
@@ -139,7 +139,7 @@ public extension Request {
     }
 
     /// Builds `Response` from response `Data`.
-    /// - Throws: `ResponseError`, `ErrorType`
+    /// - Throws: `ResponseError`, `Error`
     public func parse(data: Data, urlResponse: HTTPURLResponse) throws -> Response {
         let parsedObject = try dataParser.parse(data: data)
         let passedObject = try intercept(object: parsedObject, urlResponse: urlResponse)
