@@ -10,6 +10,7 @@ import Foundation
 public protocol Request {
     /// The response type associated with the request type.
     associatedtype Response
+    associatedtype Parser: DataParser
 
     /// The base URL.
     var baseURL: URL { get }
@@ -40,7 +41,7 @@ public protocol Request {
     var headerFields: [String: String] { get }
 
     /// The parser object that states `Content-Type` to accept and parses response body.
-    var dataParser: DataParser { get }
+    var dataParser: Parser { get }
 
     /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.send()` turns `.failure(.requestError(error))`.
@@ -52,12 +53,12 @@ public protocol Request {
     /// The default implementation of this method is provided to throw `ResponseError.unacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `Error`
-    func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any
+    func intercept(object: Parser.Parsed, urlResponse: HTTPURLResponse) throws -> Parser.Parsed
 
     /// Build `Response` instance from raw response object. This method is called after
     /// `intercept(object:urlResponse:)` if it does not throw any error.
     /// - Throws: `Error`
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response
+    func response(from object: Parser.Parsed, urlResponse: HTTPURLResponse) throws -> Response
 }
 
 public extension Request {
@@ -85,15 +86,11 @@ public extension Request {
         return [:]
     }
 
-    var dataParser: DataParser {
-        return JSONDataParser(readingOptions: [])
-    }
-
     func intercept(urlRequest: URLRequest) throws -> URLRequest {
         return urlRequest
     }
 
-    func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
+    func intercept(object: Parser.Parsed, urlResponse: HTTPURLResponse) throws -> Parser.Parsed {
         guard 200..<300 ~= urlResponse.statusCode else {
             throw ResponseError.unacceptableStatusCode(urlResponse.statusCode)
         }
@@ -150,4 +147,14 @@ public extension Request where Response == Void {
     func response(from object: Any, urlResponse: HTTPURLResponse) throws {
         return
     }
+}
+
+public protocol JSONRequest: Request {}
+
+public extension JSONRequest {
+
+    var dataParser: JSONDataParser {
+        return JSONDataParser(readingOptions: [])
+    }
+
 }
