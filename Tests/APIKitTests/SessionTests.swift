@@ -175,7 +175,7 @@ class SessionTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-    struct AnotherTestRequest: Request {
+    struct AnotherTestRequest: JSONRequest {
         typealias Response = Void
 
         var baseURL: URL {
