@@ -6,6 +6,6 @@ public protocol DataParser {
     var contentType: String? { get }
 
     /// Return `Any` that expresses structure of response such as JSON and XML.
-    /// - Throws: `ErrorType` when parser encountered invalid format data.
+    /// - Throws: `Error` when parser encountered invalid format data.
     func parse(data: Data) throws -> Any
 }

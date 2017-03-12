@@ -87,7 +87,7 @@ public final class URLEncodedSerialization {
         return data
     }
 
-    /// Returns urlencoded `Data` from the string.
+    /// Returns urlencoded `String` from the dictionary.
     public static func string(from dictionary: [String: Any]) -> String {
         let pairs = dictionary.map { key, value -> String in
             if value is NSNull {
