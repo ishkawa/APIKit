@@ -223,6 +223,23 @@ class SessionTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
+    func testProgress() {
+        let dictionary = ["key": "value"]
+        adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+
+        let expectation = self.expectation(description: "wait for response")
+        let request = TestRequest(method: .post)
+
+        session.send(request, progressHandler: { bytesSent, totalBytesSent, totalBytesExpectedToSend in
+            XCTAssertNotNil(bytesSent)
+            XCTAssertNotNil(totalBytesSent)
+            XCTAssertNotNil(totalBytesExpectedToSend)
+            expectation.fulfill()
+        })
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
     // MARK: Class methods
     func testSharedSession() {
         XCTAssert(Session.shared === Session.shared)
@@ -238,12 +255,13 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            override func send<Request : APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Int64, Int64, Int64) -> Void, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+
                 functionCallFlags[(#function)] = true
                 return super.send(request)
             }
 
-            override func cancelRequests<Request : APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
+            override func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
                 functionCallFlags[(#function)] = true
             }
         }
@@ -252,7 +270,7 @@ class SessionTests: XCTestCase {
         SessionSubclass.send(TestRequest())
         SessionSubclass.cancelRequests(with: TestRequest.self)
 
-        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:handler:)"], true)
+        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:progressHandler:handler:)"], true)
         XCTAssertEqual(testSession.functionCallFlags["cancelRequests(with:passingTest:)"], true)
     }
 }
