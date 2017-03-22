@@ -42,6 +42,7 @@ class TestSessionAdapter: SessionAdapter {
             if task.cancelled {
                 task.handler(nil, nil, Error.cancelled)
             } else {
+                task.progressHandler(1, 1, 1)
                 task.handler(data, urlResponse, error)
             }
         }
@@ -49,8 +50,8 @@ class TestSessionAdapter: SessionAdapter {
         tasks = []
     }
 
-    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
-        let task = TestSessionTask(handler: handler)
+    func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, handler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
+        let task = TestSessionTask(progressHandler: progressHandler, handler: handler)
         tasks.append(task)
 
         return task

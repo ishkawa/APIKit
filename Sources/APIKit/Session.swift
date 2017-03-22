@@ -36,8 +36,8 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return shared.send(request, callbackQueue: callbackQueue, handler: handler)
+    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _, _, _ in }, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return shared.send(request, callbackQueue: callbackQueue, progressHandler: progressHandler, handler: handler)
     }
 
     /// Calls `cancelRequests(with:passingTest:)` of `Session.shared`.
@@ -54,8 +54,8 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        let task = createSessionTask(request, callbackQueue: callbackQueue, handler: handler)
+    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _, _, _ in }, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        let task = createSessionTask(request, callbackQueue: callbackQueue, progressHandler: progressHandler, handler: handler)
         task?.resume()
         return task
     }
@@ -77,7 +77,7 @@ open class Session {
         }
     }
 
-    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Int64, Int64, Int64) -> Void, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
         let urlRequest: URLRequest
         do {
@@ -89,28 +89,33 @@ open class Session {
             return nil
         }
 
-        let task = adapter.createTask(with: urlRequest) { data, urlResponse, error in
-            let result: Result<Request.Response, SessionTaskError>
+        let task = adapter.createTask(with: urlRequest,
+            progressHandler: { bytesSent, totalBytesSent, totalBytesExpectedToSend in
+                progressHandler(bytesSent, totalBytesSent, totalBytesExpectedToSend)
+            },
+            handler: { data, urlResponse, error in
+                let result: Result<Request.Response, SessionTaskError>
 
-            switch (data, urlResponse, error) {
-            case (_, _, let error?):
-                result = .failure(.connectionError(error))
+                switch (data, urlResponse, error) {
+                case (_, _, let error?):
+                    result = .failure(.connectionError(error))
 
-            case (let data?, let urlResponse as HTTPURLResponse, _):
-                do {
-                    result = .success(try request.parse(data: data as Data, urlResponse: urlResponse))
-                } catch {
-                    result = .failure(.responseError(error))
+                case (let data?, let urlResponse as HTTPURLResponse, _):
+                    do {
+                        result = .success(try request.parse(data: data as Data, urlResponse: urlResponse))
+                    } catch {
+                        result = .failure(.responseError(error))
+                    }
+
+                default:
+                    result = .failure(.responseError(ResponseError.nonHTTPURLResponse(urlResponse)))
                 }
 
-            default:
-                result = .failure(.responseError(ResponseError.nonHTTPURLResponse(urlResponse)))
+                callbackQueue.execute {
+                    handler(result)
+                }
             }
-
-            callbackQueue.execute {
-                handler(result)
-            }
-        }
+        )
 
         setRequest(request, forTask: task)
 
