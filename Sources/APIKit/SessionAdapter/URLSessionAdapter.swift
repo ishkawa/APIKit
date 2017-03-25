@@ -26,11 +26,11 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
     }
 
     /// Creates `URLSessionDataTask` instance using `dataTaskWithRequest(_:completionHandler:)`.
-    open func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask {
+    open func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask {
         let task = urlSession.dataTask(with: URLRequest)
 
         setBuffer(NSMutableData(), forTask: task)
-        setHandler(handler, forTask: task)
+        setHandler(completionHandler, forTask: task)
         setProgressHandler(progressHandler, forTask: task)
 
         return task
