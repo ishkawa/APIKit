@@ -255,7 +255,7 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Int64, Int64, Int64) -> Void, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
 
                 functionCallFlags[(#function)] = true
                 return super.send(request)
@@ -270,7 +270,7 @@ class SessionTests: XCTestCase {
         SessionSubclass.send(TestRequest())
         SessionSubclass.cancelRequests(with: TestRequest.self)
 
-        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:progressHandler:handler:)"], true)
+        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:progressHandler:completionHandler:)"], true)
         XCTAssertEqual(testSession.functionCallFlags["cancelRequests(with:passingTest:)"], true)
     }
 }

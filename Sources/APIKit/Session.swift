@@ -37,8 +37,8 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _ in }, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return shared.send(request, callbackQueue: callbackQueue, progressHandler: progressHandler, handler: handler)
+    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return shared.send(request, callbackQueue: callbackQueue, progressHandler: progressHandler, completionHandler: completionHandler)
     }
 
     /// Calls `cancelRequests(with:passingTest:)` of `sharedSession`.
@@ -55,7 +55,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _ in }, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest
@@ -63,7 +63,7 @@ open class Session {
             urlRequest = try request.buildURLRequest()
         } catch {
             callbackQueue.execute {
-                handler(.failure(.requestError(error)))
+                completionHandler(.failure(.requestError(error)))
             }
             return nil
         }
@@ -91,7 +91,7 @@ open class Session {
                 }
 
                 callbackQueue.execute {
-                    handler(result)
+                    completionHandler(result)
                 }
             }
         )

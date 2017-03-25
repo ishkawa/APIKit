@@ -65,7 +65,7 @@ class URLSessionAdapterSubclassTests: XCTestCase {
         let session = Session(adapter: adapter)
 
         session.send(request,
-            handler: { result in
+            completionHandler: { result in
                 if case .failure = result {
                     XCTFail()
                 }
