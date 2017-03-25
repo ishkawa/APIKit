@@ -50,8 +50,8 @@ class TestSessionAdapter: SessionAdapter {
         tasks = []
     }
 
-    func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, handler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
-        let task = TestSessionTask(progressHandler: progressHandler, handler: handler)
+    func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
+        let task = TestSessionTask(progressHandler: progressHandler, handler: completionHandler)
         tasks.append(task)
 
         return task
