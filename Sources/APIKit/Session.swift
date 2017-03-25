@@ -93,7 +93,7 @@ open class Session {
             progressHandler: { bytesSent, totalBytesSent, totalBytesExpectedToSend in
                 progressHandler(bytesSent, totalBytesSent, totalBytesExpectedToSend)
             },
-            handler: { data, urlResponse, error in
+            completionHandler: { data, urlResponse, error in
                 let result: Result<Request.Response, SessionTaskError>
 
                 switch (data, urlResponse, error) {
