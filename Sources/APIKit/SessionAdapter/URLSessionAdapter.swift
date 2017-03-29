@@ -68,7 +68,7 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
     }
 
     private func progressHandler(for task: URLSessionTask) -> ((Int64, Int64, Int64) -> Void)? {
-        return objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? (Int64, Int64, Int64) -> Void
+        return objc_getAssociatedObject(task, &taskAssociatedObjectProgressHandlerKey) as? (Int64, Int64, Int64) -> Void
     }
     // MARK: URLSessionTaskDelegate
     open func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
