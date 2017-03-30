@@ -64,14 +64,9 @@ class URLSessionAdapterSubclassTests: XCTestCase {
         let adapter = SessionAdapter(configuration: configuration)
         let session = Session(adapter: adapter)
 
-        session.send(request,
-            completionHandler: { result in
-                if case .failure = result {
-                    XCTFail()
-                }
-
-                expectation.fulfill()
-            })
+        session.send(request, progressHandler: { _, _, _ in
+            expectation.fulfill()
+        })
 
         waitForExpectations(timeout: 10.0, handler: nil)
         XCTAssertEqual(adapter.functionCallFlags["urlSession(_:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)"], true)
