@@ -33,12 +33,13 @@ open class Session {
 
     /// Calls `send(_:handler:)` of `sharedSession`.
     /// - parameter request: The request to be sent.
+    /// - parameter urlRequestHandler: The closure that is called when URLRequest built.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return shared.send(request, callbackQueue: callbackQueue, handler: handler)
+    open class func send<Request: APIKit.Request>(_ request: Request, urlRequestHandler: ((URLRequest) -> Void)? = nil, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return shared.send(request, urlRequestHandler: urlRequestHandler, callbackQueue: callbackQueue, handler: handler)
     }
 
     /// Calls `cancelRequests(with:passingTest:)` of `sharedSession`.
@@ -51,16 +52,18 @@ open class Session {
     /// expressed as `Result<Request.Response, SessionTaskError>`. Since the response type
     /// `Request.Response` is inferred from `Request` type parameter, the it changes depending on the request type.
     /// - parameter request: The request to be sent.
+    /// - parameter urlRequestHandler: The closure that is called when URLRequest built.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open func send<Request: APIKit.Request>(_ request: Request, urlRequestHandler: ((URLRequest) -> Void)? = nil, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
 
         let urlRequest: URLRequest
         do {
             urlRequest = try request.buildURLRequest()
+            urlRequestHandler?(urlRequest)
         } catch {
             callbackQueue.execute {
                 handler(.failure(.requestError(error)))
