@@ -93,6 +93,14 @@ public final class URLEncodedSerialization {
             if value is NSNull {
                 return "\(escape(key))"
             }
+            
+            if let valueAsArray = value as? Array<Any> {
+                let escapedKeyForArray = escape(key + "[]")
+                return valueAsArray.map { (element: Any) -> String in
+                    let elementAsString = (element as? String) ?? "\(element)"
+                    return "\(escapedKeyForArray)=\(escape(elementAsString))"
+                    }.joined(separator: "&")
+            }
 
             let valueAsString = (value as? String) ?? "\(value)"
             return "\(escape(key))=\(escape(valueAsString))"
