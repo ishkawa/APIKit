@@ -6,7 +6,7 @@ APIKit
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Version](https://img.shields.io/cocoapods/v/APIKit.svg?style=flat)](http://cocoadocs.org/docsets/APIKit)
 [![Platform](https://img.shields.io/cocoapods/p/APIKit.svg?style=flat)](http://cocoadocs.org/docsets/APIKit)
-
+[![Swift Package Manager](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 APIKit is a type-safe networking abstraction layer that associates request type with response type.
 
