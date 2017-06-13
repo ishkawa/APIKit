@@ -18,7 +18,7 @@ import Foundation
 public struct MultipartFormDataBodyParameters: BodyParameters {
     /// `EntityType` represents wheather the entity is expressed as `Data` or `InputStream`.
     public enum EntityType {
-        /// Expresses the entity as `Data`, which has faster upload speed and lager memory usage.
+        /// Expresses the entity as `Data`, which has faster upload speed and larger memory usage.
         case data
 
         /// Expresses the entity as `InputStream`, which has smaller memory usage and slower upload speed.
@@ -86,7 +86,7 @@ public extension MultipartFormDataBodyParameters {
             self.count = data.count
         }
 
-        /// Returns Part instance that has input stream of specifed data.
+        /// Returns Part instance that has input stream of specified data.
         /// If `mimeType` or `fileName` are `nil`, the fields will be omitted.
         public init(data: Data, name: String, mimeType: String? = nil, fileName: String? = nil) {
             self.inputStream = InputStream(data: data)
@@ -96,7 +96,7 @@ public extension MultipartFormDataBodyParameters {
             self.count = data.count
         }
 
-        /// Returns Part instance that has input stream of specifed file URL.
+        /// Returns Part instance that has input stream of specified file URL.
         /// If `mimeType` or `fileName` are `nil`, values for the fields will be detected from URL.
         public init(fileURL: URL, name: String, mimeType: String? = nil, fileName: String? = nil) throws {
             guard let inputStream = InputStream(url: fileURL) else {
