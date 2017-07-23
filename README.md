@@ -6,7 +6,7 @@ APIKit
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Version](https://img.shields.io/cocoapods/v/APIKit.svg?style=flat)](http://cocoadocs.org/docsets/APIKit)
 [![Platform](https://img.shields.io/cocoapods/p/APIKit.svg?style=flat)](http://cocoadocs.org/docsets/APIKit)
-
+[![Swift Package Manager](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 APIKit is a type-safe networking abstraction layer that associates request type with response type.
 
@@ -30,7 +30,7 @@ Session.send(request) { result in
 
 ## Requirements
 
-- Swift 3.0
+- Swift 3.0 or later
 - iOS 8.0 or later
 - Mac OS 10.10 or later
 - watchOS 2.0 or later
@@ -42,13 +42,13 @@ If you use Swift 2.2 or 2.3, try [APIKit 2.0.5](https://github.com/ishkawa/APIKi
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit" ~> 3.0` to your Cartfile.
+- Insert `github "ishkawa/APIKit" ~> 3.1` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Build`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `pod 'APIKit', '~> 3.0'` to your Podfile.
+- Insert `pod 'APIKit', '~> 3.1'` to your Podfile.
 - Run `pod install`.
 
 Note: CocoaPods 1.1.0 is required to install APIKit 3.
