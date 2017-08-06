@@ -10,7 +10,7 @@ private var taskAssociatedObjectCompletionHandlerKey = 0
 /// `URLSessionAdapter` connects `URLSession` with `Session`.
 ///
 /// If you want to add custom behavior of `URLSession` by implementing delegate methods defined in
-/// `URLSessionDelegate` and related protocols, define a subclass of `URLSessionAdapter` and implment
+/// `URLSessionDelegate` and related protocols, define a subclass of `URLSessionAdapter` and implement
 /// delegate methods that you want to implement. Since `URLSessionAdapter` also implements delegate methods
 /// `URLSession(_:task: didCompleteWithError:)` and `URLSession(_:dataTask:didReceiveData:)`, you have to call
 /// `super` in these methods if you implement them.

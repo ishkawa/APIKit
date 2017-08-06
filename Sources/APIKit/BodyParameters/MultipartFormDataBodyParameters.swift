@@ -16,7 +16,7 @@ import Foundation
 
 /// `FormURLEncodedBodyParameters` serializes array of `Part` for HTTP body and states its content type is multipart/form-data.
 public struct MultipartFormDataBodyParameters: BodyParameters {
-    /// `EntityType` represents wheather the entity is expressed as `Data` or `InputStream`.
+    /// `EntityType` represents whether the entity is expressed as `Data` or `InputStream`.
     public enum EntityType {
         /// Expresses the entity as `Data`, which has faster upload speed and larger memory usage.
         case data
