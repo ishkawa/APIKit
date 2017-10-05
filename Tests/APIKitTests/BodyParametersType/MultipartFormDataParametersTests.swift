@@ -2,6 +2,14 @@ import Foundation
 import XCTest
 @testable import APIKit
 
+#if !swift(>=4.0)
+    extension NSTextCheckingResult {
+        fileprivate func range(at idx: Int) -> NSRange {
+            return rangeAt(idx)
+        }
+    }
+#endif
+
 class MultipartFormDataParametersTests: XCTestCase {
     // MARK: Entity
     func testDataEntitySuccess() {
@@ -28,7 +36,7 @@ class MultipartFormDataParametersTests: XCTestCase {
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
-            let boundary = (parameters.contentType as NSString).substring(with: match.first!.rangeAt(1))
+            let boundary = (parameters.contentType as NSString).substring(with: match.first!.range(at: 1))
             XCTAssertEqual(parameters.contentType, "multipart/form-data; boundary=\(boundary)")
             XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
         } catch {
@@ -61,7 +69,7 @@ class MultipartFormDataParametersTests: XCTestCase {
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
-            let boundary = (parameters.contentType as NSString).substring(with: match.first!.rangeAt(1))
+            let boundary = (parameters.contentType as NSString).substring(with: match.first!.range(at: 1))
             XCTAssertEqual(parameters.contentType, "multipart/form-data; boundary=\(boundary)")
             XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
         } catch {
@@ -96,7 +104,7 @@ class MultipartFormDataParametersTests: XCTestCase {
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
-            let boundary = (parameters.contentType as NSString).substring(with: match.first!.rangeAt(1))
+            let boundary = (parameters.contentType as NSString).substring(with: match.first!.range(at: 1))
             XCTAssertEqual(parameters.contentType, "multipart/form-data; boundary=\(boundary)")
             XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"test\"; filename=\"test.json\"\r\nContent-Type: application/json\(returnCode)\(returnCode)\(testString)\(returnCode)--\(boundary)--\(returnCode)")
         } catch {
