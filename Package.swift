@@ -1,9 +1,24 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
     name: "APIKit",
-    dependencies: [
-        .Package(url: "https://github.com/antitypical/Result.git", majorVersion: 3),
+    products: [
+        .library(name: "APIKit", targets: ["APIKit"]),
     ],
-    exclude: ["Sources/APIKit/BodyParameters/AbstractInputStream.m"]
+    dependencies: [
+        .package(url: "https://github.com/antitypical/Result.git", from: "3.0.0"),
+    ],
+    targets: [
+        .target(
+            name: "APIKit", 
+            dependencies: ["Result"],
+            exclude: ["BodyParameters/AbstractInputStream.m"]
+        ),
+         .testTarget(
+            name: "APIKitTests",
+            dependencies: ["APIKit"]
+        ),
+    ],
+    swiftLanguageVersions: [4]
 )
