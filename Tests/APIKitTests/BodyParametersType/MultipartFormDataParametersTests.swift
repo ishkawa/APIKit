@@ -2,14 +2,6 @@ import Foundation
 import XCTest
 @testable import APIKit
 
-#if !swift(>=4.0)
-    extension NSTextCheckingResult {
-        fileprivate func range(at idx: Int) -> NSRange {
-            return rangeAt(idx)
-        }
-    }
-#endif
-
 class MultipartFormDataParametersTests: XCTestCase {
     // MARK: Entity
     func testDataEntitySuccess() {
@@ -32,7 +24,7 @@ class MultipartFormDataParametersTests: XCTestCase {
 
             let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
             let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let range = NSRange(location: 0, length: parameters.contentType.characters.count)
+            let range = NSRange(location: 0, length: parameters.contentType.count)
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
@@ -65,7 +57,7 @@ class MultipartFormDataParametersTests: XCTestCase {
 
             let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
             let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let range = NSRange(location: 0, length: parameters.contentType.characters.count)
+            let range = NSRange(location: 0, length: parameters.contentType.count)
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
@@ -100,7 +92,7 @@ class MultipartFormDataParametersTests: XCTestCase {
 
             let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
             let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let range = NSRange(location: 0, length: parameters.contentType.characters.count)
+            let range = NSRange(location: 0, length: parameters.contentType.count)
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
