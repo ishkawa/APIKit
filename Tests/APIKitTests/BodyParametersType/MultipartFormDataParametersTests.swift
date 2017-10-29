@@ -24,11 +24,11 @@ class MultipartFormDataParametersTests: XCTestCase {
 
             let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
             let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let range = NSRange(location: 0, length: parameters.contentType.characters.count)
+            let range = NSRange(location: 0, length: parameters.contentType.count)
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
-            let boundary = (parameters.contentType as NSString).substring(with: match.first!.rangeAt(1))
+            let boundary = (parameters.contentType as NSString).substring(with: match.first!.range(at: 1))
             XCTAssertEqual(parameters.contentType, "multipart/form-data; boundary=\(boundary)")
             XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
         } catch {
@@ -57,11 +57,11 @@ class MultipartFormDataParametersTests: XCTestCase {
 
             let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
             let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let range = NSRange(location: 0, length: parameters.contentType.characters.count)
+            let range = NSRange(location: 0, length: parameters.contentType.count)
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
-            let boundary = (parameters.contentType as NSString).substring(with: match.first!.rangeAt(1))
+            let boundary = (parameters.contentType as NSString).substring(with: match.first!.range(at: 1))
             XCTAssertEqual(parameters.contentType, "multipart/form-data; boundary=\(boundary)")
             XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"foo\"\(returnCode)\(returnCode)1\(returnCode)--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"bar\"\(returnCode)\(returnCode)2\(returnCode)--\(boundary)--\(returnCode)")
         } catch {
@@ -92,11 +92,11 @@ class MultipartFormDataParametersTests: XCTestCase {
 
             let pattern = "^multipart/form-data; boundary=([\\w.]+)$"
             let regexp = try NSRegularExpression(pattern: pattern, options: [])
-            let range = NSRange(location: 0, length: parameters.contentType.characters.count)
+            let range = NSRange(location: 0, length: parameters.contentType.count)
             let match = regexp.matches(in: parameters.contentType, options: [], range: range)
             XCTAssertTrue(match.count > 0)
 
-            let boundary = (parameters.contentType as NSString).substring(with: match.first!.rangeAt(1))
+            let boundary = (parameters.contentType as NSString).substring(with: match.first!.range(at: 1))
             XCTAssertEqual(parameters.contentType, "multipart/form-data; boundary=\(boundary)")
             XCTAssertEqual(encodedData, "--\(boundary)\(returnCode)Content-Disposition: form-data; name=\"test\"; filename=\"test.json\"\r\nContent-Type: application/json\(returnCode)\(returnCode)\(testString)\(returnCode)--\(boundary)--\(returnCode)")
         } catch {
