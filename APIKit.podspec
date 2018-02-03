@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
       :tag => "#{s.version}",
   }
 
-  s.pod_target_xcconfigs = { "SWIFT_VERSION" => "4.0" }
+  s.pod_target_xcconfig = { "SWIFT_VERSION" => "4.0" }
 
   s.license = {
     :type => "MIT",
