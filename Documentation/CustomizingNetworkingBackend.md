@@ -3,7 +3,7 @@
 APIKit uses `URLSession` as networking backend by default. Since `Session` has abstraction layer of backend called `SessionAdapter`, you can change the backend of `Session` like below:
 
 - Third party HTTP client like [Alamofire](https://github.com/Alamofire/Alamofire)
-- Mock backend like [`TestSessionAdapter`](../Tests/APIKit/TestComponents/TestSessionAdapter.swift)
+- Mock backend like [`TestSessionAdapter`](../Tests/APIKitTests/TestComponents/TestSessionAdapter.swift)
 - `URLSession` with custom configuration and delegate
 
 Demo implementation of Alamofire adapter is available [here](https://github.com/ishkawa/APIKit-AlamofireAdapter).
