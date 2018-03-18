@@ -50,7 +50,7 @@ public protocol Request {
 
     /// Intercepts response `Any` and `HTTPURLResponse`. If an error is thrown in this method,
     /// the result of `Session.send()` turns `.failure(.responseError(error))`.
-    /// The default implementation of this method is provided to throw `RequestError.unacceptableStatusCode`
+    /// The default implementation of this method is provided to throw `ResponseError.unacceptableStatusCode`
     /// if the HTTP status code is not in `200..<300`.
     /// - Throws: `Error`
     func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any
