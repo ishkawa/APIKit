@@ -29,7 +29,11 @@ extension Data {
             }
         } while readSize > 0
 
+        #if swift(>=4.1)
+        buffer.deallocate()
+        #else
         buffer.deallocate(capacity: bufferSize)
+        #endif
 
         self.init(data)
     }
