@@ -29,7 +29,7 @@ extension Data {
             }
         } while readSize > 0
 
-        buffer.deallocate(capacity: bufferSize)
+        buffer.deallocate()
 
         self.init(data)
     }
