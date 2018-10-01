@@ -317,12 +317,18 @@ public extension MultipartFormDataBodyParameters {
             set { }
         }
 
-        override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoopMode) {
+        override func schedule(in aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
 
         }
 
-        override func remove(from aRunLoop: RunLoop, forMode mode: RunLoopMode) {
+        override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
 
         }
     }
 }
+
+#if !swift(>=4.2)
+extension RunLoop {
+    internal typealias Mode = RunLoopMode
+}
+#endif
