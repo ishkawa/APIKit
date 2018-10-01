@@ -16,7 +16,17 @@ matrix:
         - bash <(curl -s https://codecov.io/bash)
     - os: osx
       language: objective-c
-      osx_image: xcode9.3
+      osx_image: xcode9.4
+      script:
+        - set -o pipefail
+        - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release ENABLE_TESTABILITY=YES | xcpretty -c
+        - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk iphonesimulator -destination "name=iPhone 6s" ENABLE_TESTABILITY=YES | xcpretty -c
+        - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk appletvsimulator -destination "name=Apple TV" ENABLE_TESTABILITY=YES | xcpretty -c
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+    - os: osx
+      language: objective-c
+      osx_image: xcode10
       script:
         - set -o pipefail
         - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release ENABLE_TESTABILITY=YES | xcpretty -c
@@ -32,7 +42,13 @@ matrix:
         - swift test
     - os: osx
       language: generic
-      osx_image: xcode9.3
+      osx_image: xcode9.4
+      script:
+        - swift build
+        - swift test
+    - os: osx
+      language: generic
+      osx_image: xcode10
       script:
         - swift build
         - swift test
