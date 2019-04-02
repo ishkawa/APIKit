@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "4.0.0"
+  s.version  = "5.0.0"
   s.summary  = "Type-safe networking abstraction layer that associates request type with response type."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   }
 
   s.ios.deployment_target = "8.0"
-  s.osx.deployment_target = "10.10"
+  s.osx.deployment_target = "10.11"
   if s.respond_to?(:watchos)
     s.watchos.deployment_target = "2.0"
   end
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
       :tag => "#{s.version}",
   }
 
-  s.swift_version = "4.0"
+  s.swift_version = "5.0"
 
   s.license = {
     :type => "MIT",
@@ -34,6 +34,4 @@ Pod::Spec.new do |s|
       THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     LICENSE
   }
-
-  s.dependency "Result", "~> 4.0"
 end
