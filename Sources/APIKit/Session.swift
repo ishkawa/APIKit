@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 private var taskRequestKey = 0
 

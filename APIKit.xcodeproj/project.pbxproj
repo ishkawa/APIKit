@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		141F12201C1C9ABE0026D415 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		141F12311C1C9AC70026D415 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; };
-		141F12361C1C9AC70026D415 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CD5115241B1FFBA900514240 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F698E501D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3C1D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift */; };
 		7F698E511D9D680C00F1561D /* JSONBodyParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3D1D9D680C00F1561D /* JSONBodyParametersTests.swift */; };
 		7F698E521D9D680C00F1561D /* MultipartFormDataParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3E1D9D680C00F1561D /* MultipartFormDataParametersTests.swift */; };
@@ -56,7 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7F4A73AC1CA839AE002554B1 /* PBXContainerItemProxy */ = {
+		BDFB151A2253060A00D8C94B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7F45FCD41A94D02C006863BB /* Project object */;
 			proxyType = 1;
@@ -72,7 +69,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				141F12361C1C9AC70026D415 /* Result.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -129,7 +125,6 @@
 		7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncodedSerialization.swift; path = Sources/APIKit/Serializations/URLEncodedSerialization.swift; sourceTree = SOURCE_ROOT; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		7FA1690C1D9D8C80006C982B /* HTTPStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStub.swift; sourceTree = "<group>"; };
-		CD5115241B1FFBA900514240 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtobufDataParser.swift; path = Sources/APIKit/DataParser/ProtobufDataParser.swift; sourceTree = SOURCE_ROOT; };
 		ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufDataParserTests.swift; sourceTree = "<group>"; };
 		ECA8314B1DE4E677004EB1B5 /* ProtobufBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtobufBodyParameters.swift; path = Sources/APIKit/BodyParameters/ProtobufBodyParameters.swift; sourceTree = SOURCE_ROOT; };
@@ -141,7 +136,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				141F12201C1C9ABE0026D415 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,7 +143,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				141F12311C1C9AC70026D415 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,7 +301,6 @@
 			children = (
 				7F7048C61D9D89BE003C99F6 /* APIKit.h */,
 				7F7048C91D9D89BE003C99F6 /* Info.plist */,
-				CD5115241B1FFBA900514240 /* Result.framework */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -388,7 +380,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				7F4A73AD1CA839AE002554B1 /* PBXTargetDependency */,
+				BDFB151B2253060A00D8C94B /* PBXTargetDependency */,
 			);
 			name = Tests;
 			productName = APIKitTests;
@@ -402,7 +394,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Yosuke Ishikawa";
 				TargetAttributes = {
 					141F12161C1C9ABE0026D415 = {
@@ -415,7 +407,7 @@
 			};
 			buildConfigurationList = 7F45FCD71A94D02C006863BB /* Build configuration list for PBXProject "APIKit" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -509,10 +501,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7F4A73AD1CA839AE002554B1 /* PBXTargetDependency */ = {
+		BDFB151B2253060A00D8C94B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 141F12161C1C9ABE0026D415 /* APIKit */;
-			targetProxy = 7F4A73AC1CA839AE002554B1 /* PBXContainerItemProxy */;
+			targetProxy = BDFB151A2253060A00D8C94B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -524,8 +516,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -536,8 +530,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -546,6 +542,7 @@
 			baseConfigurationReference = 141F12401C1C9EA30026D415 /* Tests.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Tests/APIKitTests/Info.plist;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -555,6 +552,7 @@
 			buildSettings = {
 				INFOPLIST_FILE = Tests/APIKitTests/Info.plist;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -562,6 +560,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12101C1C96820026D415 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -583,6 +582,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 141F12111C1C96820026D415 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;

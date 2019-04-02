@@ -30,28 +30,30 @@ Session.send(request) { result in
 
 ## Requirements
 
-- Swift 3.0 or later
+- Swift 5.0 or later
 - iOS 8.0 or later
-- Mac OS 10.10 or later
+- Mac OS 10.11 or later
 - watchOS 2.0 or later
 - tvOS 9.0 or later
 
 If you use Swift 2.2 or 2.3, try [APIKit 2.0.5](https://github.com/ishkawa/APIKit/tree/2.0.5).
 
+If you use Swift 4.2 or before, try [APIKit 4.1.0](https://github.com/ishkawa/APIKit/tree/release/4.1.0).
+
 ## Installation
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-- Insert `github "ishkawa/APIKit" ~> 3.1` to your Cartfile.
+- Insert `github "ishkawa/APIKit" ~> 5.0` to your Cartfile.
 - Run `carthage update`.
 - Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Build`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
-- Insert `pod 'APIKit', '~> 3.1'` to your Podfile.
+- Insert `pod 'APIKit', '~> 5.0'` to your Podfile.
 - Run `pod install`.
 
-Note: CocoaPods 1.1.0 is required to install APIKit 3.
+Note: CocoaPods 1.1.0 is required to install APIKit 5.
 
 ## Documentation
 

@@ -1,6 +1,5 @@
 import Foundation
 import Dispatch
-import Result
 
 class HTTPStub: URLProtocol {
     static var stubResult: Result<Data, NSError> = .success(Data())

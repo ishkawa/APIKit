@@ -1,7 +1,6 @@
 import Foundation
 import APIKit
 import XCTest
-import Result
 
 class SessionTests: XCTestCase {
     var adapter: TestSessionAdapter!

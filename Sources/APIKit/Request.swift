@@ -1,5 +1,4 @@
 import Foundation
-import Result
 
 /// `Request` protocol represents a request for Web API.
 /// Following 5 items must be implemented.
@@ -62,11 +61,11 @@ public protocol Request {
 }
 
 public extension Request {
-    public var parameters: Any? {
+    var parameters: Any? {
         return nil
     }
 
-    public var queryParameters: [String: Any]? {
+    var queryParameters: [String: Any]? {
         guard let parameters = parameters as? [String: Any], method.prefersQueryParameters else {
             return nil
         }
@@ -74,7 +73,7 @@ public extension Request {
         return parameters
     }
 
-    public var bodyParameters: BodyParameters? {
+    var bodyParameters: BodyParameters? {
         guard let parameters = parameters, !method.prefersQueryParameters else {
             return nil
         }
@@ -82,19 +81,19 @@ public extension Request {
         return JSONBodyParameters(JSONObject: parameters)
     }
 
-    public var headerFields: [String: String] {
+    var headerFields: [String: String] {
         return [:]
     }
 
-    public var dataParser: DataParser {
+    var dataParser: DataParser {
         return JSONDataParser(readingOptions: [])
     }
 
-    public func intercept(urlRequest: URLRequest) throws -> URLRequest {
+    func intercept(urlRequest: URLRequest) throws -> URLRequest {
         return urlRequest
     }
 
-    public func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
+    func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
         guard 200..<300 ~= urlResponse.statusCode else {
             throw ResponseError.unacceptableStatusCode(urlResponse.statusCode)
         }
@@ -103,7 +102,7 @@ public extension Request {
 
     /// Builds `URLRequest` from properties of `self`.
     /// - Throws: `RequestError`, `Error`
-    public func buildURLRequest() throws -> URLRequest {
+    func buildURLRequest() throws -> URLRequest {
         let url = path.isEmpty ? baseURL : baseURL.appendingPathComponent(path)
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             throw RequestError.invalidBaseURL(baseURL)
@@ -140,7 +139,7 @@ public extension Request {
 
     /// Builds `Response` from response `Data`.
     /// - Throws: `ResponseError`, `Error`
-    public func parse(data: Data, urlResponse: HTTPURLResponse) throws -> Response {
+    func parse(data: Data, urlResponse: HTTPURLResponse) throws -> Response {
         let parsedObject = try dataParser.parse(data: data)
         let passedObject = try intercept(object: parsedObject, urlResponse: urlResponse)
         return try response(from: passedObject, urlResponse: urlResponse)

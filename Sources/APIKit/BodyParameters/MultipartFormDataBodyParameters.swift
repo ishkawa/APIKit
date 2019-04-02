@@ -58,7 +58,7 @@ public struct MultipartFormDataBodyParameters: BodyParameters {
 
 public extension MultipartFormDataBodyParameters {
     /// Part represents single part of multipart/form-data.
-    public struct Part {
+    struct Part {
         public enum Error: Swift.Error {
             case illegalValue(Any)
             case illegalFileURL(URL)
