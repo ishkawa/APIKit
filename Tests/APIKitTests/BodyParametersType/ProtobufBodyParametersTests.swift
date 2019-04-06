@@ -4,6 +4,8 @@ import APIKit
 
 class ProtobufBodyParametersTests: XCTestCase {
     func testProtobufSuccess() {
+        // Temporarily gated due to https://openradar.appspot.com/49262697
+        if #available(macOS 10.11, *) {
         let object = NSKeyedArchiver.archivedData(withRootObject: ["foo": 1, "bar": 2, "baz": 3])
         let parameters = ProtobufBodyParameters(protobufObject: object)
         XCTAssertEqual(parameters.contentType, "application/protobuf")
@@ -20,6 +22,7 @@ class ProtobufBodyParametersTests: XCTestCase {
             XCTAssertEqual(dictionary?["baz"], 3)
         } catch {
             XCTFail()
+        }
         }
     }
 }
