@@ -9,6 +9,8 @@ class ProtobufDataParserTests: XCTestCase {
     }
     
     func testProtobufSuccess() {
+        // Temporarily gated due to https://openradar.appspot.com/49262697
+        if #available(macOS 10.11, *) {
         let data = NSKeyedArchiver.archivedData(withRootObject: ["foo": 1, "bar": 2, "baz": 3])
         let parser = ProtobufDataParser()
         
@@ -20,6 +22,7 @@ class ProtobufDataParserTests: XCTestCase {
             XCTAssertEqual(dictionary?["baz"], 3)
         } catch {
             XCTFail()
+        }
         }
     }
 }
