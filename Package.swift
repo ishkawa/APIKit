@@ -6,13 +6,9 @@ let package = Package(
     products: [
         .library(name: "APIKit", targets: ["APIKit"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/antitypical/Result.git", from: "5.0.0"),
-    ],
     targets: [
         .target(
-            name: "APIKit", 
-            dependencies: ["Result"],
+            name: "APIKit",
             exclude: ["BodyParameters/AbstractInputStream.m"]
         ),
          .testTarget(

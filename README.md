@@ -53,7 +53,7 @@ If you use Swift 4.2 or before, try [APIKit 4.1.0](https://github.com/ishkawa/AP
 - Insert `pod 'APIKit', '~> 5.0'` to your Podfile.
 - Run `pod install`.
 
-Note: CocoaPods 1.1.0 is required to install APIKit 5.
+Note: CocoaPods 1.4.0 is required to install APIKit 5.
 
 ## Documentation
 
