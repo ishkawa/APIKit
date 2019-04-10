@@ -16,5 +16,5 @@ let package = Package(
             dependencies: ["APIKit"]
         ),
     ],
-    swiftLanguageVersions: [5]
+    swiftLanguageVersions: [.v5]
 )
