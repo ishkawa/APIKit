@@ -38,7 +38,7 @@ Session.send(request) { result in
 
 If you use Swift 2.2 or 2.3, try [APIKit 2.0.5](https://github.com/ishkawa/APIKit/tree/2.0.5).
 
-If you use Swift 4.2 or before, try [APIKit 4.1.0](https://github.com/ishkawa/APIKit/tree/release/4.1.0).
+If you use Swift 4.2 or before, try [APIKit 4.1.0](https://github.com/ishkawa/APIKit/tree/4.1.0).
 
 ## Installation
 
