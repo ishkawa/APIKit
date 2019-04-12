@@ -519,7 +519,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -533,7 +532,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -542,7 +540,6 @@
 			baseConfigurationReference = 141F12401C1C9EA30026D415 /* Tests.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = Tests/APIKitTests/Info.plist;
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -552,7 +549,6 @@
 			buildSettings = {
 				INFOPLIST_FILE = Tests/APIKitTests/Info.plist;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
