@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(
@@ -6,9 +6,11 @@ let package = Package(
     products: [
         .library(name: "APIKit", targets: ["APIKit"]),
     ],
+    dependencies: [],
     targets: [
         .target(
-            name: "APIKit",
+            name: "APIKit", 
+            dependencies: [],
             exclude: ["BodyParameters/AbstractInputStream.m"]
         ),
          .testTarget(
