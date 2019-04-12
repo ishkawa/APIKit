@@ -4,7 +4,4 @@
    <FileRef
       location = "container:APIKit.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/Result/Result.xcodeproj">
-   </FileRef>
 </Workspace>

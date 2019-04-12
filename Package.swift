@@ -1,18 +1,19 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(
     name: "APIKit",
+    platforms: [
+        .macOS(.v10_10), .iOS(.v8), .tvOS(.v9), .watchOS(.v2)
+    ],
     products: [
         .library(name: "APIKit", targets: ["APIKit"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/antitypical/Result.git", from: "4.0.0"),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "APIKit", 
-            dependencies: ["Result"],
+            dependencies: [],
             exclude: ["BodyParameters/AbstractInputStream.m"]
         ),
          .testTarget(
@@ -20,5 +21,5 @@ let package = Package(
             dependencies: ["APIKit"]
         ),
     ],
-    swiftLanguageVersions: [4]
+    swiftLanguageVersions: [.v5]
 )

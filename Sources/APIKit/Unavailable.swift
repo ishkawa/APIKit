@@ -6,8 +6,6 @@
 //  Copyright © 2016 Yosuke Ishikawa. All rights reserved.
 //
 
-import Result
-
 // MARK: - Protocols
 
 @available(*, unavailable, renamed: "Request")
