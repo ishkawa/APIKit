@@ -13,7 +13,7 @@ matrix:
     - &xcode
       os: osx
       language: objective-c
-      osx_image: xcode9.2
+      osx_image: xcode10.2
       script:
         - set -o pipefail
         - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release ENABLE_TESTABILITY=YES | xcpretty -c
@@ -21,25 +21,13 @@ matrix:
         - xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk appletvsimulator -destination "name=Apple TV" ENABLE_TESTABILITY=YES | xcpretty -c
       after_success:
         - bash <(curl -s https://codecov.io/bash)
-    - <<: *xcode
-      osx_image: xcode9.4
-    - <<: *xcode
-      osx_image: xcode10.1
-    - <<: *xcode
-      osx_image: xcode10.2
     - &swiftpm
       os: osx
       language: generic
-      osx_image: xcode9.2
+      osx_image: xcode10.2
       script:
         - swift build
         - swift test
-    - <<: *swiftpm
-      osx_image: xcode9.4
-    - <<: *swiftpm
-      osx_image: xcode10.1
-    - <<: *swiftpm
-      osx_image: xcode10.2
 
 notifications:
   email: false
