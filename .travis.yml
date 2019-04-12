@@ -5,12 +5,14 @@ env:
 matrix:
   include:
     - &podspec
+      name: CocoaPods Lint
       os: osx
       language: objective-c
       osx_image: xcode10.2
       script:
         - pod lib lint --allow-warnings
     - &xcode
+      name: Xcode 10.2 / Swift 5.0
       os: osx
       language: objective-c
       osx_image: xcode10.2
@@ -22,6 +24,7 @@ matrix:
       after_success:
         - bash <(curl -s https://codecov.io/bash)
     - &swiftpm
+      name: SwiftPM / Darwin / Swift 5.0
       os: osx
       language: generic
       osx_image: xcode10.2
