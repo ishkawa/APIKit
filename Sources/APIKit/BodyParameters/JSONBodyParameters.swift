@@ -32,3 +32,12 @@ public struct JSONBodyParameters: BodyParameters {
         return .data(try JSONSerialization.data(withJSONObject: JSONObject, options: writingOptions))
     }
 }
+
+extension JSONBodyParameters: ExpressibleByDictionaryLiteral {
+    public typealias Key = String
+    public typealias Value = Any
+
+    public init(dictionaryLiteral elements: (Key, Value)...) {
+        self.init(JSONObject: Dictionary(uniqueKeysWithValues: elements))
+    }
+}
