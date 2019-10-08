@@ -15,7 +15,7 @@ private var taskAssociatedObjectCompletionHandlerKey = 0
 /// `URLSession(_:task: didCompleteWithError:)` and `URLSession(_:dataTask:didReceiveData:)`, you have to call
 /// `super` in these methods if you implement them.
 open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
-    /// The undelying `URLSession` instance.
+    /// The underlying `URLSession` instance.
     open var urlSession: URLSession!
 
     /// Returns `URLSessionAdapter` initialized with `URLSessionConfiguration`.
