@@ -46,7 +46,7 @@ If you use Swift 4.2 or before, try [APIKit 4.1.0](https://github.com/ishkawa/AP
 
 - Insert `github "ishkawa/APIKit" ~> 5.0` to your Cartfile.
 - Run `carthage update`.
-- Link your app with `APIKit.framework` and `Result.framework` in `Carthage/Build`.
+- Link your app with `APIKit.framework` in `Carthage/Build`.
 
 #### [CocoaPods](https://github.com/cocoapods/cocoapods)
 
