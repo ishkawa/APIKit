@@ -22,3 +22,4 @@ LD_RUNPATH_SEARCH_PATHS[sdk=watch*] = $(inherited) @executable_path/Frameworks @
 LD_RUNPATH_SEARCH_PATHS[sdk=appletv*] = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 
 APPLICATION_EXTENSION_API_ONLY = YES;
+BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
