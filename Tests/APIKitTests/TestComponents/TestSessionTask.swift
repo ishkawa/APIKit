@@ -2,12 +2,14 @@ import Foundation
 import APIKit
 
 class TestSessionTask: SessionTask {
-    
-    var handler: (Data?, URLResponse?, Error?) -> Void
+
+    var completionHandler: (Data?, URLResponse?, Error?) -> Void
+    var progressHandler: (Int64, Int64, Int64) -> Void
     var cancelled = false
 
-    init(handler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-        self.handler = handler
+    init(progressHandler: @escaping  (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        self.completionHandler = completionHandler
+        self.progressHandler = progressHandler
     }
 
     func resume() {
