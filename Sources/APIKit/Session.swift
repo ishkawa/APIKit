@@ -106,7 +106,7 @@ open class Session {
     /// - parameter test: The test closure that determines if a request should be cancelled or not.
     open func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
         adapter.getTasks { [weak self] tasks in
-            return tasks
+            tasks
                 .filter { task in
                     if let request = self?.requestForTask(task) as Request? {
                         return test(request)
