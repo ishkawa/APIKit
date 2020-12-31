@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0969AE0F259DEC6D00C498AF /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0969AE0E259DEC6D00C498AF /* Combine.swift */; };
 		7F698E501D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3C1D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift */; };
 		7F698E511D9D680C00F1561D /* JSONBodyParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3D1D9D680C00F1561D /* JSONBodyParametersTests.swift */; };
 		7F698E521D9D680C00F1561D /* MultipartFormDataParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3E1D9D680C00F1561D /* MultipartFormDataParametersTests.swift */; };
@@ -76,6 +77,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0969AE0E259DEC6D00C498AF /* Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combine.swift; sourceTree = "<group>"; };
 		141F120F1C1C96820026D415 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = Configurations/Base.xcconfig; sourceTree = "<group>"; };
 		141F12101C1C96820026D415 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Configurations/Debug.xcconfig; sourceTree = "<group>"; };
 		141F12111C1C96820026D415 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Configurations/Release.xcconfig; sourceTree = "<group>"; };
@@ -149,6 +151,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0969AE0D259DEC3C00C498AF /* Combine */ = {
+			isa = PBXGroup;
+			children = (
+				0969AE0E259DEC6D00C498AF /* Combine.swift */,
+			);
+			name = Combine;
+			path = APIKit/Combine;
+			sourceTree = "<group>";
+		};
 		141F120E1C1C96690026D415 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +299,7 @@
 				7F7048CA1D9D89BE003C99F6 /* Request.swift */,
 				7F7048CB1D9D89BE003C99F6 /* Session.swift */,
 				7F7048CC1D9D89BE003C99F6 /* Unavailable.swift */,
+				0969AE0D259DEC3C00C498AF /* Combine */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapter */,
 				7F18BD0D1C972C38003A31DF /* BodyParameters */,
 				7FA19A441C9CC9A2005D25AE /* DataParser */,
@@ -473,6 +485,7 @@
 				ECA831481DE4DDBF004EB1B5 /* ProtobufDataParser.swift in Sources */,
 				7F7048F31D9D8A1F003C99F6 /* URLEncodedSerialization.swift in Sources */,
 				7F7048D71D9D89F2003C99F6 /* URLSessionAdapter.swift in Sources */,
+				0969AE0F259DEC6D00C498AF /* Combine.swift in Sources */,
 				7F7048EB1D9D8A08003C99F6 /* StringDataParser.swift in Sources */,
 				7F7048CF1D9D89BE003C99F6 /* HTTPMethod.swift in Sources */,
 			);

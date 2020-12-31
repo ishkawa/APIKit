@@ -30,7 +30,7 @@ open class Session {
         return privateShared
     }
 
-    /// Calls `send(_:handler:)` of `sharedSession`.
+    /// Calls `send(_:callbackQueue:handler:)` of `shared`.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
