@@ -31,16 +31,16 @@ final class CombineTests: XCTestCase {
         let request = TestRequest()
 
         session.publisher(request)
-            .sink { completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     XCTFail()
                 case .finished:
                     expectation.fulfill()
                 }
-            } receiveValue: { response in
+            }, receiveValue: { response in
                 XCTAssertEqual((response as? [String: String])?["key"], "value")
-            }
+            })
             .store(in: &cancellables)
 
         waitForExpectations(timeout: 1.0, handler: nil)
@@ -53,17 +53,17 @@ final class CombineTests: XCTestCase {
         let request = TestRequest()
 
         session.publisher(request)
-            .sink { completion in
+            .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion, case .responseError(let responseError as NSError) = error {
                     XCTAssertEqual(responseError.domain, NSCocoaErrorDomain)
                     XCTAssertEqual(responseError.code, 3840)
+                    expectation.fulfill()
                 } else {
                     XCTFail()
                 }
-                expectation.fulfill()
-            } receiveValue: { response in
+            }, receiveValue: { response in
                 XCTFail()
-            }
+            })
             .store(in: &cancellables)
 
         waitForExpectations(timeout: 1.0, handler: nil)
@@ -74,16 +74,16 @@ final class CombineTests: XCTestCase {
         let request = TestRequest()
 
         let cancellable = session.publisher(request)
-            .sink { completion in
+            .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion, case .connectionError(let connectionError as NSError) = error {
                     XCTAssertEqual(connectionError.code, 0)
+                    expectation.fulfill()
                 } else {
                     XCTFail()
                 }
-                expectation.fulfill()
-            } receiveValue: { response in
+            }, receiveValue: { response in
                 XCTFail()
-            }
+            })
 
         cancellable.cancel()
 
