@@ -18,7 +18,7 @@ public struct RequestPublisher<Request: APIKit.Request>: Publisher {
         self.callbackQueue = callbackQueue
     }
 
-    public func receive<S>(subscriber: S) where S : Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {
+    public func receive<S>(subscriber: S) where S : Subscriber, RequestPublisher.Failure == S.Failure, RequestPublisher.Output == S.Input {
         subscriber.receive(subscription: RequestSubscription(session: session,
                                                              request: request,
                                                              callbackQueue: callbackQueue,
