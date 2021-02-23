@@ -69,22 +69,51 @@ final class CombineTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-    func testCancel() {
-        let expectation = self.expectation(description: "wait for response")
+    func testBefore2020OSVersionsCancel() throws {
+        if #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) {
+            throw XCTSkip("Skip on After 2020 OS versions, as Combine cancellation no longer emits a value.")
+        }
+
+        let cancelExpectation = self.expectation(description: "wait for cancel")
+        let completionExpectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
         let cancellable = session.sessionTaskPublisher(for: request)
+            .handleEvents(receiveCancel: {
+                cancelExpectation.fulfill()
+            })
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion, case .connectionError(let connectionError as NSError) = error {
                     XCTAssertEqual(connectionError.code, 0)
-                    expectation.fulfill()
+                    completionExpectation.fulfill()
                 } else {
                     XCTFail()
                 }
             }, receiveValue: { response in
                 XCTFail()
             })
+        cancellable.cancel()
 
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testAfter2020OSVersionsCancel() throws {
+        guard #available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *) else {
+            throw XCTSkip("Skip on Before 2020 OS versions.")
+        }
+
+        let expectation = self.expectation(description: "wait for cancel")
+        let request = TestRequest()
+
+        let cancellable = session.sessionTaskPublisher(for: request)
+            .handleEvents(receiveCancel: {
+                expectation.fulfill()
+            })
+            .sink(receiveCompletion: { completion in
+                XCTFail()
+            }, receiveValue: { response in
+                XCTFail()
+            })
         cancellable.cancel()
 
         waitForExpectations(timeout: 1.0, handler: nil)
