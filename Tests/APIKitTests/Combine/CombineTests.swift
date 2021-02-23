@@ -30,7 +30,7 @@ final class CombineTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.publisher(request)
+        session.sessionTaskPublisher(for: request)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -52,7 +52,7 @@ final class CombineTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.publisher(request)
+        session.sessionTaskPublisher(for: request)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion, case .responseError(let responseError as NSError) = error {
                     XCTAssertEqual(responseError.domain, NSCocoaErrorDomain)
@@ -73,7 +73,7 @@ final class CombineTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        let cancellable = session.publisher(request)
+        let cancellable = session.sessionTaskPublisher(for: request)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion, case .connectionError(let connectionError as NSError) = error {
                     XCTAssertEqual(connectionError.code, 0)
