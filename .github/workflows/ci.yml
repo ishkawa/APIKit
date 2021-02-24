@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with: 
-          fetch-depth: 0
+          fetch-depth: 2
       - name: test
         run: |
           set -o pipefail
