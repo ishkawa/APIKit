@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "APIKit"
-  s.version  = "5.1.0"
+  s.version  = "5.2.0"
   s.summary  = "Type-safe networking abstraction layer that associates request type with response type."
   s.homepage = "https://github.com/ishkawa/APIKit"
 
