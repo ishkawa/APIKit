@@ -324,6 +324,14 @@ public extension MultipartFormDataBodyParameters {
         override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
 
         }
+
+        override func property(forKey key: Stream.PropertyKey) -> Any? {
+            return nil
+        }
+
+        override func setProperty(_ property: Any?, forKey key: Stream.PropertyKey) -> Bool {
+            return false
+        }
     }
 }
 
