@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0ED17E891E229EC700EC1114 /* QueryParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED17E881E229EC700EC1114 /* QueryParameters.swift */; };
+		0ED17E8B1E22A22900EC1114 /* URLEncodedQueryParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED17E8A1E22A22900EC1114 /* URLEncodedQueryParameters.swift */; };
+		0ED17E8E1E22AC8300EC1114 /* URLEncodedQueryParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED17E8D1E22AC8300EC1114 /* URLEncodedQueryParametersTests.swift */; };
 		0969AE0F259DEC6D00C498AF /* Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0969AE0E259DEC6D00C498AF /* Combine.swift */; };
 		0973EE35259E2DDC00879BA2 /* CombineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0973EE34259E2DDC00879BA2 /* CombineTests.swift */; };
 		7F698E501D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E3C1D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift */; };
@@ -78,6 +81,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0ED17E881E229EC700EC1114 /* QueryParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryParameters.swift; sourceTree = "<group>"; };
+		0ED17E8A1E22A22900EC1114 /* URLEncodedQueryParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedQueryParameters.swift; sourceTree = "<group>"; };
+		0ED17E8D1E22AC8300EC1114 /* URLEncodedQueryParametersTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLEncodedQueryParametersTests.swift; sourceTree = "<group>"; };
 		0969AE0E259DEC6D00C498AF /* Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combine.swift; sourceTree = "<group>"; };
 		0973EE34259E2DDC00879BA2 /* CombineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineTests.swift; sourceTree = "<group>"; };
 		141F120F1C1C96820026D415 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = Configurations/Base.xcconfig; sourceTree = "<group>"; };
@@ -153,6 +159,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0ED17E871E229EAC00EC1114 /* QueryParameters */ = {
+			isa = PBXGroup;
+			children = (
+				0ED17E881E229EC700EC1114 /* QueryParameters.swift */,
+				0ED17E8A1E22A22900EC1114 /* URLEncodedQueryParameters.swift */,
+			);
+			name = QueryParameters;
+			path = APIKit/QueryParameters;
+			sourceTree = "<group>";
+		};
+		0ED17E8C1E22AC5D00EC1114 /* QueryParameters */ = {
+			isa = PBXGroup;
+			children = (
+				0ED17E8D1E22AC8300EC1114 /* URLEncodedQueryParametersTests.swift */,
+			);
+			path = QueryParameters;
+			sourceTree = "<group>";
+		};
 		0969AE0D259DEC3C00C498AF /* Combine */ = {
 			isa = PBXGroup;
 			children = (
@@ -240,6 +264,7 @@
 				7F698E451D9D680C00F1561D /* RequestTests.swift */,
 				7F698E491D9D680C00F1561D /* SessionCallbackQueueTests.swift */,
 				7F698E4A1D9D680C00F1561D /* SessionTests.swift */,
+				0ED17E8C1E22AC5D00EC1114 /* QueryParameters */,
 				0973EE33259E2DD000879BA2 /* Combine */,
 				7F698E3B1D9D680C00F1561D /* BodyParametersType */,
 				7F698E401D9D680C00F1561D /* DataParserType */,
@@ -312,6 +337,7 @@
 				7F7048CC1D9D89BE003C99F6 /* Unavailable.swift */,
 				0969AE0D259DEC3C00C498AF /* Combine */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapter */,
+				0ED17E871E229EAC00EC1114 /* QueryParameters */,
 				7F18BD0D1C972C38003A31DF /* BodyParameters */,
 				7FA19A441C9CC9A2005D25AE /* DataParser */,
 				7F18BD161C9730ED003A31DF /* Serializations */,
@@ -477,12 +503,14 @@
 			files = (
 				7F7048D31D9D89BE003C99F6 /* Unavailable.swift in Sources */,
 				7F7048D11D9D89BE003C99F6 /* Request.swift in Sources */,
+				0ED17E891E229EC700EC1114 /* QueryParameters.swift in Sources */,
 				7F7048E81D9D8A08003C99F6 /* DataParser.swift in Sources */,
 				7F7048CE1D9D89BE003C99F6 /* CallbackQueue.swift in Sources */,
 				7F7048DE1D9D89FB003C99F6 /* AbstractInputStream.m in Sources */,
 				7F7048E31D9D89FB003C99F6 /* MultipartFormDataBodyParameters.swift in Sources */,
 				7F7048F01D9D8A12003C99F6 /* ResponseError.swift in Sources */,
 				7F7048EA1D9D8A08003C99F6 /* JSONDataParser.swift in Sources */,
+				0ED17E8B1E22A22900EC1114 /* URLEncodedQueryParameters.swift in Sources */,
 				7F7048D21D9D89BE003C99F6 /* Session.swift in Sources */,
 				7F7048E01D9D89FB003C99F6 /* Data+InputStream.swift in Sources */,
 				7F7048DF1D9D89FB003C99F6 /* BodyParameters.swift in Sources */,
@@ -512,6 +540,7 @@
 				7F698E501D9D680C00F1561D /* FormURLEncodedBodyParametersTests.swift in Sources */,
 				7F698E581D9D680C00F1561D /* RequestTests.swift in Sources */,
 				ECA8314A1DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift in Sources */,
+				0ED17E8E1E22AC8300EC1114 /* URLEncodedQueryParametersTests.swift in Sources */,
 				7F698E5E1D9D680C00F1561D /* TestRequest.swift in Sources */,
 				7F698E601D9D680C00F1561D /* TestSessionTask.swift in Sources */,
 				0973EE35259E2DDC00879BA2 /* CombineTests.swift in Sources */,

@@ -40,17 +40,18 @@ class TestSessionAdapter: SessionAdapter {
     func executeAllTasks() {
         for task in tasks {
             if task.cancelled {
-                task.handler(nil, nil, Error.cancelled)
+                task.completionHandler(nil, nil, Error.cancelled)
             } else {
-                task.handler(data, urlResponse, error)
+                task.progressHandler(1, 1, 1)
+                task.completionHandler(data, urlResponse, error)
             }
         }
 
         tasks = []
     }
 
-    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
-        let task = TestSessionTask(handler: handler)
+    func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) -> SessionTask {
+        let task = TestSessionTask(progressHandler: progressHandler, completionHandler: completionHandler)
         tasks.append(task)
 
         return task

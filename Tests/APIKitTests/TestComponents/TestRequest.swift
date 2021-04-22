@@ -1,7 +1,7 @@
 import Foundation
 import APIKit
 
-struct TestRequest: Request {
+struct TestRequest: JSONRequest {
     var absoluteURL: URL? {
         let urlRequest = try? buildURLRequest()
         return urlRequest?.url
