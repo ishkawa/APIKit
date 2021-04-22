@@ -30,7 +30,7 @@ open class Session {
         return privateShared
     }
 
-    /// Calls `send(_:handler:)` of `sharedSession`.
+    /// Calls `send(_:callbackQueue:handler:)` of `Session.shared`.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - parameter handler: The closure that receives result of the request.
@@ -40,7 +40,7 @@ open class Session {
         return shared.send(request, callbackQueue: callbackQueue, progressHandler: progressHandler, completionHandler: completionHandler)
     }
 
-    /// Calls `cancelRequests(with:passingTest:)` of `sharedSession`.
+    /// Calls `cancelRequests(with:passingTest:)` of `Session.shared`.
     open class func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
         shared.cancelRequests(with: requestType, passingTest: test)
     }

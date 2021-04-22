@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
     name: CocoaPods Lint
     env:
-      DEVELOPER_DIR: "/Applications/Xcode_11.4.1.app"
+      DEVELOPER_DIR: "/Applications/Xcode_12.3.app"
     steps:
       - uses: actions/checkout@v2
       - run: pod lib lint --allow-warnings
@@ -19,28 +19,30 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode: [10.3, 11.3.1, 11.4.1]
+        xcode: [10.3, 11.7, 12.3]
       fail-fast: false
     name: Xcode ${{ matrix.xcode }}
     env:
       DEVELOPER_DIR: "/Applications/Xcode_${{ matrix.xcode }}.app"
     steps:
       - uses: actions/checkout@v2
+        with: 
+          fetch-depth: 2
       - name: test
         run: |
           set -o pipefail
-          xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release ENABLE_TESTABILITY=YES | xcpretty -c
-          xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk iphonesimulator -destination "name=iPhone 8" ENABLE_TESTABILITY=YES | xcpretty -c
-          xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -configuration Release -sdk appletvsimulator -destination "name=Apple TV" ENABLE_TESTABILITY=YES | xcpretty -c
-      - name: codecov
-        run: bash <(curl -s https://codecov.io/bash)
-        if: success()
+          xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit | xcpretty -c
+          xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty -c
+          xcodebuild build-for-testing test-without-building -workspace APIKit.xcworkspace -scheme APIKit -sdk appletvsimulator -destination "name=Apple TV" | xcpretty -c
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.2.1
+        if: ${{ success() }}
 
   swiftpm:
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode: [11.3.1, 11.4.1]
+        xcode: [11.7, 12.3]
       fail-fast: false
     name: SwiftPM (Xcode ${{ matrix.xcode }})
     env:
