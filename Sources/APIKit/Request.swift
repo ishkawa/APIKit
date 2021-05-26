@@ -41,6 +41,9 @@ public protocol Request {
 
     /// The parser object that states `Content-Type` to accept and parses response body.
     var dataParser: DataParser { get }
+    
+    /// The URLRequest CachePolicy
+    var cachePolicy: URLRequest.CachePolicy { get }
 
     /// Intercepts `URLRequest` which is created by `Request.buildURLRequest()`. If an error is
     /// thrown in this method, the result of `Session.send()` turns `.failure(.requestError(error))`.
@@ -88,6 +91,10 @@ public extension Request {
     var dataParser: DataParser {
         return JSONDataParser(readingOptions: [])
     }
+    
+    var cachePolicy: URLRequest.CachePolicy {
+        return .useProtocolCachePolicy
+    }
 
     func intercept(urlRequest: URLRequest) throws -> URLRequest {
         return urlRequest
@@ -108,7 +115,7 @@ public extension Request {
             throw RequestError.invalidBaseURL(baseURL)
         }
 
-        var urlRequest = URLRequest(url: url)
+        var urlRequest = URLRequest(url: url, cachePolicy: cachePolicy)
 
         if let queryParameters = queryParameters, !queryParameters.isEmpty {
             components.percentEncodedQuery = URLEncodedSerialization.string(from: queryParameters)

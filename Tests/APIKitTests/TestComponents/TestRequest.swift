@@ -10,12 +10,19 @@ struct TestRequest: Request {
     // MARK: Request
     typealias Response = Any
 
-    init(baseURL: String = "https://example.com", path: String = "/", method: HTTPMethod = .get, parameters: Any? = [:], headerFields: [String: String] = [:], interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
+    init(baseURL: String = "https://example.com",
+         path: String = "/",
+         method: HTTPMethod = .get,
+         parameters: Any? = [:],
+         headerFields: [String: String] = [:],
+         cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy,
+         interceptURLRequest: @escaping (URLRequest) throws -> URLRequest = { $0 }) {
         self.baseURL = URL(string: baseURL)!
         self.path = path
         self.method = method
         self.parameters = parameters
         self.headerFields = headerFields
+        self.cachePolicy = cachePolicy
         self.interceptURLRequest = interceptURLRequest
     }
 
@@ -24,6 +31,7 @@ struct TestRequest: Request {
     let path: String
     let parameters: Any?
     let headerFields: [String: String]
+    let cachePolicy: URLRequest.CachePolicy
     let interceptURLRequest: (URLRequest) throws -> URLRequest
 
     func intercept(urlRequest: URLRequest) throws -> URLRequest {

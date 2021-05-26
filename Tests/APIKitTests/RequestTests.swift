@@ -417,4 +417,9 @@ class RequestTests: XCTestCase {
 
         XCTAssertEqual((try? request.buildURLRequest())?.url, url)
     }
+
+    func testCachePolicy() {
+        XCTAssertEqual(TestRequest().cachePolicy, .useProtocolCachePolicy)
+        XCTAssertEqual(TestRequest(cachePolicy: .reloadIgnoringLocalAndRemoteCacheData).cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
+    }
 }
