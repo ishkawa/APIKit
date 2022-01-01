@@ -1,7 +1,7 @@
 import Foundation
 
 /// `SessionTask` protocol represents a task for a request.
-public protocol SessionTask: class {
+public protocol SessionTask: AnyObject {
     func resume()
     func cancel()
 }
