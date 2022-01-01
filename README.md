@@ -31,7 +31,7 @@ Session.send(request) { result in
 ## Requirements
 
 - Swift 5.0 or later
-- iOS 8.0 or later
+- iOS 9.0 or later
 - Mac OS 10.10 or later
 - watchOS 2.0 or later
 - tvOS 9.0 or later
