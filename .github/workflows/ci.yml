@@ -7,7 +7,7 @@ on:
 
 jobs:
   podspec:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     name: CocoaPods Lint
     env:
       DEVELOPER_DIR: "/Applications/Xcode_12.3.app/Contents/Developer"
@@ -16,7 +16,7 @@ jobs:
       - run: pod lib lint --allow-warnings
 
   xcode:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     strategy:
       matrix:
         xcode: [10.3, 11.7, 12.3]
@@ -39,7 +39,7 @@ jobs:
         if: ${{ success() }}
 
   swiftpm:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     strategy:
       matrix:
         xcode: [11.7, 12.3]
