@@ -11,7 +11,7 @@ public protocol SessionTask: AnyObject {
 /// with `Session`.
 public protocol SessionAdapter {
     /// Returns instance that conforms to `SessionTask`. `handler` must be called after success or failure.
-    func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask
+    func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask
 
     /// Collects tasks from backend networking stack. `handler` must be called after collecting.
     func getTasks(with handler: @escaping ([SessionTask]) -> Void)

@@ -6,6 +6,7 @@ extension URLSessionTask: SessionTask {
 
 private var dataTaskResponseBufferKey = 0
 private var taskAssociatedObjectCompletionHandlerKey = 0
+private var taskAssociatedObjectProgressHandlerKey = 0
 
 /// `URLSessionAdapter` connects `URLSession` with `Session`.
 ///
@@ -25,11 +26,12 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
     }
 
     /// Creates `URLSessionDataTask` instance using `dataTaskWithRequest(_:completionHandler:)`.
-    open func createTask(with URLRequest: URLRequest, handler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask {
+    open func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask {
         let task = urlSession.dataTask(with: URLRequest)
 
         setBuffer(NSMutableData(), forTask: task)
-        setHandler(handler, forTask: task)
+        setHandler(completionHandler, forTask: task)
+        setProgressHandler(progressHandler, forTask: task)
 
         return task
     }
@@ -58,6 +60,14 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
         return objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? (Data?, URLResponse?, Error?) -> Void
     }
 
+    private func setProgressHandler(_ progressHandler: @escaping (Int64, Int64, Int64) -> Void, forTask task: URLSessionTask) {
+        objc_setAssociatedObject(task, &taskAssociatedObjectProgressHandlerKey, progressHandler as Any, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
+    private func progressHandler(for task: URLSessionTask) -> ((Int64, Int64, Int64) -> Void)? {
+        return objc_getAssociatedObject(task, &taskAssociatedObjectProgressHandlerKey) as? (Int64, Int64, Int64) -> Void
+    }
+
     // MARK: URLSessionTaskDelegate
     open func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         handler(for: task)?(buffer(for: task) as Data?, task.response, error)
@@ -66,5 +76,9 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
     // MARK: URLSessionDataDelegate
     open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         buffer(for: dataTask)?.append(data)
+    }
+
+    open func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        progressHandler(for: task)?(bytesSent, totalBytesSent, totalBytesExpectedToSend)
     }
 }
