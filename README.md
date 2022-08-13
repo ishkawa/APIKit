@@ -30,7 +30,7 @@ Session.send(request) { result in
 
 ## Requirements
 
-- Swift 5.0 or later
+- Swift 5.3 or later
 - iOS 9.0 or later
 - Mac OS 10.10 or later
 - watchOS 2.0 or later
@@ -39,6 +39,8 @@ Session.send(request) { result in
 If you use Swift 2.2 or 2.3, try [APIKit 2.0.5](https://github.com/ishkawa/APIKit/tree/2.0.5).
 
 If you use Swift 4.2 or before, try [APIKit 4.1.0](https://github.com/ishkawa/APIKit/tree/4.1.0).
+
+If you use Swift 5.2 or before, try [APIKit 5.3.0](https://github.com/ishkawa/APIKit/tree/5.3.0).
 
 ## Installation
 
