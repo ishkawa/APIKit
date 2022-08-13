@@ -188,10 +188,6 @@ class SessionTests: XCTestCase {
         var path: String {
             return "/"
         }
-
-        func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-            return ()
-        }
     }
 
     func testCancelOtherRequest() {
