@@ -6,11 +6,11 @@ class SessionCallbackQueueTests: XCTestCase {
     var adapter: TestSessionAdapter!
     var session: Session!
 
-    override func setUp() {
-        super.setUp()
+    override func setUpWithError() throws {
+        try super.setUpWithError()
 
         adapter = TestSessionAdapter()
-        adapter.data = try! JSONSerialization.data(withJSONObject: ["key": "value"], options: [])
+        adapter.data = try XCTUnwrap(JSONSerialization.data(withJSONObject: ["key": "value"], options: []))
 
         session = Session(adapter: adapter, callbackQueue: .main)
     }
@@ -33,7 +33,7 @@ class SessionCallbackQueueTests: XCTestCase {
 
         session.send(request, callbackQueue: .sessionQueue) { result in
             // This depends on implementation of TestSessionAdapter
-            XCTAssert(Thread.isMainThread)
+            XCTAssertTrue(Thread.isMainThread)
             expectation.fulfill()
         }
 
@@ -60,7 +60,7 @@ class SessionCallbackQueueTests: XCTestCase {
 
         session.send(request, callbackQueue: .dispatchQueue(dispatchQueue)) { result in
             // There is no way to test current dispatch queue.
-            XCTAssert(!Thread.isMainThread)
+            XCTAssertFalse(Thread.isMainThread)
             expectation.fulfill()
         }
 

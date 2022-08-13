@@ -4,21 +4,18 @@ import APIKit
 
 class URLEncodedSerializationTests: XCTestCase {
     // MARK: NSData -> Any
-    func testObjectFromData() {
-        let data = "key1=value1&key2=value2".data(using: .utf8)!
+    func testObjectFromData() throws {
+        let data = try XCTUnwrap("key1=value1&key2=value2".data(using: .utf8))
         let object = try? URLEncodedSerialization.object(from: data, encoding: .utf8)
         XCTAssertEqual(object?["key1"], "value1")
         XCTAssertEqual(object?["key2"], "value2")
     }
 
-    func testInvalidFormatString() {
+    func testInvalidFormatString() throws {
         let string = "key==value&"
 
-        do {
-            let data = string.data(using: .utf8)!
-            try _ = URLEncodedSerialization.object(from: data, encoding: .utf8)
-            XCTFail()
-        } catch {
+        let data = try XCTUnwrap(string.data(using: .utf8))
+        XCTAssertThrowsError(try URLEncodedSerialization.object(from: data, encoding: .utf8)) { error in
             guard let error = error as? URLEncodedSerialization.Error,
                   case .invalidFormatString(let invalidString) = error else {
                 XCTFail()
@@ -33,10 +30,7 @@ class URLEncodedSerializationTests: XCTestCase {
         var bytes = [UInt8]([0xed, 0xa0, 0x80]) // U+D800 (high surrogate)
         let data = Data(bytes: &bytes, count: bytes.count)
 
-        do {
-            try _ = URLEncodedSerialization.object(from: data, encoding: .utf8)
-            XCTFail()
-        } catch {
+        XCTAssertThrowsError(try URLEncodedSerialization.object(from: data, encoding: .utf8)) { error in
             guard let error = error as? URLEncodedSerialization.Error,
                   case .cannotGetStringFromData(let invalidData, let encoding) = error else {
                 XCTFail()
@@ -59,10 +53,7 @@ class URLEncodedSerializationTests: XCTestCase {
     func testNonDictionaryObject() {
         let dictionaries = [["hey": "yo"]] as Any
 
-        do {
-            try _ = URLEncodedSerialization.data(from: dictionaries, encoding: .utf8)
-            XCTFail()
-        } catch {
+        XCTAssertThrowsError(try URLEncodedSerialization.data(from: dictionaries, encoding: .utf8)) { error in
             guard let error = error as? URLEncodedSerialization.Error,
                   case .cannotCastObjectToDictionary(let object) = error else {
                 XCTFail()

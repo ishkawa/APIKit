@@ -8,17 +8,13 @@ class StringDataParserTests: XCTestCase {
         XCTAssertNil(parser.contentType)
     }
     
-    func testParseData() {
+    func testParseData() throws {
         let string = "abcdef"
         let data = string.data(using: .utf8, allowLossyConversion: false)!
         let parser = StringDataParser(encoding: .utf8)
 
-        do {
-            let object = try parser.parse(data: data)
-            XCTAssertEqual(object as? String, string)
-        } catch {
-            XCTFail()
-        }
+        let object = try parser.parse(data: data)
+        XCTAssertEqual(object as? String, string)
     }
 
     func testInvalidString() {
@@ -26,10 +22,7 @@ class StringDataParserTests: XCTestCase {
         let data = Data(bytes: &bytes, count: bytes.count)
         let parser = StringDataParser(encoding: .utf8)
 
-        do {
-            try _ = parser.parse(data: data)
-            XCTFail()
-        } catch {
+        XCTAssertThrowsError(try parser.parse(data: data)) { error in
             guard let error = error as? StringDataParser.Error,
                   case .invalidData(let invalidData) = error else {
                 XCTFail()
