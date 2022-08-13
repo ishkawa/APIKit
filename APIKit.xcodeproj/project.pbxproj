@@ -21,7 +21,6 @@
 		7F698E5A1D9D680C00F1561D /* URLSessionAdapterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E481D9D680C00F1561D /* URLSessionAdapterTests.swift */; };
 		7F698E5B1D9D680C00F1561D /* SessionCallbackQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E491D9D680C00F1561D /* SessionCallbackQueueTests.swift */; };
 		7F698E5C1D9D680C00F1561D /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E4A1D9D680C00F1561D /* SessionTests.swift */; };
-		7F698E5D1D9D680C00F1561D /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F698E4B1D9D680C00F1561D /* test.json */; };
 		7F698E5E1D9D680C00F1561D /* TestRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E4D1D9D680C00F1561D /* TestRequest.swift */; };
 		7F698E5F1D9D680C00F1561D /* TestSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E4E1D9D680C00F1561D /* TestSessionAdapter.swift */; };
 		7F698E601D9D680C00F1561D /* TestSessionTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F698E4F1D9D680C00F1561D /* TestSessionTask.swift */; };
@@ -48,6 +47,7 @@
 		7F7048F11D9D8A12003C99F6 /* SessionTaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048EE1D9D8A12003C99F6 /* SessionTaskError.swift */; };
 		7F7048F31D9D8A1F003C99F6 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */; };
 		7FA1690D1D9D8C80006C982B /* HTTPStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1690C1D9D8C80006C982B /* HTTPStub.swift */; };
+		C5FF1DC128A80FFD0059573D /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = C5FF1DC028A80FFD0059573D /* test.json */; };
 		ECA831481DE4DDBF004EB1B5 /* ProtobufDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */; };
 		ECA8314A1DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */; };
 		ECA8314C1DE4E677004EB1B5 /* ProtobufBodyParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA8314B1DE4E677004EB1B5 /* ProtobufBodyParameters.swift */; };
@@ -100,7 +100,6 @@
 		7F698E481D9D680C00F1561D /* URLSessionAdapterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionAdapterTests.swift; sourceTree = "<group>"; };
 		7F698E491D9D680C00F1561D /* SessionCallbackQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCallbackQueueTests.swift; sourceTree = "<group>"; };
 		7F698E4A1D9D680C00F1561D /* SessionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
-		7F698E4B1D9D680C00F1561D /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		7F698E4D1D9D680C00F1561D /* TestRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestRequest.swift; sourceTree = "<group>"; };
 		7F698E4E1D9D680C00F1561D /* TestSessionAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSessionAdapter.swift; sourceTree = "<group>"; };
 		7F698E4F1D9D680C00F1561D /* TestSessionTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSessionTask.swift; sourceTree = "<group>"; };
@@ -129,6 +128,7 @@
 		7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncodedSerialization.swift; path = Sources/APIKit/Serializations/URLEncodedSerialization.swift; sourceTree = SOURCE_ROOT; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		7FA1690C1D9D8C80006C982B /* HTTPStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStub.swift; sourceTree = "<group>"; };
+		C5FF1DC028A80FFD0059573D /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtobufDataParser.swift; path = Sources/APIKit/DataParser/ProtobufDataParser.swift; sourceTree = SOURCE_ROOT; };
 		ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufDataParserTests.swift; sourceTree = "<group>"; };
 		ECA8314B1DE4E677004EB1B5 /* ProtobufBodyParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtobufBodyParameters.swift; path = Sources/APIKit/BodyParameters/ProtobufBodyParameters.swift; sourceTree = SOURCE_ROOT; };
@@ -201,8 +201,8 @@
 				ECA8314B1DE4E677004EB1B5 /* ProtobufBodyParameters.swift */,
 				7F7048D81D9D89FB003C99F6 /* AbstractInputStream.m */,
 			);
-			path = APIKit/BodyParameters;
 			name = BodyParameters;
+			path = APIKit/BodyParameters;
 			sourceTree = "<group>";
 		};
 		7F18BD161C9730ED003A31DF /* Serializations */ = {
@@ -210,8 +210,8 @@
 			children = (
 				7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */,
 			);
-			path = APIKit/Serializations;
 			name = Serializations;
+			path = APIKit/Serializations;
 			sourceTree = "<group>";
 		};
 		7F45FCD31A94D02C006863BB = {
@@ -245,6 +245,7 @@
 				7F698E401D9D680C00F1561D /* DataParserType */,
 				7F698E461D9D680C00F1561D /* SessionAdapterType */,
 				7F698E4C1D9D680C00F1561D /* TestComponents */,
+				C5FF1DBF28A80FFD0059573D /* Resources */,
 				7F698E611D9D681500F1561D /* Supporting Files */,
 			);
 			path = APIKitTests;
@@ -297,7 +298,6 @@
 			isa = PBXGroup;
 			children = (
 				7F698E441D9D680C00F1561D /* Info.plist */,
-				7F698E4B1D9D680C00F1561D /* test.json */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -336,8 +336,8 @@
 				7F7048D41D9D89F2003C99F6 /* SessionAdapter.swift */,
 				7F7048D51D9D89F2003C99F6 /* URLSessionAdapter.swift */,
 			);
-			path = APIKit/SessionAdapter;
 			name = SessionAdapter;
+			path = APIKit/SessionAdapter;
 			sourceTree = "<group>";
 		};
 		7FA19A3D1C9CBF2A005D25AE /* Error */ = {
@@ -347,8 +347,8 @@
 				7F7048EC1D9D8A12003C99F6 /* RequestError.swift */,
 				7F7048ED1D9D8A12003C99F6 /* ResponseError.swift */,
 			);
-			path = APIKit/Error;
 			name = Error;
+			path = APIKit/Error;
 			sourceTree = "<group>";
 		};
 		7FA19A441C9CC9A2005D25AE /* DataParser */ = {
@@ -360,8 +360,16 @@
 				ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */,
 				7F7048E71D9D8A08003C99F6 /* StringDataParser.swift */,
 			);
-			path = APIKit/DataParser;
 			name = DataParser;
+			path = APIKit/DataParser;
+			sourceTree = "<group>";
+		};
+		C5FF1DBF28A80FFD0059573D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C5FF1DC028A80FFD0059573D /* test.json */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -464,7 +472,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F698E5D1D9D680C00F1561D /* test.json in Resources */,
+				C5FF1DC128A80FFD0059573D /* test.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
@@ -18,7 +18,8 @@ let package = Package(
         ),
          .testTarget(
             name: "APIKitTests",
-            dependencies: ["APIKit"]
+            dependencies: ["APIKit"],
+            resources: [.process("Resources")]
         ),
     ],
     swiftLanguageVersions: [.v5]
