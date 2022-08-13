@@ -145,3 +145,9 @@ public extension Request {
         return try response(from: passedObject, urlResponse: urlResponse)
     }
 }
+
+public extension Request where Response == Void {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws {
+        return
+    }
+}
