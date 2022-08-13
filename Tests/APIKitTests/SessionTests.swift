@@ -20,7 +20,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { response in
+        session.send(request, completionHandler: { response in
             switch response {
             case .success(let dictionary):
                 XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
@@ -28,9 +28,9 @@ class SessionTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
-            
+
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -42,7 +42,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .responseError(let responseError as NSError) = error {
                 XCTAssertEqual(responseError.domain, NSCocoaErrorDomain)
@@ -50,9 +50,9 @@ class SessionTests: XCTestCase {
             } else {
                 XCTFail()
             }
-            
+
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -63,7 +63,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .responseError(let responseError as ResponseError) = error,
                case .unacceptableStatusCode(let statusCode) = responseError {
@@ -73,7 +73,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -84,7 +84,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .responseError(let responseError as ResponseError) = error,
                case .nonHTTPURLResponse(let urlResponse) = responseError {
@@ -94,7 +94,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -108,7 +108,7 @@ class SessionTests: XCTestCase {
             throw Error()
         }
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .requestError(let requestError) = error {
                 XCTAssert(requestError is Error)
@@ -117,7 +117,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
 
@@ -128,7 +128,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .connectionError(let connectionError as NSError) = error {
                 XCTAssertEqual(connectionError.code, 0)
@@ -137,7 +137,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         session.cancelRequests(with: TestRequest.self)
         
@@ -148,24 +148,24 @@ class SessionTests: XCTestCase {
         let successExpectation = expectation(description: "wait for response")
         let successRequest = TestRequest(path: "/success")
 
-        session.send(successRequest) { result in
+        session.send(successRequest, completionHandler: { result in
             if case .failure = result {
                 XCTFail()
             }
 
             successExpectation.fulfill()
-        }
+        })
 
         let failureExpectation = expectation(description: "wait for response")
         let failureRequest = TestRequest(path: "/failure")
 
-        session.send(failureRequest) { result in
+        session.send(failureRequest, completionHandler: { result in
             if case .success = result {
                 XCTFail()
             }
 
             failureExpectation.fulfill()
-        }
+        })
         
         session.cancelRequests(with: TestRequest.self) { request in
             return request.path == failureRequest.path
@@ -194,24 +194,24 @@ class SessionTests: XCTestCase {
         let successExpectation = expectation(description: "wait for response")
         let successRequest = AnotherTestRequest()
 
-        session.send(successRequest) { result in
+        session.send(successRequest, completionHandler: { result in
             if case .failure = result {
                 XCTFail()
             }
 
             successExpectation.fulfill()
-        }
+        })
 
         let failureExpectation = expectation(description: "wait for response")
         let failureRequest = TestRequest()
 
-        session.send(failureRequest) { result in
+        session.send(failureRequest, completionHandler: { result in
             if case .success = result {
                 XCTFail()
             }
 
             failureExpectation.fulfill()
-        }
+        })
         
         session.cancelRequests(with: TestRequest.self)
 

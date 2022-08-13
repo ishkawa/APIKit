@@ -47,7 +47,7 @@ public struct SessionTaskPublisher<Request: APIKit.Request>: Publisher {
             assert(demand > 0)
             guard let downstream = self.downstream else { return }
             self.downstream = nil
-            task = session.send(request, callbackQueue: callbackQueue) { result in
+            task = session.send(request, callbackQueue: callbackQueue, completionHandler: { result in
                 switch result {
                 case .success(let response):
                     _ = downstream.receive(response)
@@ -55,7 +55,7 @@ public struct SessionTaskPublisher<Request: APIKit.Request>: Publisher {
                 case .failure(let error):
                     downstream.receive(completion: .failure(error))
                 }
-            }
+            })
         }
 
         func cancel() {
