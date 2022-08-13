@@ -8,20 +8,16 @@ class FormURLEncodedDataParserTests: XCTestCase {
         XCTAssertEqual(parser.contentType, "application/x-www-form-urlencoded")
     }
     
-    func testURLSuccess() {
+    func testURLSuccess() throws {
         let string = "foo=1&bar=2&baz=3"
         let data = string.data(using: .utf8, allowLossyConversion: false)!
         let parser = FormURLEncodedDataParser(encoding: .utf8)
 
-        do {
-            let object = try parser.parse(data: data)
-            let dictionary = object as? [String: String]
-            XCTAssertEqual(dictionary?["foo"], "1")
-            XCTAssertEqual(dictionary?["bar"], "2")
-            XCTAssertEqual(dictionary?["baz"], "3")
-        } catch {
-            XCTFail()
-        }
+        let object = try parser.parse(data: data)
+        let dictionary = object as? [String: String]
+        XCTAssertEqual(dictionary?["foo"], "1")
+        XCTAssertEqual(dictionary?["bar"], "2")
+        XCTAssertEqual(dictionary?["baz"], "3")
     }
 
     func testInvalidString() {
@@ -29,10 +25,7 @@ class FormURLEncodedDataParserTests: XCTestCase {
         let data = Data(bytes: &bytes, count: bytes.count)
         let parser = FormURLEncodedDataParser(encoding: .utf8)
 
-        do {
-            try _ = parser.parse(data: data)
-            XCTFail()
-        } catch {
+        XCTAssertThrowsError(try parser.parse(data: data)) { error in
             guard let error = error as? FormURLEncodedDataParser.Error,
                   case .cannotGetStringFromData(let invalidData) = error else {
                 XCTFail()

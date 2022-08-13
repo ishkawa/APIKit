@@ -30,12 +30,9 @@ jobs:
           - xcode: "Xcode_12.5.1"
             runsOn: macOS-11
             name: "macOS 11, Xcode 12.5.1, Swift 5.4.2"
-          - xcode: "Xcode_11.7"
+          - xcode: "Xcode_12"
             runsOn: macOS-10.15
-            name: "macOS 10.15, Xcode 11.7, Swift 5.2.4"
-          - xcode: "Xcode_10.3"
-            runsOn: macOS-10.15
-            name: "macOS 10.15, Xcode 10.3, Swift 5.0.1"
+            name: "macOS 10.15, Xcode 12.0.1, Swift 5.3"
     steps:
       - uses: actions/checkout@v2
         with: 
@@ -62,15 +59,16 @@ jobs:
           - xcode: "Xcode_13.4.1"
             runsOn: macOS-12
             name: "macOS 12, Xcode 13.4.1, Swift 5.6.1"
+            action: swift test -c debug
           - xcode: "Xcode_12.5.1"
             runsOn: macOS-11
             name: "macOS 11, Xcode 12.5.1, Swift 5.4.2"
-          - xcode: "Xcode_11.7"
+            action: swift test -c debug
+          - xcode: "Xcode_12"
             runsOn: macOS-10.15
-            name: "macOS 10.15, Xcode 11.7, Swift 5.2.4"
+            name: "macOS 10.15, Xcode 12.0.1, Swift 5.3"
+            action: swift build -c debug
     steps:
       - uses: actions/checkout@v2
       - name: ${{ matrix.name }}
-        run: |
-          swift build
-          swift test
+        run: ${{ matrix.action }}

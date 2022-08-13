@@ -2,33 +2,33 @@ import XCTest
 import APIKit
 
 class RequestTests: XCTestCase {
-    func testJapanesesQueryParameters() {
+    func testJapanesesQueryParameters() throws {
         let request = TestRequest(parameters: ["q": "こんにちは"])
-        let urlRequest = try? request.buildURLRequest()
-        XCTAssertEqual(urlRequest?.url?.query, "q=%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF")
+        let urlRequest = try request.buildURLRequest()
+        XCTAssertEqual(urlRequest.url?.query, "q=%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF")
     }
     
-    func testSymbolQueryParameters() {
+    func testSymbolQueryParameters() throws {
         let request = TestRequest(parameters: ["q": "!\"#$%&'()0=~|`{}*+<>?/_"])
-        let urlRequest = try? request.buildURLRequest()
-        XCTAssertEqual(urlRequest?.url?.query, "q=%21%22%23%24%25%26%27%28%290%3D~%7C%60%7B%7D%2A%2B%3C%3E?/_")
+        let urlRequest = try request.buildURLRequest()
+        XCTAssertEqual(urlRequest.url?.query, "q=%21%22%23%24%25%26%27%28%290%3D~%7C%60%7B%7D%2A%2B%3C%3E?/_")
     }
 
-    func testNullQueryParameters() {
+    func testNullQueryParameters() throws {
         let request = TestRequest(parameters: ["null": NSNull()])
-        let urlRequest = try? request.buildURLRequest()
-        XCTAssertEqual(urlRequest?.url?.query, "null")
+        let urlRequest = try request.buildURLRequest()
+        XCTAssertEqual(urlRequest.url?.query, "null")
     }
     
-    func testheaderFields() {
+    func testheaderFields() throws {
         let request = TestRequest(headerFields: ["Foo": "f", "Accept": "a", "Content-Type": "c"])
-        let urlReqeust = try? request.buildURLRequest()
-        XCTAssertEqual(urlReqeust?.value(forHTTPHeaderField: "Foo"), "f")
-        XCTAssertEqual(urlReqeust?.value(forHTTPHeaderField: "Accept"), "a")
-        XCTAssertEqual(urlReqeust?.value(forHTTPHeaderField: "Content-Type"), "c")
+        let urlReqeust = try request.buildURLRequest()
+        XCTAssertEqual(urlReqeust.value(forHTTPHeaderField: "Foo"), "f")
+        XCTAssertEqual(urlReqeust.value(forHTTPHeaderField: "Accept"), "a")
+        XCTAssertEqual(urlReqeust.value(forHTTPHeaderField: "Content-Type"), "c")
     }
 
-    func testPOSTJSONRequest() {
+    func testPOSTJSONRequest() throws {
         let parameters: [Any] = [
             ["id": "1"],
             ["id": "2"],
@@ -38,10 +38,9 @@ class RequestTests: XCTestCase {
         let request = TestRequest(method: .post, parameters: parameters)
         XCTAssert((request.parameters as? [Any])?.count == 3)
 
-        let urlRequest = try? request.buildURLRequest()
-        XCTAssertNotNil(urlRequest?.httpBody)
+        let urlRequest = try request.buildURLRequest()
 
-        let json = urlRequest?.httpBody.flatMap { try? JSONSerialization.jsonObject(with: $0, options: []) } as? [AnyObject]
+        let json = urlRequest.httpBody.flatMap { try? JSONSerialization.jsonObject(with: $0, options: []) } as? [AnyObject]
         XCTAssertEqual(json?.count, 3)
         XCTAssertEqual((json?[0] as? [String: String])?["id"], "1")
         XCTAssertEqual((json?[1] as? [String: String])?["id"], "2")
@@ -409,12 +408,12 @@ class RequestTests: XCTestCase {
         )
     }
 
-    func testInterceptURLRequest() {
-        let url = URL(string: "https://example.com/customize")!
+    func testInterceptURLRequest() throws {
+        let url = try XCTUnwrap(URL(string: "https://example.com/customize"))
         let request = TestRequest() { _ in
             return URLRequest(url: url)
         }
 
-        XCTAssertEqual((try? request.buildURLRequest())?.url, url)
+        XCTAssertEqual(try request.buildURLRequest().url, url)
     }
 }

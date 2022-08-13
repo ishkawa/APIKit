@@ -13,9 +13,9 @@ class SessionTests: XCTestCase {
         session = Session(adapter: adapter)
     }
 
-    func testSuccess() {
+    func testSuccess() throws {
         let dictionary = ["key": "value"]
-        adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+        adapter.data = try XCTUnwrap(JSONSerialization.data(withJSONObject: dictionary, options: []))
         
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
