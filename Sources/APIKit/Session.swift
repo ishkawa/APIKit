@@ -36,7 +36,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _, _, _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Progress) -> Void = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         return shared.send(request, callbackQueue: callbackQueue, progressHandler: progressHandler, completionHandler: completionHandler)
     }
 
@@ -54,7 +54,7 @@ open class Session {
     /// - parameter handler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Int64, Int64, Int64) -> Void = { _, _, _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Progress) -> Void = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
         let task = createSessionTask(request, callbackQueue: callbackQueue, progressHandler: progressHandler, completionHandler: completionHandler)
         task?.resume()
         return task
@@ -77,7 +77,7 @@ open class Session {
         }
     }
 
-    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Progress) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
         let urlRequest: URLRequest
         do {
@@ -90,8 +90,8 @@ open class Session {
         }
 
         let task = adapter.createTask(with: urlRequest,
-            progressHandler: { bytesSent, totalBytesSent, totalBytesExpectedToSend in
-                progressHandler(bytesSent, totalBytesSent, totalBytesExpectedToSend)
+            progressHandler: { progress in
+                progressHandler(progress)
             },
             completionHandler: { data, urlResponse, error in
                 let result: Result<Request.Response, SessionTaskError>

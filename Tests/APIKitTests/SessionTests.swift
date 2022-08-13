@@ -225,10 +225,8 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest(method: .post)
 
-        session.send(request, progressHandler: { bytesSent, totalBytesSent, totalBytesExpectedToSend in
-            XCTAssertNotNil(bytesSent)
-            XCTAssertNotNil(totalBytesSent)
-            XCTAssertNotNil(totalBytesExpectedToSend)
+        session.send(request, progressHandler: { progress in
+            XCTAssertNotNil(progress)
             expectation.fulfill()
         })
 
@@ -250,7 +248,7 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Int64, Int64, Int64) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Progress) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
 
                 functionCallFlags[(#function)] = true
                 return super.send(request)
