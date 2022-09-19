@@ -10,4 +10,7 @@ public enum SessionTaskError: Error {
 
     /// Error while creating `Request.Response` from `(Data, URLResponse)`.
     case responseError(Error)
+
+    /// Error when the `Task` in Concurrency was cancelled before execution.
+    case taskAlreadyCancelledError
 }

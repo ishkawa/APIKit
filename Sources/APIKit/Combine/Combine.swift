@@ -68,6 +68,7 @@ public struct SessionTaskPublisher<Request: APIKit.Request>: Publisher {
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 public extension Session {
     /// Calls `sessionTaskPublisher(for:callbackQueue:)` of `Session.shared`.
+    /// 
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
     /// - returns: A publisher that wraps a session task for the request.
