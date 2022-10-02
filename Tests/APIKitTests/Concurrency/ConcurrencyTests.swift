@@ -50,10 +50,10 @@ final class ConcurrencyTests: XCTestCase {
                 XCTFail()
             } catch  {
                 let sessionError = try XCTUnwrap(error as? SessionTaskError)
-                switch sessionError {
-                case .taskAlreadyCancelledError:
+                if case .connectionError(let connectionError as NSError) = sessionError {
+                    XCTAssertEqual(connectionError.code, 0)
                     XCTAssertTrue(Task.isCancelled)
-                default:
+                } else {
                     XCTFail()
                 }
             }
