@@ -24,6 +24,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - xcode: "Xcode_14.0.1"
+            runsOn: macOS-12
+            name: "macOS 12, Xcode 14.0.1, Swift 5.7"
           - xcode: "Xcode_13.4.1"
             runsOn: macOS-12
             name: "macOS 12, Xcode 13.4.1, Swift 5.6.1"
@@ -56,6 +59,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - xcode: "Xcode_14.0.1"
+            runsOn: macOS-12
+            name: "macOS 12, Xcode 14.0.1, Swift 5.7"
+            action: swift test -c debug
           - xcode: "Xcode_13.4.1"
             runsOn: macOS-12
             name: "macOS 12, Xcode 13.4.1, Swift 5.6.1"
