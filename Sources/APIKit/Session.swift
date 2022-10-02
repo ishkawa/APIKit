@@ -55,8 +55,30 @@ open class Session {
     /// - returns: The new session task.
     @discardableResult
     open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        let callbackQueue = callbackQueue ?? self.callbackQueue
+        let task = createSessionTask(request, callbackQueue: callbackQueue, handler: handler)
+        task?.resume()
+        return task
+    }
 
+    /// Cancels requests that passes the test.
+    /// - parameter requestType: The request type to cancel.
+    /// - parameter test: The test closure that determines if a request should be cancelled or not.
+    open func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
+        adapter.getTasks { [weak self] tasks in
+            tasks
+                .filter { task in
+                    if let request = self?.requestForTask(task) as Request? {
+                        return test(request)
+                    } else {
+                        return false
+                    }
+                }
+                .forEach { $0.cancel() }
+        }
+    }
+
+    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+        let callbackQueue = callbackQueue ?? self.callbackQueue
         let urlRequest: URLRequest
         do {
             urlRequest = try request.buildURLRequest()
@@ -91,26 +113,8 @@ open class Session {
         }
 
         setRequest(request, forTask: task)
-        task.resume()
 
         return task
-    }
-
-    /// Cancels requests that passes the test.
-    /// - parameter requestType: The request type to cancel.
-    /// - parameter test: The test closure that determines if a request should be cancelled or not.
-    open func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool = { _ in true }) {
-        adapter.getTasks { [weak self] tasks in
-            tasks
-                .filter { task in
-                    if let request = self?.requestForTask(task) as Request? {
-                        return test(request)
-                    } else {
-                        return false
-                    }
-                }
-                .forEach { $0.cancel() }
-        }
     }
 
     private func setRequest<Request: APIKit.Request>(_ request: Request, forTask task: SessionTask) {

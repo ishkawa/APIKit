@@ -47,6 +47,8 @@
 		7F7048F11D9D8A12003C99F6 /* SessionTaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048EE1D9D8A12003C99F6 /* SessionTaskError.swift */; };
 		7F7048F31D9D8A1F003C99F6 /* URLEncodedSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */; };
 		7FA1690D1D9D8C80006C982B /* HTTPStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1690C1D9D8C80006C982B /* HTTPStub.swift */; };
+		C5725F4B28D8C36500810D7C /* Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5725F4A28D8C36500810D7C /* Concurrency.swift */; };
+		C5B144D828D8D7DC00E30ECD /* ConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B144D728D8D7DC00E30ECD /* ConcurrencyTests.swift */; };
 		C5FF1DC128A80FFD0059573D /* test.json in Resources */ = {isa = PBXBuildFile; fileRef = C5FF1DC028A80FFD0059573D /* test.json */; };
 		ECA831481DE4DDBF004EB1B5 /* ProtobufDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */; };
 		ECA8314A1DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */; };
@@ -128,6 +130,8 @@
 		7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncodedSerialization.swift; path = Sources/APIKit/Serializations/URLEncodedSerialization.swift; sourceTree = SOURCE_ROOT; };
 		7F8ECDFD1B6A799E00234E04 /* Demo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Demo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		7FA1690C1D9D8C80006C982B /* HTTPStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStub.swift; sourceTree = "<group>"; };
+		C5725F4A28D8C36500810D7C /* Concurrency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Concurrency.swift; sourceTree = "<group>"; };
+		C5B144D728D8D7DC00E30ECD /* ConcurrencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrencyTests.swift; sourceTree = "<group>"; };
 		C5FF1DC028A80FFD0059573D /* test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = test.json; sourceTree = "<group>"; };
 		ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtobufDataParser.swift; path = Sources/APIKit/DataParser/ProtobufDataParser.swift; sourceTree = SOURCE_ROOT; };
 		ECA831491DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtobufDataParserTests.swift; sourceTree = "<group>"; };
@@ -240,6 +244,7 @@
 				7F698E451D9D680C00F1561D /* RequestTests.swift */,
 				7F698E491D9D680C00F1561D /* SessionCallbackQueueTests.swift */,
 				7F698E4A1D9D680C00F1561D /* SessionTests.swift */,
+				C5B144D628D8D7D000E30ECD /* Concurrency */,
 				0973EE33259E2DD000879BA2 /* Combine */,
 				7F698E3B1D9D680C00F1561D /* BodyParametersType */,
 				7F698E401D9D680C00F1561D /* DataParserType */,
@@ -310,6 +315,7 @@
 				7F7048CA1D9D89BE003C99F6 /* Request.swift */,
 				7F7048CB1D9D89BE003C99F6 /* Session.swift */,
 				7F7048CC1D9D89BE003C99F6 /* Unavailable.swift */,
+				C5725F4928D8C36500810D7C /* Concurrency */,
 				0969AE0D259DEC3C00C498AF /* Combine */,
 				7F85FB8B1C9D317300CEE132 /* SessionAdapter */,
 				7F18BD0D1C972C38003A31DF /* BodyParameters */,
@@ -362,6 +368,23 @@
 			);
 			name = DataParser;
 			path = APIKit/DataParser;
+			sourceTree = "<group>";
+		};
+		C5725F4928D8C36500810D7C /* Concurrency */ = {
+			isa = PBXGroup;
+			children = (
+				C5725F4A28D8C36500810D7C /* Concurrency.swift */,
+			);
+			name = Concurrency;
+			path = APIKit/Concurrency;
+			sourceTree = "<group>";
+		};
+		C5B144D628D8D7D000E30ECD /* Concurrency */ = {
+			isa = PBXGroup;
+			children = (
+				C5B144D728D8D7DC00E30ECD /* ConcurrencyTests.swift */,
+			);
+			path = Concurrency;
 			sourceTree = "<group>";
 		};
 		C5FF1DBF28A80FFD0059573D /* Resources */ = {
@@ -495,6 +518,7 @@
 				7F7048E01D9D89FB003C99F6 /* Data+InputStream.swift in Sources */,
 				7F7048DF1D9D89FB003C99F6 /* BodyParameters.swift in Sources */,
 				7F7048E21D9D89FB003C99F6 /* JSONBodyParameters.swift in Sources */,
+				C5725F4B28D8C36500810D7C /* Concurrency.swift in Sources */,
 				7F7048D61D9D89F2003C99F6 /* SessionAdapter.swift in Sources */,
 				7F7048EF1D9D8A12003C99F6 /* RequestError.swift in Sources */,
 				7F7048E91D9D8A08003C99F6 /* FormURLEncodedDataParser.swift in Sources */,
@@ -521,6 +545,7 @@
 				7F698E581D9D680C00F1561D /* RequestTests.swift in Sources */,
 				ECA8314A1DE4DEBE004EB1B5 /* ProtobufDataParserTests.swift in Sources */,
 				7F698E5E1D9D680C00F1561D /* TestRequest.swift in Sources */,
+				C5B144D828D8D7DC00E30ECD /* ConcurrencyTests.swift in Sources */,
 				7F698E601D9D680C00F1561D /* TestSessionTask.swift in Sources */,
 				0973EE35259E2DDC00879BA2 /* CombineTests.swift in Sources */,
 				7FA1690D1D9D8C80006C982B /* HTTPStub.swift in Sources */,
