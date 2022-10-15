@@ -218,14 +218,29 @@ class SessionTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-    func testProgress() {
+    func testUploadProgress() {
         let dictionary = ["key": "value"]
         adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
 
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest(method: .post)
 
-        session.send(request, progressHandler: { progress in
+        session.send(request, uploadProgressHandler: { progress in
+            XCTAssertNotNil(progress)
+            expectation.fulfill()
+        })
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testDownloadProgress() {
+        let dictionary = ["key": "value"]
+        adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+
+        let expectation = self.expectation(description: "wait for response")
+        let request = TestRequest(method: .post)
+
+        session.send(request, downloadProgressHandler: { progress in
             XCTAssertNotNil(progress)
             expectation.fulfill()
         })
@@ -248,7 +263,7 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Progress) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, uploadProgressHandler: @escaping Session.ProgressHandler, downloadProgressHandler: @escaping Session.ProgressHandler, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
 
                 functionCallFlags[(#function)] = true
                 return super.send(request)
@@ -263,7 +278,7 @@ class SessionTests: XCTestCase {
         SessionSubclass.send(TestRequest())
         SessionSubclass.cancelRequests(with: TestRequest.self)
 
-        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:progressHandler:completionHandler:)"], true)
+        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:uploadProgressHandler:downloadProgressHandler:completionHandler:)"], true)
         XCTAssertEqual(testSession.functionCallFlags["cancelRequests(with:passingTest:)"], true)
     }
 }

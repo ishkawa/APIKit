@@ -64,7 +64,7 @@ class URLSessionAdapterSubclassTests: XCTestCase {
         let adapter = SessionAdapter(configuration: configuration)
         let session = Session(adapter: adapter)
 
-        session.send(request, progressHandler: { _ in
+        session.send(request, uploadProgressHandler: { _ in
             expectation.fulfill()
         })
 
