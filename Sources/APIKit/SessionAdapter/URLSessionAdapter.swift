@@ -6,7 +6,8 @@ extension URLSessionTask: SessionTask {
 
 private var dataTaskResponseBufferKey = 0
 private var taskAssociatedObjectCompletionHandlerKey = 0
-private var taskAssociatedObjectProgressHandlerKey = 0
+private var taskAssociatedObjectUploadProgressHandlerKey = 0
+private var taskAssociatedObjectDownloadProgressHandlerKey = 0
 
 /// `URLSessionAdapter` connects `URLSession` with `Session`.
 ///
@@ -26,12 +27,13 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
     }
 
     /// Creates `URLSessionDataTask` instance using `dataTaskWithRequest(_:completionHandler:)`.
-    open func createTask(with URLRequest: URLRequest, progressHandler: @escaping (Progress) -> Void, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask {
+    open func createTask(with URLRequest: URLRequest, uploadProgressHandler: @escaping Session.ProgressHandler, downloadProgressHandler: @escaping Session.ProgressHandler, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> SessionTask {
         let task = urlSession.dataTask(with: URLRequest)
 
         setBuffer(NSMutableData(), forTask: task)
         setHandler(completionHandler, forTask: task)
-        setProgressHandler(progressHandler, forTask: task)
+        setUploadProgressHandler(uploadProgressHandler, forTask: task)
+        setDownloadProgressHandler(downloadProgressHandler, forTask: task)
 
         return task
     }
@@ -60,12 +62,20 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
         return objc_getAssociatedObject(task, &taskAssociatedObjectCompletionHandlerKey) as? (Data?, URLResponse?, Error?) -> Void
     }
 
-    private func setProgressHandler(_ progressHandler: @escaping (Progress) -> Void, forTask task: URLSessionTask) {
-        objc_setAssociatedObject(task, &taskAssociatedObjectProgressHandlerKey, progressHandler as Any, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    private func setUploadProgressHandler(_ progressHandler: @escaping Session.ProgressHandler, forTask task: URLSessionTask) {
+        objc_setAssociatedObject(task, &taskAssociatedObjectUploadProgressHandlerKey, progressHandler as Any, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
-    private func progressHandler(for task: URLSessionTask) -> ((Progress) -> Void)? {
-        return objc_getAssociatedObject(task, &taskAssociatedObjectProgressHandlerKey) as? (Progress) -> Void
+    private func uploadProgressHandler(for task: URLSessionTask) -> Session.ProgressHandler? {
+        return objc_getAssociatedObject(task, &taskAssociatedObjectUploadProgressHandlerKey) as? Session.ProgressHandler
+    }
+
+    private func setDownloadProgressHandler(_ progressHandler: @escaping Session.ProgressHandler, forTask task: URLSessionTask) {
+        objc_setAssociatedObject(task, &taskAssociatedObjectDownloadProgressHandlerKey, progressHandler as Any, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
+    private func downloadProgressHandler(for task: URLSessionTask) -> Session.ProgressHandler? {
+        return objc_getAssociatedObject(task, &taskAssociatedObjectDownloadProgressHandlerKey) as? Session.ProgressHandler
     }
 
     // MARK: URLSessionTaskDelegate
@@ -73,15 +83,24 @@ open class URLSessionAdapter: NSObject, SessionAdapter, URLSessionDelegate, URLS
         handler(for: task)?(buffer(for: task) as Data?, task.response, error)
     }
 
-    // MARK: URLSessionDataDelegate
-    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        buffer(for: dataTask)?.append(data)
-    }
-
-    // MARK: URLSessionDataDelegate
     open func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
         let progress = Progress(totalUnitCount: totalBytesExpectedToSend)
         progress.completedUnitCount = totalBytesSent
-        progressHandler(for: task)?(progress)
+        uploadProgressHandler(for: task)?(progress)
+    }
+
+    // MARK: URLSessionDataDelegate
+    open func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        buffer(for: dataTask)?.append(data)
+        updateDownloadProgress(dataTask)
+    }
+
+    private func updateDownloadProgress(_ task: URLSessionTask) {
+        let receivedData = buffer(for: task) as Data?
+        let totalBytesReceived = Int64(receivedData?.count ?? 0)
+        let totalBytesExpected = task.response?.expectedContentLength ?? NSURLSessionTransferSizeUnknown
+        let progress = Progress(totalUnitCount: totalBytesExpected)
+        progress.completedUnitCount = totalBytesReceived
+        downloadProgressHandler(for: task)?(progress)
     }
 }

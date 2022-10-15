@@ -60,13 +60,16 @@ struct GetRateLimitRequest: GitHubRequest {
 //: Step 4: Send request
 let request = GetRateLimitRequest()
 
-Session.send(request) { result in
+Session.send(request, uploadProgressHandler: { progress in
+    print("upload progress: \(progress.fractionCompleted)")
+}, downloadProgressHandler: { progress in
+    print("download progress: \(progress.fractionCompleted) %")
+}, completionHandler: { result in
     switch result {
     case .success(let rateLimit):
         print("count: \(rateLimit.count)")
         print("reset: \(rateLimit.resetDate)")
-
     case .failure(let error):
         print("error: \(error)")
     }
-}
+})

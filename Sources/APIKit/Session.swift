@@ -10,6 +10,9 @@ open class Session {
     /// The default callback queue for `send(_:handler:)`.
     public let callbackQueue: CallbackQueue
 
+    /// Closure type executed when the upload or download progress of a request.
+    public typealias ProgressHandler = (Progress) -> Void
+
     /// Returns `Session` instance that is initialized with `adapter`.
     /// - parameter adapter: The adapter that connects lower level backend with Session interface.
     /// - parameter callbackQueue: The default callback queue for `send(_:handler:)`.
@@ -33,11 +36,13 @@ open class Session {
     /// Calls `send(_:callbackQueue:handler:)` of `Session.shared`.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
-    /// - parameter handler: The closure that receives result of the request.
+    /// - parameter uploadProgressHandler: The closure that receives upload progress of the request.
+    /// - parameter downloadProgressHandler: The closure that receives download progress of the request.
+    /// - parameter completionHandler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Progress) -> Void = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        return shared.send(request, callbackQueue: callbackQueue, progressHandler: progressHandler, completionHandler: completionHandler)
+    open class func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, uploadProgressHandler: @escaping ProgressHandler = { _ in }, downloadProgressHandler: @escaping ProgressHandler = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        return shared.send(request, callbackQueue: callbackQueue, uploadProgressHandler: uploadProgressHandler, downloadProgressHandler: downloadProgressHandler, completionHandler: completionHandler)
     }
 
     /// Calls `cancelRequests(with:passingTest:)` of `Session.shared`.
@@ -51,11 +56,13 @@ open class Session {
     /// `Request.Response` is inferred from `Request` type parameter, the it changes depending on the request type.
     /// - parameter request: The request to be sent.
     /// - parameter callbackQueue: The queue where the handler runs. If this parameters is `nil`, default `callbackQueue` of `Session` will be used.
-    /// - parameter handler: The closure that receives result of the request.
+    /// - parameter uploadProgressHandler: The closure that receives upload progress of the request.
+    /// - parameter downloadProgressHandler: The closure that receives download progress of the request.
+    /// - parameter completionHandler: The closure that receives result of the request.
     /// - returns: The new session task.
     @discardableResult
-    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, progressHandler: @escaping (Progress) -> Void = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
-        let task = createSessionTask(request, callbackQueue: callbackQueue, progressHandler: progressHandler, completionHandler: completionHandler)
+    open func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue? = nil, uploadProgressHandler: @escaping ProgressHandler = { _ in }, downloadProgressHandler: @escaping ProgressHandler = { _ in }, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void = { _ in }) -> SessionTask? {
+        let task = createSessionTask(request, callbackQueue: callbackQueue, uploadProgressHandler: uploadProgressHandler, downloadProgressHandler: downloadProgressHandler, completionHandler: completionHandler)
         task?.resume()
         return task
     }
@@ -77,7 +84,7 @@ open class Session {
         }
     }
 
-    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, progressHandler: @escaping (Progress) -> Void, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+    internal func createSessionTask<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, uploadProgressHandler: @escaping ProgressHandler, downloadProgressHandler: @escaping ProgressHandler, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
         let callbackQueue = callbackQueue ?? self.callbackQueue
         let urlRequest: URLRequest
         do {
@@ -90,8 +97,15 @@ open class Session {
         }
 
         let task = adapter.createTask(with: urlRequest,
-            progressHandler: { progress in
-                progressHandler(progress)
+            uploadProgressHandler: { progress in
+                callbackQueue.execute {
+                    uploadProgressHandler(progress)
+                }
+            },
+            downloadProgressHandler:  { progress in
+                callbackQueue.execute {
+                    downloadProgressHandler(progress)
+                }
             },
             completionHandler: { data, urlResponse, error in
                 let result: Result<Request.Response, SessionTaskError>
