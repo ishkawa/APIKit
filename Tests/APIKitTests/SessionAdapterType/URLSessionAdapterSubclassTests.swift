@@ -68,7 +68,7 @@ class URLSessionAdapterSubclassTests: XCTestCase {
             expectation.fulfill()
         })
 
-        waitForExpectations(timeout: 10.0, handler: nil)
+        waitForExpectations(timeout: 30.0, handler: nil)
         XCTAssertEqual(adapter.functionCallFlags["urlSession(_:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)"], true)
     }
 }
