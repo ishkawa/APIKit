@@ -4,7 +4,7 @@ import APIKit
 
 class ProtobufBodyParametersTests: XCTestCase {
     func testProtobufSuccess() throws {
-        let object = NSKeyedArchiver.archivedData(withRootObject: ["foo": 1, "bar": 2, "baz": 3])
+        let object = try XCTUnwrap("data".data(using: .utf8))
         let parameters = ProtobufBodyParameters(protobufObject: object)
         XCTAssertEqual(parameters.contentType, "application/protobuf")
 
@@ -12,9 +12,7 @@ class ProtobufBodyParametersTests: XCTestCase {
             XCTFail()
             return
         }
-        let dictionary = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String: Int]
-        XCTAssertEqual(dictionary?["foo"], 1)
-        XCTAssertEqual(dictionary?["bar"], 2)
-        XCTAssertEqual(dictionary?["baz"], 3)
+        let string = String(data: data, encoding: .utf8)
+        XCTAssertEqual(string, "data")
     }
 }
