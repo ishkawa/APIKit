@@ -5,9 +5,7 @@ import APIKit
 PlaygroundPage.current.needsIndefiniteExecution = true
 
 //: Step 1: Define request protocol
-protocol GitHubRequest: Request {
-
-}
+protocol GitHubRequest: JSONRequest {}
 
 extension GitHubRequest {
     var baseURL: URL {
