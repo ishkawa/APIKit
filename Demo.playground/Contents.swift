@@ -5,30 +5,37 @@ import APIKit
 PlaygroundPage.current.needsIndefiniteExecution = true
 
 //: Step 1: Define request protocol
-protocol GitHubRequest: JSONRequest {}
+protocol GitHubRequest: Request {}
 
 extension GitHubRequest {
     var baseURL: URL {
         return URL(string: "https://api.github.com")!
     }
+
+    var dataParser: DecodableJSONDataParser {
+        return DecodableJSONDataParser()
+    }
 }
 
 //: Step 2: Create model object
-struct RateLimit {
+struct RateLimit: Decodable {
     let count: Int
     let resetDate: Date
 
-    init?(dictionary: [String: AnyObject]) {
-        guard let count = dictionary["rate"]?["limit"] as? Int else {
-            return nil
-        }
+    enum CodingKeys: String, CodingKey {
+        case rate
+    }
+    enum RateCodingKeys: String, CodingKey {
+        case limit
+        case reset
+    }
 
-        guard let resetDateString = dictionary["rate"]?["reset"] as? TimeInterval else {
-            return nil
-        }
-
-        self.count = count
-        self.resetDate = Date(timeIntervalSince1970: resetDateString)
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let rateContainer = try container.nestedContainer(keyedBy: RateCodingKeys.self, forKey: .rate)
+        self.count = try rateContainer.decode(Int.self, forKey: .limit)
+        let resetTimeInterval = try rateContainer.decode(TimeInterval.self, forKey: .reset)
+        self.resetDate = Date(timeIntervalSince1970: resetTimeInterval)
     }
 }
 
@@ -37,21 +44,11 @@ struct RateLimit {
 struct GetRateLimitRequest: GitHubRequest {
     typealias Response = RateLimit
 
-    var method: HTTPMethod {
-        return .get
-    }
+    let method: HTTPMethod = .get
+    let path: String = "/rate_limit"
 
-    var path: String {
-        return "/rate_limit"
-    }
-
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-        guard let dictionary = object as? [String: AnyObject],
-              let rateLimit = RateLimit(dictionary: dictionary) else {
-            throw ResponseError.unexpectedObject(object)
-        }
-
-        return rateLimit
+    func response(from object: Data, urlResponse: HTTPURLResponse) throws -> Response {
+        return try JSONDecoder().decode(Response.self, from: object)
     }
 }
 
