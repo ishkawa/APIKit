@@ -12,8 +12,8 @@ extension GitHubRequest {
         return URL(string: "https://api.github.com")!
     }
 
-    var dataParser: DecodableJSONDataParser {
-        return DecodableJSONDataParser()
+    var dataParser: NonSerializedJSONDataParser {
+        return NonSerializedJSONDataParser()
     }
 }
 

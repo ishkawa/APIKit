@@ -1,8 +1,8 @@
 import Foundation
 
-/// `DecodableJSONDataParser` response Data data.
-public class DecodableJSONDataParser: DataParser {
-    /// Returns `DecodableJSONDataParser`.
+/// `NonSerializedJSONDataParser` response Data data.
+public class NonSerializedJSONDataParser: DataParser {
+    /// Returns `NonSerializedJSONDataParser`.
     public init() {}
 
     // MARK: - DataParser
