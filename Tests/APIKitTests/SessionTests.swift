@@ -20,7 +20,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { response in
+        session.send(request, completionHandler: { response in
             switch response {
             case .success(let dictionary):
                 XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
@@ -28,9 +28,9 @@ class SessionTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
-            
+
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -42,7 +42,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .responseError(let responseError as NSError) = error {
                 XCTAssertEqual(responseError.domain, NSCocoaErrorDomain)
@@ -50,9 +50,9 @@ class SessionTests: XCTestCase {
             } else {
                 XCTFail()
             }
-            
+
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -63,7 +63,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .responseError(let responseError as ResponseError) = error,
                case .unacceptableStatusCode(let statusCode) = responseError {
@@ -73,7 +73,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -84,7 +84,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .responseError(let responseError as ResponseError) = error,
                case .nonHTTPURLResponse(let urlResponse) = responseError {
@@ -94,7 +94,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -108,7 +108,7 @@ class SessionTests: XCTestCase {
             throw Error()
         }
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .requestError(let requestError) = error {
                 XCTAssert(requestError is Error)
@@ -117,7 +117,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 1.0, handler: nil)
 
@@ -128,7 +128,7 @@ class SessionTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
         
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             if case .failure(let error) = result,
                case .connectionError(let connectionError as NSError) = error {
                 XCTAssertEqual(connectionError.code, 0)
@@ -137,7 +137,7 @@ class SessionTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         session.cancelRequests(with: TestRequest.self)
         
@@ -148,24 +148,24 @@ class SessionTests: XCTestCase {
         let successExpectation = expectation(description: "wait for response")
         let successRequest = TestRequest(path: "/success")
 
-        session.send(successRequest) { result in
+        session.send(successRequest, completionHandler: { result in
             if case .failure = result {
                 XCTFail()
             }
 
             successExpectation.fulfill()
-        }
+        })
 
         let failureExpectation = expectation(description: "wait for response")
         let failureRequest = TestRequest(path: "/failure")
 
-        session.send(failureRequest) { result in
+        session.send(failureRequest, completionHandler: { result in
             if case .success = result {
                 XCTFail()
             }
 
             failureExpectation.fulfill()
-        }
+        })
         
         session.cancelRequests(with: TestRequest.self) { request in
             return request.path == failureRequest.path
@@ -174,7 +174,7 @@ class SessionTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
-    struct AnotherTestRequest: Request {
+    struct AnotherTestRequest: JSONRequest {
         typealias Response = Void
 
         var baseURL: URL {
@@ -194,26 +194,56 @@ class SessionTests: XCTestCase {
         let successExpectation = expectation(description: "wait for response")
         let successRequest = AnotherTestRequest()
 
-        session.send(successRequest) { result in
+        session.send(successRequest, completionHandler: { result in
             if case .failure = result {
                 XCTFail()
             }
 
             successExpectation.fulfill()
-        }
+        })
 
         let failureExpectation = expectation(description: "wait for response")
         let failureRequest = TestRequest()
 
-        session.send(failureRequest) { result in
+        session.send(failureRequest, completionHandler: { result in
             if case .success = result {
                 XCTFail()
             }
 
             failureExpectation.fulfill()
-        }
+        })
         
         session.cancelRequests(with: TestRequest.self)
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testUploadProgress() {
+        let dictionary = ["key": "value"]
+        adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+
+        let expectation = self.expectation(description: "wait for response")
+        let request = TestRequest(method: .post)
+
+        session.send(request, uploadProgressHandler: { progress in
+            XCTAssertNotNil(progress)
+            expectation.fulfill()
+        })
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testDownloadProgress() {
+        let dictionary = ["key": "value"]
+        adapter.data = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+
+        let expectation = self.expectation(description: "wait for response")
+        let request = TestRequest(method: .post)
+
+        session.send(request, downloadProgressHandler: { progress in
+            XCTAssertNotNil(progress)
+            expectation.fulfill()
+        })
 
         waitForExpectations(timeout: 1.0, handler: nil)
     }
@@ -233,12 +263,13 @@ class SessionTests: XCTestCase {
                 return testSesssion
             }
 
-            override func send<Request : APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, handler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+            override func send<Request: APIKit.Request>(_ request: Request, callbackQueue: CallbackQueue?, uploadProgressHandler: @escaping Session.ProgressHandler, downloadProgressHandler: @escaping Session.ProgressHandler, completionHandler: @escaping (Result<Request.Response, SessionTaskError>) -> Void) -> SessionTask? {
+
                 functionCallFlags[(#function)] = true
                 return super.send(request)
             }
 
-            override func cancelRequests<Request : APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
+            override func cancelRequests<Request: APIKit.Request>(with requestType: Request.Type, passingTest test: @escaping (Request) -> Bool) {
                 functionCallFlags[(#function)] = true
             }
         }
@@ -247,7 +278,7 @@ class SessionTests: XCTestCase {
         SessionSubclass.send(TestRequest())
         SessionSubclass.cancelRequests(with: TestRequest.self)
 
-        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:handler:)"], true)
+        XCTAssertEqual(testSession.functionCallFlags["send(_:callbackQueue:uploadProgressHandler:downloadProgressHandler:completionHandler:)"], true)
         XCTAssertEqual(testSession.functionCallFlags["cancelRequests(with:passingTest:)"], true)
     }
 }

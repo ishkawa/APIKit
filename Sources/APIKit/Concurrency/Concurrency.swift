@@ -23,7 +23,7 @@ public extension Session {
         return try await withTaskCancellationHandler(operation: {
             return try await withCheckedThrowingContinuation { continuation in
                 Task {
-                    let sessionTask = createSessionTask(request, callbackQueue: callbackQueue) { result in
+                    let sessionTask = createSessionTask(request, callbackQueue: callbackQueue, uploadProgressHandler: { _ in }, downloadProgressHandler: { _ in }) { result in
                         continuation.resume(with: result)
                     }
                     await cancellationHandler.register(with: sessionTask)

@@ -23,7 +23,7 @@ public class StringDataParser: DataParser {
 
     /// Return `String` that converted from `Data`.
     /// - Throws: `StringDataParser.Error` when the parser fails to initialize `String` from `Data`.
-    public func parse(data: Data) throws -> Any {
+    public func parse(data: Data) throws -> String {
         guard let string = String(data: data, encoding: encoding) else {
             throw Error.invalidData(data)
         }

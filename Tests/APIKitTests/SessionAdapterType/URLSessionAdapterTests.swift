@@ -24,7 +24,7 @@ class URLSessionAdapterTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.send(request) { response in
+        session.send(request, completionHandler: { response in
             switch response {
             case .success(let dictionary):
                 XCTAssertEqual((dictionary as? [String: String])?["key"], "value")
@@ -32,9 +32,9 @@ class URLSessionAdapterTests: XCTestCase {
             case .failure:
                 XCTFail()
             }
-            
+
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 10.0, handler: nil)
     }
@@ -46,11 +46,11 @@ class URLSessionAdapterTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.send(request) { response in
+        session.send(request, completionHandler: { response in
             switch response {
             case .success:
                 XCTFail()
-                
+
             case .failure(let error):
                 switch error {
                 case .connectionError(let error as NSError):
@@ -62,7 +62,7 @@ class URLSessionAdapterTests: XCTestCase {
             }
 
             expectation.fulfill()
-        }
+        })
         
         waitForExpectations(timeout: 10.0, handler: nil)
     }
@@ -74,7 +74,7 @@ class URLSessionAdapterTests: XCTestCase {
         let expectation = self.expectation(description: "wait for response")
         let request = TestRequest()
 
-        session.send(request) { result in
+        session.send(request, completionHandler: { result in
             guard case .failure(let error) = result,
                   case .connectionError(let connectionError as NSError) = error else {
                 XCTFail()
@@ -84,7 +84,7 @@ class URLSessionAdapterTests: XCTestCase {
             XCTAssertEqual(connectionError.code, NSURLErrorCancelled)
 
             expectation.fulfill()
-        }
+        })
 
         DispatchQueue.main.async {
             self.session.cancelRequests(with: TestRequest.self)
