@@ -14,10 +14,9 @@ class FormURLEncodedDataParserTests: XCTestCase {
         let parser = FormURLEncodedDataParser(encoding: .utf8)
 
         let object = try parser.parse(data: data)
-        let dictionary = object as? [String: String]
-        XCTAssertEqual(dictionary?["foo"], "1")
-        XCTAssertEqual(dictionary?["bar"], "2")
-        XCTAssertEqual(dictionary?["baz"], "3")
+        XCTAssertEqual(object["foo"] as? String, "1")
+        XCTAssertEqual(object["bar"] as? String, "2")
+        XCTAssertEqual(object["baz"] as? String, "3")
     }
 
     func testInvalidString() {

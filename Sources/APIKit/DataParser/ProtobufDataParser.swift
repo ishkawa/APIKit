@@ -12,8 +12,8 @@ public class ProtobufDataParser: DataParser {
         return "application/protobuf"
     }
     
-    /// Return `Any` that expresses structure of Data response.
-    public func parse(data: Data) throws -> Any {
+    /// Return `Data` that expresses structure of Data response.
+    public func parse(data: Data) throws -> Data {
         return data
     }
 }

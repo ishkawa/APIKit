@@ -14,7 +14,7 @@ class StringDataParserTests: XCTestCase {
         let parser = StringDataParser(encoding: .utf8)
 
         let object = try parser.parse(data: data)
-        XCTAssertEqual(object as? String, string)
+        XCTAssertEqual(object, string)
     }
 
     func testInvalidString() {

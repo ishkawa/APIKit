@@ -144,7 +144,7 @@ public extension Request {
 }
 
 public extension Request where Response == Void {
-    func response(from object: Any, urlResponse: HTTPURLResponse) throws {
+    func response(from object: DataParser.Parsed, urlResponse: HTTPURLResponse) throws {
         return
     }
 }
