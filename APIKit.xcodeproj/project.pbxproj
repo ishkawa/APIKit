@@ -201,8 +201,8 @@
 				ECA8314B1DE4E677004EB1B5 /* ProtobufBodyParameters.swift */,
 				7F7048D81D9D89FB003C99F6 /* AbstractInputStream.m */,
 			);
-			path = APIKit/BodyParameters;
 			name = BodyParameters;
+			path = APIKit/BodyParameters;
 			sourceTree = "<group>";
 		};
 		7F18BD161C9730ED003A31DF /* Serializations */ = {
@@ -210,8 +210,8 @@
 			children = (
 				7F7048F21D9D8A1F003C99F6 /* URLEncodedSerialization.swift */,
 			);
-			path = APIKit/Serializations;
 			name = Serializations;
+			path = APIKit/Serializations;
 			sourceTree = "<group>";
 		};
 		7F45FCD31A94D02C006863BB = {
@@ -336,8 +336,8 @@
 				7F7048D41D9D89F2003C99F6 /* SessionAdapter.swift */,
 				7F7048D51D9D89F2003C99F6 /* URLSessionAdapter.swift */,
 			);
-			path = APIKit/SessionAdapter;
 			name = SessionAdapter;
+			path = APIKit/SessionAdapter;
 			sourceTree = "<group>";
 		};
 		7FA19A3D1C9CBF2A005D25AE /* Error */ = {
@@ -347,8 +347,8 @@
 				7F7048EC1D9D8A12003C99F6 /* RequestError.swift */,
 				7F7048ED1D9D8A12003C99F6 /* ResponseError.swift */,
 			);
-			path = APIKit/Error;
 			name = Error;
+			path = APIKit/Error;
 			sourceTree = "<group>";
 		};
 		7FA19A441C9CC9A2005D25AE /* DataParser */ = {
@@ -360,8 +360,8 @@
 				ECA831471DE4DDBF004EB1B5 /* ProtobufDataParser.swift */,
 				7F7048E71D9D8A08003C99F6 /* StringDataParser.swift */,
 			);
-			path = APIKit/DataParser;
 			name = DataParser;
+			path = APIKit/DataParser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -545,6 +545,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -557,6 +558,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
